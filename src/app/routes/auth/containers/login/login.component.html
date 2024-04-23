@@ -1,1 +1,14 @@
-<p>login works!</p>
+<div class="flex justify-center items-center bg-gray-100">
+  <form (ngSubmit)="login()" [formGroup]="loginForm" class="bg-white p-8 rounded-lg shadow-lg">
+    <h1 class="text-xl font-bold mb-6">Login</h1>
+    <mat-form-field class="w-full">
+      <mat-label>Username</mat-label>
+      <input formControlName="username" matInput/>
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>Password</mat-label>
+      <input formControlName="password" matInput type="password"/>
+    </mat-form-field>
+    <button class="w-full" color="primary" mat-raised-button>Login</button>
+  </form>
+</div>

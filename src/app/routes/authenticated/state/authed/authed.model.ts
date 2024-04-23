@@ -30,18 +30,18 @@ export interface AllianceDto {
 }
 
 export enum CharacterClassEnum {
-  SADIDA = "Sadida",
-  IOP = "Iop",
-  SACRIEUR = "Sacrieur",
-  ENIRIPSA = "Eniripsa",
   CRA = "Cra",
   ECAFLIP = "Ecaflip",
+  ENIRIPSA = "Eniripsa",
   ENUTROF = "Enutrof",
   FECA = "Feca",
-  XELOR = "Xelor",
-  PANDAWA = "Pandawa",
-  SRAM = "Sram",
+  IOP = "Iop",
   OSAMODAS = "Osamodas",
+  PANDAWA = "Pandawa",
+  SACRIEUR = "Sacrieur",
+  SADIDA = "Sadida",
+  SRAM = "Sram",
+  XELOR = "Xelor",
 }
 
 export enum UserRoleEnum {
