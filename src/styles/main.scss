@@ -1,0 +1,48 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$guilds-retro-primary: mat.define-palette(mat.$green-palette, 600); // Vert plus naturel et doux
+$guilds-retro-accent: mat.define-palette(mat.$amber-palette, A200); // Ambre pour l'éclat et la rareté
+$guilds-retro-warn: mat.define-palette(mat.$deep-orange-palette, 700); // Terre cuite pour les alertes
+
+$guilds-retro-gold: mat.define-palette(mat.$amber-palette, 500); // Ajout d'un or pour les éléments importants
+
+$guilds-retro-theme: mat.define-light-theme(
+    (
+      color: (
+        primary: $guilds-retro-primary,
+        accent: $guilds-retro-accent,
+        warn: $guilds-retro-warn
+      ),
+      typography: mat.define-typography-config(),
+      foreground: (
+        base: white,
+        text: white,
+        disabled-text: mat.get-color-from-palette($guilds-retro-primary, 300),
+        hint-text: mat.get-color-from-palette($guilds-retro-accent, 300),
+        icon: mat.get-color-from-palette($guilds-retro-primary, 600),
+        icons: mat.get-color-from-palette($guilds-retro-primary, 600)
+      )
+    )
+);
+
+@include mat.core-theme($guilds-retro-theme);
+@include mat.all-component-themes($guilds-retro-theme);
+
+
+.guilds-retro-gold {
+  color: mat.get-color-from-palette($guilds-retro-gold, 500);
+}
+
+.body-background {
+  background-color: #f0e4d3;
+}
+
+.card-background {
+  background-color: #F5F5DC;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
