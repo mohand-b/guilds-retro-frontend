@@ -16,4 +16,7 @@ export class HeaderComponent {
   readonly user: Omit<UserDto, 'guild'> = this.authenticatedFacade.getCurrentUser()!;
   readonly guild: Pick<GuildDto, "id" | "name" | "description"> = this.authenticatedFacade.getGuild()!;
 
+  logout() {
+    this.authenticatedFacade.logout();
+  }
 }

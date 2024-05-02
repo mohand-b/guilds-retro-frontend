@@ -12,4 +12,9 @@
       <i class="fas fa-users"></i> Guilde: <span class="font-semibold">{{ guild.name }}</span>
     </div>
   </div>
+  <button (click)="logout()"
+          class="absolute bottom-0 right-0 m-4 p-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded shadow"
+          mat-raised-button>
+    Déconnexion
+  </button>
 </header>

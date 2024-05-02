@@ -3,6 +3,7 @@ import {createStore, withProps} from '@ngneat/elf';
 import {AuthedStateDto, GuildDto, UserDto} from './state/authed/authed.model';
 import {createRequestsStatusOperator, withRequestsStatus,} from '@ngneat/elf-requests';
 import {localStorageStrategy, persistState} from '@ngneat/elf-persist-state';
+import {Router} from "@angular/router";
 
 export const AUTHENTICATED_STORE_NAME = 'authenticated';
 
@@ -29,8 +30,14 @@ export const trackAuthedRequestsStatus =
 @Injectable({providedIn: 'root'})
 export class AuthenticatedFacade {
 
+  constructor(
+    private router: Router,
+  ) {
+  }
+
   logout(): void {
     authenticatedStore.reset();
+    this.router.navigateByUrl('/auth');
   }
 
   getState(): AuthedStateDto {

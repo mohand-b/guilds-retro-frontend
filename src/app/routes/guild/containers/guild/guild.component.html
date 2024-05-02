@@ -1,1 +1,75 @@
-<p>guild works!</p>
+<div *ngIf="currentGuild$() as guild" class="p-4">
+  <mat-card class="overflow-hidden shadow-lg rounded-lg">
+    <mat-card-header class="bg-primary-600">
+      <mat-card-title>{{ guild.name }}</mat-card-title>
+      <mat-card-subtitle>Nombre de membres : {{ guild.members.length }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="p-0">
+      <table [dataSource]="guild.members" class="min-w-full divide-y divide-gray-300" mat-table>
+        <ng-container matColumnDef="username">
+          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Nom</th>
+          <td *matCellDef="let member" class="p-3 text-sm text-gray-700 whitespace-nowrap"
+              mat-cell>{{ member.username }}</td>
+        </ng-container>
+        <ng-container matColumnDef="characterClass">
+          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Classe</th>
+          <td *matCellDef="let member" class="p-3 text-sm text-gray-700 whitespace-nowrap"
+              mat-cell>{{ member.characterClass }}</td>
+        </ng-container>
+        <ng-container matColumnDef="role">
+          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Grade</th>
+          <td *matCellDef="let member" class="p-3 text-sm text-gray-700 whitespace-nowrap"
+              mat-cell>{{ member.role }}</td>
+        </ng-container>
+        <tr *matHeaderRowDef="['username', 'characterClass', 'role']" class="bg-gray-100" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: ['username', 'characterClass', 'role'];" mat-row></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="overflow-hidden shadow-lg rounded-lg mt-6">
+    <mat-card-header class="bg-primary-600 text-white">
+      <mat-card-subtitle>Nombre d'alliés : {{ guild.allies.length }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="p-0">
+      <table [dataSource]="guild.allies" class="min-w-full divide-y divide-gray-300" mat-table>
+        <ng-container matColumnDef="name">
+          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Nom</th>
+          <td *matCellDef="let ally" class="p-3 text-sm text-gray-700 whitespace-nowrap" mat-cell>{{ ally.name }}</td>
+        </ng-container>
+        <tr *matHeaderRowDef="['name']" class="bg-gray-100" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: ['name'];" mat-row></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="overflow-hidden shadow-lg rounded-lg mt-6">
+    <mat-card-header class="bg-primary-600 text-white">
+      <mat-card-subtitle>Demandes d'adhésion</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="p-0">
+      <table [dataSource]="guild.membershipRequests" class="min-w-full divide-y divide-gray-300" mat-table>
+        <ng-container matColumnDef="username">
+          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Nom</th>
+          <td *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap"
+              mat-cell>{{ request.user.username }}</td>
+        </ng-container>
+        <ng-container matColumnDef="characterClass">
+          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Classe</th>
+          <td *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap"
+              mat-cell>{{ request.user.characterClass }}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Actions</th>
+          <td *matCellDef="let request" class="p-3 flex justify-start space-x-2">
+            <button (click)="acceptRequest(request.id)" color="primary" mat-flat-button>Accepter</button>
+            <button (click)="declineRequest(request.id)" color="warn" mat-button>Refuser</button>
+
+          </td>
+        </ng-container>
+        <tr *matHeaderRowDef="['username', 'characterClass', 'actions']" class="bg-gray-100" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: ['username', 'characterClass', 'actions'];" mat-row></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

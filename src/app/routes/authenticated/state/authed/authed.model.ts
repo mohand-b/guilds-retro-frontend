@@ -48,4 +48,5 @@ export enum UserRoleEnum {
   LEADER = 'Meneur',
   OFFICER = 'Bras droit',
   MEMBER = 'Membre',
+  CANDIDATE = 'Candidat',
 }

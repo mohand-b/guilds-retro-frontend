@@ -11,12 +11,14 @@ import {
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthenticatedFacade} from "../../routes/authenticated/authenticated.facade";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenInterceptorService implements HttpInterceptor {
   private authenticatedFacade = inject(AuthenticatedFacade);
+  private router = inject(Router);
 
   intercept(
     request: HttpRequest<unknown>,
@@ -35,8 +37,9 @@ export class TokenInterceptorService implements HttpInterceptor {
         if (
           error instanceof HttpErrorResponse &&
           error.status === 401 &&
-          !request.url.endsWith('/authentication')
+          !request.url.endsWith('/login')
         ) {
+          this.authenticatedFacade.logout();
         }
         return throwError(error);
       }),
