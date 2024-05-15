@@ -8,6 +8,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {switchMap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {AuthFacade} from "../../../auth/auth.facade";
+import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 
 @Component({
   selector: 'app-guild',
@@ -17,7 +18,8 @@ import {AuthFacade} from "../../../auth/auth.facade";
     NgForOf,
     MatCardModule,
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    CharacterIconPipe
   ],
   templateUrl: './guild.component.html',
   styleUrl: './guild.component.scss'

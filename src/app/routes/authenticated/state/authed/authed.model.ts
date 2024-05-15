@@ -10,6 +10,13 @@ export interface UserDto {
   characterClass: CharacterClassEnum;
   role: UserRoleEnum;
   guild: GuildDto;
+  gender: GenderEnum;
+  level: number;
+}
+
+export enum GenderEnum {
+  MALE = "M",
+  FEMALE = "F",
 }
 
 export interface GuildDto {

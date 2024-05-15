@@ -8,7 +8,7 @@
       <span class="text-sm font-medium">{{ user.characterClass }}</span> |
       <span class="text-sm font-medium">{{ user.role }}</span>
     </div>
-    <div class="text-white text-md mt-1">
+    <div *ngIf="guild" class="text-white text-md mt-1">
       <i class="fas fa-users"></i> Guilde: <span class="font-semibold">{{ guild.name }}</span>
     </div>
   </div>

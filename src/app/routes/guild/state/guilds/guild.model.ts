@@ -7,6 +7,7 @@ export interface GuildDto {
   description?: string;
   members: UserDto[];
   allies: guildAllie[];
+  logo?: string;
 }
 
 export interface GuildState extends GuildDto {
@@ -16,5 +17,6 @@ export interface GuildState extends GuildDto {
 export interface guildAllie {
   id: number;
   name: string;
+  level: number;
   description?: string;
 }
