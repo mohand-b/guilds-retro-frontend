@@ -30,7 +30,6 @@ $guilds-retro-theme: mat.define-light-theme(
 @include mat.core-theme($guilds-retro-theme);
 @include mat.all-component-themes($guilds-retro-theme);
 
-
 .guilds-retro-gold {
   color: mat.get-color-from-palette($guilds-retro-gold, 500);
 }

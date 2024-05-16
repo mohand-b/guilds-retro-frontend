@@ -27,14 +27,12 @@ export class DashboardComponent {
   currentUser = this.authenticatedFacade.getCurrentUser() as UserDto
 
   openCreatePostModal() {
-    const dialogRef = this.dialog.open(CreatePostModalComponent, {
-    });
+    const dialogRef = this.dialog.open(CreatePostModalComponent, {});
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Post data received:', result);
       }
     });
-  }
   }
 }
