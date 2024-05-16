@@ -19,6 +19,10 @@ export const authenticatedRoutes: Routes = [
         loadChildren: () => import('../eternal-harvest/eternal-harvest.routes').then(c => c.EternalHarvestRoutes)
       },
       {
+        path: 'feed',
+        loadChildren: () => import('../feed/feed.routes').then(c => c.FeedRoutes)
+      },
+      {
         path: 'guild',
         loadChildren: () => import('../guild/guild.routes').then(c => c.GuildRoutes)
       },

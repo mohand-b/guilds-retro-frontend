@@ -43,6 +43,10 @@ $guilds-retro-theme: mat.define-light-theme(
   background-color: #F5F5DC;
 }
 
+.mdc-notched-outline__notch {
+  border-right: none !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

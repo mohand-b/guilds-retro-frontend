@@ -1,0 +1,9 @@
+<div class="flex flex-col gap-2 p-4">
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Post Content</mat-label>
+    <textarea [formControl]="postFormControl" matInput rows="4"></textarea>
+  </mat-form-field>
+
+  <button (click)="onSubmit()" [disabled]="!postFormControl.valid" color="primary" mat-raised-button>Post</button>
+</div>
+
