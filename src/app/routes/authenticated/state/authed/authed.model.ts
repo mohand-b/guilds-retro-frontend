@@ -12,28 +12,13 @@ export interface UserDto {
   guild: GuildDto;
   gender: GenderEnum;
   level: number;
+  guildId?: number;
+  guildAlliesIds?: number[];
 }
 
 export enum GenderEnum {
   MALE = "M",
   FEMALE = "F",
-}
-
-export interface GuildDto {
-  id: number;
-  name: string;
-  description: string;
-  members: UserDto[];
-  allianceRequests: AllianceDto[];
-  receivedRequests: AllianceDto[];
-  allies: GuildDto[];
-}
-
-export interface AllianceDto {
-  id: number;
-  requesterGuild: GuildDto;
-  targetGuild: GuildDto;
-  status: string;
 }
 
 export enum CharacterClassEnum {
@@ -56,4 +41,21 @@ export enum UserRoleEnum {
   OFFICER = 'Bras droit',
   MEMBER = 'Membre',
   CANDIDATE = 'Candidat',
+}
+
+export interface GuildDto {
+  id: number;
+  name: string;
+  description: string;
+  members: UserDto[];
+  allianceRequests: AllianceDto[];
+  receivedRequests: AllianceDto[];
+  allies: GuildDto[];
+}
+
+export interface AllianceDto {
+  id: number;
+  requesterGuild: GuildDto;
+  targetGuild: GuildDto;
+  status: string;
 }

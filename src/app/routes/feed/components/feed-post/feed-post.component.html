@@ -1,0 +1,32 @@
+<div class="w-full flex flex-col p-4 bg-white shadow-sm rounded-lg mb-4">
+  <div class="flex items-center mb-2">
+    <div class="w-12 h-12 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
+      <img [src]="post.user | characterIcon" alt="Avatar"
+           class="w-10 h-10 rounded-full object-cover no-select no-copy">
+    </div>
+    <div class="ml-4">
+      <div class="text-sm font-semibold">{{ post.user.username }}</div>
+      <div class="text-xs text-gray-500">
+        <span *ngIf="(post.user | guildMembership:currentUser) === 'currentUser'">
+          Moi
+        </span>
+
+        <span *ngIf="(post.user | guildMembership:currentUser) === 'myGuild'">
+          {{ post.user.role }} de ma guilde
+        </span>
+        <span *ngIf="(post.user | guildMembership:currentUser) === 'alliedGuild'">
+          Membre de la guilde alliée {{ post.user.guild.name }}
+        </span>
+        <span *ngIf="(post.user | guildMembership:currentUser) === 'externalGuild'">
+          Membre de la guilde {{ post.user.guild.name }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="text-sm mb-2">
+    {{ post.text }}
+  </div>
+  <div class="text-xs text-gray-400 mb-2">
+    {{ post.createdAt | date:'short' }}
+  </div>
+</div>

@@ -29,7 +29,6 @@ export const guildStore = createStore(
 @Injectable({providedIn: 'root'})
 export class GuildFacade {
 
-
   currentGuild$: Signal<GuildState> = toSignal(guildStore.pipe(select((
     state) => state)), {
     initialValue: guildStore.value,
