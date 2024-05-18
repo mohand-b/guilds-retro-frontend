@@ -26,7 +26,6 @@ export class AuthFacade {
               ...state,
               token: response.token,
               user: response.user,
-              guild: response.guild
             }),
             updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
           );

@@ -11,9 +11,9 @@ export class GuildMembershipPipe implements PipeTransform {
     if (user.id === currentUser.id) {
       return 'currentUser';
     }
-    if (user.guild.id === currentUser.guildId) {
+    if (user.guild.id === currentUser.guild.id) {
       return 'myGuild';
-    } else if (currentUser.guildAlliesIds?.some((allyId: number) => allyId === user.guildId)) {
+    } else if (currentUser.guildAlliesIds?.some((allyId: number) => allyId === user.guild.id)) {
       return 'alliedGuild';
     } else {
       return 'externalGuild';

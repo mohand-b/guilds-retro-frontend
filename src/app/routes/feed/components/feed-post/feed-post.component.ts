@@ -16,7 +16,7 @@ import {UserDto} from "../../../authenticated/state/authed/authed.model";
     NgIf
   ],
   templateUrl: './feed-post.component.html',
-  styleUrl: './feed-post.component.scss'
+  styles: ``
 })
 export class FeedPostComponent implements OnInit {
 
@@ -25,7 +25,5 @@ export class FeedPostComponent implements OnInit {
   private authedFacade = inject(AuthenticatedFacade);
 
   ngOnInit() {
-    console.log('Post:', this.post);
-    console.log('Current user:', this.currentUser);
   }
 }

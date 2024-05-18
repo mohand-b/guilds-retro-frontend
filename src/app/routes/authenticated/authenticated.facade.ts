@@ -13,7 +13,6 @@ export const authenticatedStore = createStore(
   },
   withProps<AuthedStateDto>({
     user: undefined,
-    guild: undefined,
     token: undefined,
   }),
   withRequestsStatus(),
@@ -49,6 +48,6 @@ export class AuthenticatedFacade {
   }
 
   getGuild(): Pick<GuildDto, "id" | "name" | "description"> | undefined {
-    return this.getState().guild;
+    return this.getState().user?.guild;
   }
 }

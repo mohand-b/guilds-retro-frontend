@@ -15,7 +15,7 @@
           {{ post.user.role }} de ma guilde
         </span>
         <span *ngIf="(post.user | guildMembership:currentUser) === 'alliedGuild'">
-          Membre de la guilde alliée {{ post.user.guild.name }}
+          Membre de la guilde <span class="font-bold text-warn">alliée</span> {{ post.user.guild.name }}
         </span>
         <span *ngIf="(post.user | guildMembership:currentUser) === 'externalGuild'">
           Membre de la guilde {{ post.user.guild.name }}

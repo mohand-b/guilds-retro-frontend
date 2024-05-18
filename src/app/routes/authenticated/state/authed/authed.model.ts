@@ -1,6 +1,5 @@
 export interface AuthedStateDto {
-  user: Omit<UserDto, 'guild'> | undefined;
-  guild: Pick<GuildDto, 'id' | 'name' | 'description'> | undefined;
+  user: UserDto | undefined;
   token: string | undefined;
 }
 
