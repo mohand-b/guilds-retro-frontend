@@ -1,4 +1,5 @@
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
+import {LikeDto} from "../likes/like.model";
 
 export interface Post {
   id: number;
@@ -8,18 +9,13 @@ export interface Post {
   image: string;
   user: UserDto;
   comments: Comment[];
-  likes: Like[];
+  likes: LikeDto[];
 }
 
 export interface Comment {
   id: number;
   text: string;
   createdAt: Date;
-  user: UserDto;
-}
-
-export interface Like {
-  id: number;
   user: UserDto;
 }
 

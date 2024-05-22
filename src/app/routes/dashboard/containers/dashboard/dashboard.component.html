@@ -1,5 +1,14 @@
 <div class="w- full flex flex-col gap-6">
 
+  <h2 class="text-2xl font-bold">Fil d'actualité</h2>
+
+  <mat-slide-toggle
+    (change)="toggleFeedClosingToGuildAndAllies($event.checked)"
+    [checked]="feedClosingToGuildAndAllies$()"
+    color="primary">
+    Fermer son fil d'actualité au gens de sa guilde et des guilde alliées
+  </mat-slide-toggle>
+
   <div class="flex items-center">
     <div class="flex-shrink-0">
       <div class="w-12 h-12 rounded-full bg-beige border border-gray-300 flex items-center justify-center">

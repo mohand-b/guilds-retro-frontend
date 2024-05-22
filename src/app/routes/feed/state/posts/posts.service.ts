@@ -14,4 +14,6 @@ export class PostsService {
   create(post: CreatePost): Observable<Post> {
     return this.http.post<Post>(`${this.postsBaseUrl}`, post);
   }
+
+
 }

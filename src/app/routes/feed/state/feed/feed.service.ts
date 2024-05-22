@@ -16,4 +16,11 @@ export class FeedService {
       `${this.feedBaseUrl}`,
     );
   }
+
+  updateFeedPreference(feedClosingToGuildAndAllies: boolean): Observable<void> {
+    return this.http.patch<void>(
+      `${environment.apiUrl}/users/feed-preference`,
+      {feedClosingToGuildAndAllies},
+    );
+  }
 }

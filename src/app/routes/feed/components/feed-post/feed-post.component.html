@@ -29,4 +29,17 @@
   <div class="text-xs text-gray-400 mb-2">
     {{ post.createdAt | date:'short' }}
   </div>
+
+  <div class="flex items-center gap-2">
+    <button (click)="likePost()" *ngIf="!isLiked" mat-icon-button>
+      <mat-icon>favorite_border</mat-icon>
+    </button>
+
+    <button (click)="unlikePost()" *ngIf="isLiked" mat-icon-button>
+      <mat-icon>favorite</mat-icon>
+    </button>
+
+    <div>{{ likesCount }}</div>
+  </div>
+
 </div>

@@ -9,6 +9,8 @@ import {
 } from "../authenticated/authenticated.facade";
 import {updateRequestStatus} from "@ngneat/elf-requests";
 import {LoginDto} from "./state/auth/auth.model";
+import {setProps} from "@ngneat/elf";
+import {feedStore} from "../feed/feed.facade";
 
 @Injectable({providedIn: 'root'})
 export class AuthFacade {
@@ -29,6 +31,9 @@ export class AuthFacade {
             }),
             updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
           );
+          feedStore.update(setProps(
+            {feedClosingToGuildAndAllies: response.user?.feedClosingToGuildAndAllies}
+          ))
         },
         error: () => {
           console.log('error');

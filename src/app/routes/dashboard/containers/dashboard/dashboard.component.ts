@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, OnInit, Signal} from '@angular/core';
+import {Component, DestroyRef, effect, inject, Signal} from '@angular/core';
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialog} from "@angular/material/dialog";
 import {CreatePostModalComponent} from "../../../feed/components/create-post-modal/create-post-modal.component";
@@ -12,8 +12,7 @@ import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {Post} from "../../../feed/state/posts/post.model";
 import {FeedPostComponent} from "../../../feed/components/feed-post/feed-post.component";
-import {switchMap} from "rxjs";
-import {GuildFacade} from "../../../guild/guild.facade";
+import {MatSlideToggle} from "@angular/material/slide-toggle";
 
 @Component({
   selector: 'app-dashboard',
@@ -28,31 +27,27 @@ import {GuildFacade} from "../../../guild/guild.facade";
     DatePipe,
     NgForOf,
     FeedPostComponent,
+    MatSlideToggle,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
 
   public dialog = inject(MatDialog);
   private authenticatedFacade = inject(AuthenticatedFacade)
   currentUser = this.authenticatedFacade.getCurrentUser() as UserDto
   private feedFacade = inject(FeedFacade);
   feed$: Signal<Post[]> = this.feedFacade.feed$;
+  feedClosingToGuildAndAllies$: Signal<boolean> = this.feedFacade.feedClosingToGuildAndAllies$;
   private destroyRef: DestroyRef = inject(DestroyRef);
-  private guildFacade = inject(GuildFacade);
-  currentGuild$ = this.guildFacade.currentGuild$;
 
-  ngOnInit() {
+  feedPreferenceChanged = effect(() => {
+    const feedPreference = this.feedClosingToGuildAndAllies$();
     this.feedFacade.setFeed().pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(res => console.log('Feed:', res));
-
-    this.guildFacade.getCurrentGuild().pipe(
-      takeUntilDestroyed(this.destroyRef),
-      switchMap((guild) => this.guildFacade.getPendingMembershipRequests(guild.id!))
     ).subscribe();
-  }
+  })
 
   openCreatePostModal() {
     const dialogRef = this.dialog.open(CreatePostModalComponent, {});
@@ -63,4 +58,10 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  toggleFeedClosingToGuildAndAllies(checked: boolean) {
+    this.feedFacade.updateFeedPreference(checked).subscribe();
+  }
+
+
 }
