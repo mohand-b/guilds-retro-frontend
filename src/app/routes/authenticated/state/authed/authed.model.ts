@@ -43,6 +43,17 @@ export enum UserRoleEnum {
   CANDIDATE = 'Candidat',
 }
 
+type RoleHierarchy = {
+  [key in UserRoleEnum]: UserRoleEnum[];
+};
+
+export const roleHierarchy: RoleHierarchy = {
+  [UserRoleEnum.CANDIDATE]: [],
+  [UserRoleEnum.MEMBER]: [UserRoleEnum.CANDIDATE],
+  [UserRoleEnum.OFFICER]: [UserRoleEnum.MEMBER, UserRoleEnum.CANDIDATE],
+  [UserRoleEnum.LEADER]: [UserRoleEnum.OFFICER, UserRoleEnum.MEMBER, UserRoleEnum.CANDIDATE],
+};
+
 export interface GuildDto {
   id: number;
   name: string;

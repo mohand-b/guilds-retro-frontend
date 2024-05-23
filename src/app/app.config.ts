@@ -8,9 +8,16 @@ import {TokenInterceptorProvider} from "./shared/services/token-interceptor.serv
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: {
+        subscriptSizing: 'dynamic'
+      }
+    },
     provideHttpClient(withInterceptorsFromDi()),
     TokenInterceptorProvider,
     provideRouter(routes),

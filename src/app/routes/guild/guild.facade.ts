@@ -2,7 +2,7 @@ import {inject, Injectable, Signal} from "@angular/core";
 import {GuildsService} from "./state/guilds/guilds.service";
 import {createStore, select, setProps, withProps} from "@ngneat/elf";
 import {withRequestsStatus} from "@ngneat/elf-requests";
-import {GuildDto, GuildState} from "./state/guilds/guild.model";
+import {GuildDto, GuildState, LightGuildDto} from "./state/guilds/guild.model";
 import {Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {MembershipRequestsService} from "./state/membership-requests/membership-requests.service";
@@ -100,5 +100,9 @@ export class GuildFacade {
         error: (error) => console.error(error),
       }),
     );
+  }
+
+  getGuildsRecruiting(): Observable<LightGuildDto[]> {
+    return this.guildsService.getGuildsRecruiting();
   }
 }

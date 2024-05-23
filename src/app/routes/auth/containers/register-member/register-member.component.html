@@ -1,0 +1,95 @@
+<div class="flex flex-col items-center justify-center min-h-screen p-4">
+  <h1 class="text-2xl font-bold mb-6 text-center">Inscription</h1>
+
+  <form (ngSubmit)="onSubmit()"
+        [formGroup]="registerAsMemberFb"
+        class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl grid grid-cols-2 gap-4">
+
+    <div class="col-span-2 md:col-span-1">
+      <mat-form-field appearance="outline" class="w-full mb-4" floatLabel="always">
+        <input formControlName="username" matInput placeholder="Nom du personnage">
+        <mat-error *ngIf="registerAsMemberFb.get('username')?.hasError('usernameAlreadyTaken')">
+          Ce nom est déjà pris
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full mb-4">
+        <input formControlName="password" matInput placeholder="Choisir un mot de passe" type="password">
+      </mat-form-field>
+
+      <div class="flex gap-4 mb-4 items-center">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Classe</mat-label>
+          <mat-select formControlName="characterClass">
+            <mat-option *ngFor="let charClass of characterClasses" [value]="charClass">
+              {{ charClass }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="flex items-center gap-2 h-full">
+          <div
+            (click)="selectGender(GenderEnum.MALE)"
+            [ngClass]="{
+              'text-accent': registerAsMemberFb.get('gender')?.value === 'M',
+              'text-gray-400': registerAsMemberFb.get('gender')?.value !== 'M'
+            }"
+            class="w-12 h-12 flex items-center justify-center border-gray-400 border rounded cursor-pointer transition-colors">
+            <mat-icon>male</mat-icon>
+          </div>
+          <div
+            (click)="selectGender(GenderEnum.FEMALE)"
+            [ngClass]="{
+              'text-accent': registerAsMemberFb.get('gender')?.value === 'F',
+              'text-gray-400': registerAsMemberFb.get('gender')?.value !== 'F'
+            }"
+            class="w-12 h-12 flex items-center justify-center border-gray-400 border rounded cursor-pointer transition-colors">
+            <mat-icon>female</mat-icon>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full flex gap-3">
+        <label>Niveau du personnage</label>
+        <label class="font-bold">{{ level.value }}</label>
+      </div>
+
+      <div class="pr-5">
+        <mat-slider color="accent" max="200" min="1" showTickMark step="1">
+          <input #level class="w-full" formControlName="characterLevel" matSliderThumb>
+        </mat-slider>
+      </div>
+    </div>
+
+    <div class="col-span-2 md:col-span-1 flex flex-col justify-between">
+      <div class="flex flex-col items-start gap-2">
+        <button (click)="onOpenGuildSelection()" class="mb-4 w-full text-white" color="accent" mat-raised-button
+                type="button">
+          Choisir une guilde
+        </button>
+
+        <div *ngIf="guildSelected" class="w-full p-4 m-2 border rounded-lg bg-white shadow-md">
+          <div class="flex items-center mb-4">
+            <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
+              <img [src]="guildSelected.logo" alt="{{ guildSelected.name }} Logo" class="w-14 h-14 rounded-full">
+            </div>
+            <div class="ml-4">
+              <div class="text-xl font-bold">{{ guildSelected.name }}</div>
+              <div
+                class="text-sm text-gray-500">{{ guildSelected.description || 'Aucune description disponible' }}</div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="text-sm text-gray-500">Meneur</div>
+            <div class="text-md font-semibold">{{ guildSelected.leaderUsername }}</div>
+          </div>
+        </div>
+      </div>
+
+      <button [disabled]="registerAsMemberFb.invalid" class="w-full mt-3" color="primary" mat-raised-button
+              type="submit">
+        S'inscrire
+      </button>
+    </div>
+  </form>
+</div>

@@ -20,3 +20,16 @@ export interface guildAllie {
   level: number;
   description?: string;
 }
+
+export interface LightGuildDto {
+  id: number;
+  name: string;
+  level: number;
+  logo: string;
+  capacity: number;
+  averageLevelOfMembers: number;
+  description: string;
+  nbOfMembers: number;
+  nbOfAllies: number;
+  leaderUsername: string;
+}

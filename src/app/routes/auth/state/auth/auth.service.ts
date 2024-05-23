@@ -2,7 +2,7 @@ import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {AuthedStateDto} from "../../../authenticated/state/authed/authed.model";
-import {LoginDto} from "./auth.model";
+import {LoginDto, RegisterMemberDto} from "./auth.model";
 import {Observable} from "rxjs";
 
 @Injectable({providedIn: 'root'})
@@ -17,4 +17,12 @@ export class AuthService {
       loginDto,
     );
   }
+
+  registerAsMember(registerMemberDto: RegisterMemberDto): Observable<AuthedStateDto> {
+    return this.http.post<AuthedStateDto>(
+      `${this.authBaseUrl}/register-member`,
+      registerMemberDto,
+    );
+  }
+  
 }

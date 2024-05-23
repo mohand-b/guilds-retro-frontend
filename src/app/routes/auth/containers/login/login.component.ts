@@ -4,7 +4,7 @@ import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {NonNullableFormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {AuthFacade} from "../../auth.facade";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {LoginDto} from "../../state/auth/auth.model";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
@@ -16,7 +16,8 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
     MatInput,
     MatLabel,
     MatButton,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

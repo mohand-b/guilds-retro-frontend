@@ -43,7 +43,7 @@ export class AuthenticatedFacade {
     return authenticatedStore.value;
   }
 
-  getCurrentUser(): Omit<UserDto, "guild"> | undefined {
+  getCurrentUser(): UserDto | undefined {
     return this.getState().user;
   }
 

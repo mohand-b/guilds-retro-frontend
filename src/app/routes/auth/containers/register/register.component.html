@@ -1,1 +1,16 @@
-<p>register works!</p>
+<div class="flex flex-col items-center justify-center min-h-screen p-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div [routerLink]="['/auth/register/member']"
+         class="cursor-pointer p-8 bg-white shadow-md rounded-lg flex flex-col items-center justify-center transition-transform transform hover:scale-105">
+
+      <h2 class="text-xl font-bold mb-2">S'inscrire en tant que Membre</h2>
+      <p class="text-gray-600 text-center">Rejoins une guilde existante en tant que membre.</p>
+    </div>
+    <div [routerLink]="['/auth/register/leader']"
+         class="cursor-pointer p-8 bg-white shadow-md rounded-lg flex flex-col items-center justify-center transition-transform transform hover:scale-105">
+
+      <h2 class="text-xl font-bold mb-2">S'inscrire en tant que Meneur de Guilde</h2>
+      <p class="text-gray-600 text-center">Déclares ta guilde et inscris-toi en tant que meneur.</p>
+    </div>
+  </div>
+</div>

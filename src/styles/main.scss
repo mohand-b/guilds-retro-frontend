@@ -3,7 +3,7 @@
 @include mat.core();
 
 $guilds-retro-primary: mat.define-palette(mat.$green-palette, 600);
-$guilds-retro-accent: mat.define-palette(mat.$amber-palette, A200);
+$guilds-retro-accent: mat.define-palette(mat.$amber-palette, 500);
 $guilds-retro-warn: mat.define-palette(mat.$deep-orange-palette, 700);
 
 $guilds-retro-gold: mat.define-palette(mat.$amber-palette, 500);
@@ -44,6 +44,10 @@ $guilds-retro-theme: mat.define-light-theme(
 
 .mdc-notched-outline__notch {
   border-right: none !important;
+}
+
+.mat-accent {
+  color: white !important;
 }
 
 @tailwind base;

@@ -8,7 +8,7 @@ import {
   trackAuthedRequestsStatus
 } from "../authenticated/authenticated.facade";
 import {updateRequestStatus} from "@ngneat/elf-requests";
-import {LoginDto} from "./state/auth/auth.model";
+import {LoginDto, RegisterMemberDto} from "./state/auth/auth.model";
 import {setProps} from "@ngneat/elf";
 import {feedStore} from "../feed/feed.facade";
 
@@ -23,6 +23,30 @@ export class AuthFacade {
       tap({
         next: (response) => {
           console.log('response', response);
+          authenticatedStore.update(
+            (state) => ({
+              ...state,
+              token: response.token,
+              user: response.user,
+            }),
+            updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
+          );
+          feedStore.update(setProps(
+            {feedClosingToGuildAndAllies: response.user?.feedClosingToGuildAndAllies}
+          ))
+        },
+        error: () => {
+          console.log('error');
+        },
+      }),
+      trackAuthedRequestsStatus(AUTHENTICATED_STORE_NAME),
+    );
+  }
+
+  registerAsMember(registerMemberDto: RegisterMemberDto): Observable<AuthedStateDto> {
+    return this.authService.registerAsMember(registerMemberDto).pipe(
+      tap({
+        next: (response) => {
           authenticatedStore.update(
             (state) => ({
               ...state,
