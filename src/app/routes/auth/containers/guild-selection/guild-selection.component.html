@@ -1,19 +1,17 @@
-<div class="p-3">
-  <h1 mat-dialog-title>Sélection de la guilde</h1>
-  <div class="max-h-[60vh] overflow-y-auto w-full" mat-dialog-content>
-    <div class="flex flex-wrap gap-4">
-      <app-guild-selection-card
-        (selectGuild)="onGuildSelect($event)"
-        *ngFor="let guild of data"
-        [guild]="guild"
-        [selected]="guild === selectedGuild">
-      </app-guild-selection-card>
-    </div>
-  </div>
-  <div class="flex justify-center space-x-2 p-2" mat-dialog-actions>
-    <button (click)="onNoClick()" color="warn" mat-stroked-button>Annuler</button>
-    <button [disabled]="!selectedGuild" [mat-dialog-close]="selectedGuild" cdkFocusInitial color="primary"
-            mat-raised-button>Confirmer
-    </button>
+<div class="mb-4">
+  <input
+    [formControl]="searchControl"
+    class="p-2 border rounded w-full"
+    placeholder="Rechercher une guilde..."
+    type="text"
+  />
+</div>
+<div class="flex flex-wrap gap-4 justify-center">
+  <div *ngFor="let guild of filteredGuilds" class="flex-1 min-w-[300px] max-w-[400px]">
+    <app-guild-selection-card
+      (selectGuild)="onGuildSelect($event)"
+      [guild]="guild"
+      [selected]="guild === selectedGuild"
+    />
   </div>
 </div>

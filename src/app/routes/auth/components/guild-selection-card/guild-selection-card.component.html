@@ -1,33 +1,35 @@
 <div
   (click)="onSelect()"
   [ngClass]="{ 'border-green-500': selected, 'border-gray-300': !selected }"
-  class="p-4 m-2 border rounded-lg cursor-pointer transition-colors bg-white shadow-md"
+  class="p-4 border rounded-lg cursor-pointer transition-colors bg-white shadow-md hover:shadow-lg flex flex-col justify-between"
 >
-  <div class="flex items-center mb-4">
-    <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
-      <img [src]="guild.logo" alt="{{ guild.name }} Logo" class="w-14 h-14 rounded-full">
+  <div>
+    <div class="flex items-center mb-4">
+      <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
+        <img [src]="guild.logo" alt="{{ guild.name }} Logo" class="w-14 h-14 rounded-full">
+      </div>
+      <div class="ml-4">
+        <div class="text-xl font-bold">{{ guild.name }}</div>
+        <div class="text-sm text-gray-500">{{ guild.description || 'Aucune description disponible' }}</div>
+      </div>
     </div>
-    <div class="ml-4">
-      <div class="text-xl font-bold">{{ guild.name }}</div>
-      <div class="text-sm text-gray-500">{{ guild.description || 'Aucune description disponible' }}</div>
-    </div>
-  </div>
-  <div class="grid grid-cols-2 gap-4 text-center">
-    <div>
-      <div class="text-lg font-semibold">{{ guild.level }}</div>
-      <div class="text-sm text-gray-500">Niveau de la guilde</div>
-    </div>
-    <div>
-      <div class="text-lg font-semibold">{{ guild.averageLevelOfMembers }}</div>
-      <div class="text-sm text-gray-500">Niveau moyen des membres</div>
-    </div>
-    <div>
-      <div class="text-lg font-semibold">{{ guild.nbOfMembers }}/{{ guild.capacity }}</div>
-      <div class="text-sm text-gray-500">Membres</div>
-    </div>
-    <div>
-      <div class="text-lg font-semibold">{{ guild.nbOfAllies }}</div>
-      <div class="text-sm text-gray-500">Alliés</div>
+    <div class="grid grid-cols-2 gap-4 text-center">
+      <div>
+        <div class="text-lg font-semibold">{{ guild.level }}</div>
+        <div class="text-sm text-gray-500">Niveau de la guilde</div>
+      </div>
+      <div>
+        <div class="text-lg font-semibold">{{ guild.averageLevelOfMembers }}</div>
+        <div class="text-sm text-gray-500">Niveau moyen des membres</div>
+      </div>
+      <div>
+        <div class="text-lg font-semibold">{{ guild.nbOfMembers }}/{{ guild.capacity }}</div>
+        <div class="text-sm text-gray-500">Membres</div>
+      </div>
+      <div>
+        <div class="text-lg font-semibold">{{ guild.nbOfAllies }}</div>
+        <div class="text-sm text-gray-500">Alliés</div>
+      </div>
     </div>
   </div>
   <div class="mt-4 text-center">

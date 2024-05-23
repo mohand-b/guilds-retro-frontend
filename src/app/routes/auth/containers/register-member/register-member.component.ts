@@ -9,67 +9,65 @@ import {
   Validators
 } from "@angular/forms";
 import {CharacterClassEnum, GenderEnum} from "../../../authenticated/state/authed/authed.model";
-import {MatError, MatFormField, MatFormFieldModule, MatLabel} from "@angular/material/form-field";
-import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatDialog} from "@angular/material/dialog";
+import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {NgClass, NgFor, NgIf} from "@angular/common";
-import {MatButton} from "@angular/material/button";
-import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
+import {MatSliderModule} from "@angular/material/slider";
+import {distinctUntilChanged} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
+import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
 import {GuildFacade} from "../../../guild/guild.facade";
 import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
 import {AuthFacade} from "../../auth.facade";
 import {RegisterMemberDto} from "../../state/auth/auth.model";
-import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
-import {MatSliderModule} from "@angular/material/slider";
-import {distinctUntilChanged} from "rxjs";
-import {MatIcon} from "@angular/material/icon";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
+import {CommonModule} from "@angular/common";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatSelectModule} from "@angular/material/select";
 
 @Component({
   selector: 'app-register-member',
   standalone: true,
   imports: [
     RouterOutlet,
-    MatFormField,
-    MatLabel,
-    MatError,
-    MatRadioButton,
-    MatRadioGroup,
-    MatSelect,
-    MatOption,
+    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgFor,
-    MatButton,
-    GuildSelectionCardComponent,
-    NgIf,
+    MatButtonModule,
     MatSliderModule,
-    NgClass,
-    MatIcon
+    MatIconModule,
+    MatRadioModule,
+    MatSelectModule,
+    GuildSelectionCardComponent
   ],
   templateUrl: './register-member.component.html',
-  styleUrl: './register-member.component.scss'
+  styleUrls: ['./register-member.component.scss']
 })
 export class RegisterMemberComponent implements OnInit {
-  characterClasses = Object.values(CharacterClassEnum);
-  public dialog = inject(MatDialog);
-  guilds: LightGuildDto[] = [];
-  guildSelected: LightGuildDto | null = null;
-  registerAsMemberFb: FormGroup;
-  usernameAlreadyTaken = false;
+  public characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
+  public guilds: LightGuildDto[] = [];
+  public guildSelected: LightGuildDto | null = null;
+  public registerAsMemberForm: FormGroup;
+  public usernameAlreadyTaken = false;
   public GenderEnum = GenderEnum;
+
   private guildsFacade = inject(GuildFacade);
   private fb = inject(NonNullableFormBuilder);
-  private destroyRef: DestroyRef = inject(DestroyRef);
-  private router: Router = inject(Router);
+  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
   private authFacade = inject(AuthFacade);
+  private genericModalService = inject(GenericModalService);
 
   constructor() {
-    this.registerAsMemberFb = this.fb.group({
-      username: this.fb.control<string>('', [Validators.required, Validators.minLength(4), this.usernameAlreadyTakenValidator.bind(this)]),
+    this.registerAsMemberForm = this.fb.group({
+      username: this.fb.control<string>('', [
+        Validators.required,
+        Validators.minLength(4),
+        this.usernameAlreadyTakenValidator.bind(this)
+      ]),
       password: this.fb.control<string>('', [Validators.required, Validators.minLength(4)]),
       characterClass: this.fb.control<CharacterClassEnum | null>(null, [Validators.required]),
       characterLevel: this.fb.control<number>(1, [Validators.required]),
@@ -78,55 +76,57 @@ export class RegisterMemberComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.guildsFacade.getGuildsRecruiting().pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe((guilds) => {
-      this.guilds = guilds;
-    });
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(guilds => this.guilds = guilds);
 
-    this.registerAsMemberFb.get('username')?.valueChanges.pipe(
+    this.registerAsMemberForm.get('username')?.valueChanges.pipe(
       distinctUntilChanged()
-    ).subscribe((res) => {
-      if (!res) return;
-      this.usernameAlreadyTaken = false;
-      this.registerAsMemberFb.get('username')?.updateValueAndValidity();
+    ).subscribe(() => {
+      if (this.usernameAlreadyTaken) {
+        this.usernameAlreadyTaken = false;
+        this.registerAsMemberForm.get('username')?.updateValueAndValidity();
+      }
     });
   }
 
-  usernameAlreadyTakenValidator(control: AbstractControl): ValidationErrors | null {
-    return this.usernameAlreadyTaken ? {usernameAlreadyTaken: true} : null;
+  public onOpenGuildSelection(): void {
+    this.genericModalService.open(
+      'Choisir une guilde',
+      GuildSelectionComponent,
+      {primary: 'Confirmer'},
+      'xl',
+      {guilds: this.guilds},
+      true
+    ).subscribe(selectedGuild => {
+      if (selectedGuild) {
+        this.registerAsMemberForm.patchValue({guildId: selectedGuild.id});
+        this.guildSelected = selectedGuild;
+      }
+    });
   }
 
-  onOpenGuildSelection(): void {
-    const dialogRef = this.dialog.open(GuildSelectionComponent, {
-      width: '80%',
-      data: this.guilds,
-    });
-
-    dialogRef.afterClosed().subscribe((guild: LightGuildDto) => {
-      if (!guild) return;
-      this.registerAsMemberFb.patchValue({guildId: guild.id});
-      this.guildSelected = guild;
-    });
-  }
-
-  onSubmit(): void {
-    if (this.registerAsMemberFb.invalid) return;
-    this.authFacade.registerAsMember(this.registerAsMemberFb.value as RegisterMemberDto)
+  public onSubmit(): void {
+    if (this.registerAsMemberForm.invalid) return;
+    this.authFacade.registerAsMember(this.registerAsMemberForm.value as RegisterMemberDto)
       .subscribe({
         next: () => this.router.navigate(['/']),
         error: (error) => {
           if (error.status === 409) {
             this.usernameAlreadyTaken = true;
-            this.registerAsMemberFb.get('username')?.setErrors({usernameAlreadyTaken: true});
-            this.registerAsMemberFb.get('username')?.updateValueAndValidity();
+            this.registerAsMemberForm.get('username')?.setErrors({usernameAlreadyTaken: true});
+            this.registerAsMemberForm.get('username')?.updateValueAndValidity();
           }
         },
       });
   }
 
-  selectGender(gender: GenderEnum): void {
-    this.registerAsMemberFb.patchValue({gender});
+  public selectGender(gender: GenderEnum): void {
+    this.registerAsMemberForm.patchValue({gender});
+  }
+
+  private usernameAlreadyTakenValidator(control: AbstractControl): ValidationErrors | null {
+    return this.usernameAlreadyTaken ? {usernameAlreadyTaken: true} : null;
   }
 }

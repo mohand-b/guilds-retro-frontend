@@ -2,13 +2,13 @@
   <h1 class="text-2xl font-bold mb-6 text-center">Inscription</h1>
 
   <form (ngSubmit)="onSubmit()"
-        [formGroup]="registerAsMemberFb"
+        [formGroup]="registerAsMemberForm"
         class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl grid grid-cols-2 gap-4">
 
     <div class="col-span-2 md:col-span-1">
       <mat-form-field appearance="outline" class="w-full mb-4" floatLabel="always">
         <input formControlName="username" matInput placeholder="Nom du personnage">
-        <mat-error *ngIf="registerAsMemberFb.get('username')?.hasError('usernameAlreadyTaken')">
+        <mat-error *ngIf="registerAsMemberForm.get('username')?.hasError('usernameAlreadyTaken')">
           Ce nom est déjà pris
         </mat-error>
       </mat-form-field>
@@ -31,8 +31,8 @@
           <div
             (click)="selectGender(GenderEnum.MALE)"
             [ngClass]="{
-              'text-accent': registerAsMemberFb.get('gender')?.value === 'M',
-              'text-gray-400': registerAsMemberFb.get('gender')?.value !== 'M'
+              'text-accent': registerAsMemberForm.get('gender')?.value === 'M',
+              'text-gray-400': registerAsMemberForm.get('gender')?.value !== 'M'
             }"
             class="w-12 h-12 flex items-center justify-center border-gray-400 border rounded cursor-pointer transition-colors">
             <mat-icon>male</mat-icon>
@@ -40,8 +40,8 @@
           <div
             (click)="selectGender(GenderEnum.FEMALE)"
             [ngClass]="{
-              'text-accent': registerAsMemberFb.get('gender')?.value === 'F',
-              'text-gray-400': registerAsMemberFb.get('gender')?.value !== 'F'
+              'text-accent': registerAsMemberForm.get('gender')?.value === 'F',
+              'text-gray-400': registerAsMemberForm.get('gender')?.value !== 'F'
             }"
             class="w-12 h-12 flex items-center justify-center border-gray-400 border rounded cursor-pointer transition-colors">
             <mat-icon>female</mat-icon>
@@ -86,7 +86,7 @@
         </div>
       </div>
 
-      <button [disabled]="registerAsMemberFb.invalid" class="w-full mt-3" color="primary" mat-raised-button
+      <button [disabled]="registerAsMemberForm.invalid" class="w-full mt-3" color="primary" mat-raised-button
               type="submit">
         S'inscrire
       </button>
