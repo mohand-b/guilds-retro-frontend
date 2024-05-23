@@ -26,6 +26,8 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatSelectModule} from "@angular/material/select";
+import {GuildSelectedCardComponent} from "../../components/guild-selected-card/guild-selected-card.component";
+import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-register-member',
@@ -41,7 +43,10 @@ import {MatSelectModule} from "@angular/material/select";
     MatIconModule,
     MatRadioModule,
     MatSelectModule,
-    GuildSelectionCardComponent
+    GuildSelectionCardComponent,
+    GuildSelectedCardComponent,
+    MatProgressSpinner,
+    MatProgressSpinnerModule
   ],
   templateUrl: './register-member.component.html',
   styleUrls: ['./register-member.component.scss']
@@ -53,6 +58,7 @@ export class RegisterMemberComponent implements OnInit {
   public registerAsMemberForm: FormGroup;
   public usernameAlreadyTaken = false;
   public GenderEnum = GenderEnum;
+  public loadingGuilds = true;
 
   private guildsFacade = inject(GuildFacade);
   private fb = inject(NonNullableFormBuilder);
@@ -78,8 +84,11 @@ export class RegisterMemberComponent implements OnInit {
 
   ngOnInit(): void {
     this.guildsFacade.getGuildsRecruiting().pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(guilds => this.guilds = guilds);
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(guilds => {
+      this.loadingGuilds = false;
+      this.guilds = guilds
+    });
 
     this.registerAsMemberForm.get('username')?.valueChanges.pipe(
       distinctUntilChanged()

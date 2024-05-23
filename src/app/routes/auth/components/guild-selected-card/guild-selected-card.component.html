@@ -1,0 +1,33 @@
+<div class="w-full p-4 m-2 border rounded-lg bg-white shadow-md">
+  <div class="flex items-center mb-4">
+    <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
+      <img [src]="guild.logo" alt="{{ guild.name }} Logo" class="w-14 h-14 rounded-full">
+    </div>
+    <div class="ml-4">
+      <div class="flex gap-2 items-center">
+        <div class="text-xl font-bold">{{ guild.name }}</div>
+        <div class="text-xs">Niv. {{ guild.level }}</div>
+      </div>
+      <div
+        class="text-sm text-gray-500">{{ guild.description || 'Aucune description disponible' }}</div>
+    </div>
+  </div>
+  <div class="mt-4 flex items-center gap-[2rem]">
+    <div>
+      <div class="text-sm text-gray-500">Meneur</div>
+      <div class="text-md font-semibold">{{ guild.leaderUsername }}</div>
+    </div>
+    <div>
+      <div class="text-sm text-gray-500">Membres</div>
+      <div class="text-md font-semibold">{{ guild.nbOfMembers }}/{{ guild.capacity }}</div>
+    </div>
+    <div>
+      <div class="text-sm text-gray-500">Niv. moyen</div>
+      <div class="text-md font-semibold">{{ guild.averageLevelOfMembers }}</div>
+    </div>
+    <div>
+      <div class="text-sm text-gray-500">Alliés</div>
+      <div class="text-md font-semibold">{{ guild.nbOfAllies }}</div>
+    </div>
+  </div>
+</div>
