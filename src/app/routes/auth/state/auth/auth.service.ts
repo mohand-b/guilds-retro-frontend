@@ -24,5 +24,13 @@ export class AuthService {
       registerMemberDto,
     );
   }
-  
+
+  registerAsLeader(registerLeaderFormData: FormData): Observable<AuthedStateDto> {
+    return this.http.post<AuthedStateDto>(
+      `${this.authBaseUrl}/register-leader`,
+      registerLeaderFormData,
+    );
+  }
+
+
 }

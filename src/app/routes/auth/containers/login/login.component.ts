@@ -2,11 +2,13 @@ import {Component, DestroyRef, inject} from '@angular/core';
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
-import {NonNullableFormBuilder, ReactiveFormsModule} from "@angular/forms";
+import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AuthFacade} from "../../auth.facade";
 import {Router, RouterLink} from "@angular/router";
 import {LoginDto} from "../../state/auth/auth.model";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +19,9 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
     MatLabel,
     MatButton,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    AlertComponent,
+    NgIf
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -27,8 +31,8 @@ export class LoginComponent {
   destroyRef: DestroyRef = inject(DestroyRef);
   private fb: NonNullableFormBuilder = inject(NonNullableFormBuilder);
   loginForm = this.fb.group({
-    username: [''],
-    password: ['']
+    username: this.fb.control<string>('', Validators.required),
+    password: this.fb.control<string>('', Validators.required)
   });
   private authFacade: AuthFacade = inject(AuthFacade);
   private router: Router = inject(Router);
@@ -43,6 +47,11 @@ export class LoginComponent {
       .pipe(
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(() => this.router.navigateByUrl('/'));
+      .subscribe({
+        next: () => this.router.navigate(['/dashboard']),
+        error: () => {
+          this.loginForm.setErrors({invalidCredentials: true});
+        }
+      });
   }
 }

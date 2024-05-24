@@ -1,18 +1,10 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {Router, RouterOutlet} from "@angular/router";
-import {
-  AbstractControl,
-  FormGroup,
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators
-} from "@angular/forms";
+import {FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CharacterClassEnum, GenderEnum} from "../../../authenticated/state/authed/authed.model";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatSliderModule} from "@angular/material/slider";
-import {distinctUntilChanged} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
 import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
@@ -21,13 +13,14 @@ import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
 import {AuthFacade} from "../../auth.facade";
 import {RegisterMemberDto} from "../../state/auth/auth.model";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
-import {CommonModule} from "@angular/common";
+import {CommonModule, Location} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatSelectModule} from "@angular/material/select";
 import {GuildSelectedCardComponent} from "../../components/guild-selected-card/guild-selected-card.component";
 import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 
 @Component({
   selector: 'app-register-member',
@@ -46,23 +39,25 @@ import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/pr
     GuildSelectionCardComponent,
     GuildSelectedCardComponent,
     MatProgressSpinner,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    AlertComponent
   ],
   templateUrl: './register-member.component.html',
   styleUrls: ['./register-member.component.scss']
 })
 export class RegisterMemberComponent implements OnInit {
-  public characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
   public guilds: LightGuildDto[] = [];
   public guildSelected: LightGuildDto | null = null;
   public registerAsMemberForm: FormGroup;
-  public usernameAlreadyTaken = false;
-  public GenderEnum = GenderEnum;
   public loadingGuilds = true;
+
+  protected readonly characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
+  protected readonly GenderEnum = GenderEnum;
 
   private guildsFacade = inject(GuildFacade);
   private fb = inject(NonNullableFormBuilder);
   private destroyRef = inject(DestroyRef);
+  private location: Location = inject(Location);
   private router = inject(Router);
   private authFacade = inject(AuthFacade);
   private genericModalService = inject(GenericModalService);
@@ -72,7 +67,6 @@ export class RegisterMemberComponent implements OnInit {
       username: this.fb.control<string>('', [
         Validators.required,
         Validators.minLength(4),
-        this.usernameAlreadyTakenValidator.bind(this)
       ]),
       password: this.fb.control<string>('', [Validators.required, Validators.minLength(4)]),
       characterClass: this.fb.control<CharacterClassEnum | null>(null, [Validators.required]),
@@ -88,15 +82,6 @@ export class RegisterMemberComponent implements OnInit {
     ).subscribe(guilds => {
       this.loadingGuilds = false;
       this.guilds = guilds
-    });
-
-    this.registerAsMemberForm.get('username')?.valueChanges.pipe(
-      distinctUntilChanged()
-    ).subscribe(() => {
-      if (this.usernameAlreadyTaken) {
-        this.usernameAlreadyTaken = false;
-        this.registerAsMemberForm.get('username')?.updateValueAndValidity();
-      }
     });
   }
 
@@ -123,9 +108,7 @@ export class RegisterMemberComponent implements OnInit {
         next: () => this.router.navigate(['/']),
         error: (error) => {
           if (error.status === 409) {
-            this.usernameAlreadyTaken = true;
             this.registerAsMemberForm.get('username')?.setErrors({usernameAlreadyTaken: true});
-            this.registerAsMemberForm.get('username')?.updateValueAndValidity();
           }
         },
       });
@@ -135,7 +118,7 @@ export class RegisterMemberComponent implements OnInit {
     this.registerAsMemberForm.patchValue({gender});
   }
 
-  private usernameAlreadyTakenValidator(control: AbstractControl): ValidationErrors | null {
-    return this.usernameAlreadyTaken ? {usernameAlreadyTaken: true} : null;
+  goBack() {
+    this.location.back();
   }
 }

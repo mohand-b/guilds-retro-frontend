@@ -1,4 +1,8 @@
 <div class="flex flex-col items-center justify-center min-h-screen p-4">
+  <button (click)="goBack()" class="absolute top-4 left-4 text-gray-600 hover:text-gray-800">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <div [routerLink]="['/auth/register/member']"
          class="cursor-pointer p-8 bg-white shadow-md rounded-lg flex flex-col items-center justify-center transition-transform transform hover:scale-105">

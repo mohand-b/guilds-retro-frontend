@@ -13,3 +13,14 @@ export interface RegisterMemberDto {
   gender: GenderEnum;
   guildId: number;
 }
+
+export interface RegisterLeaderDto {
+  username: string;
+  password: string;
+  characterClass: CharacterClassEnum;
+  characterLevel: number;
+  gender: GenderEnum;
+  guildName: string;
+  description?: string;
+  logo?: any;
+}

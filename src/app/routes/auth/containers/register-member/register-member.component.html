@@ -1,23 +1,34 @@
 <div class="flex flex-col items-center justify-center min-h-screen p-4">
-  <h1 class="text-2xl font-bold mb-6 text-center">Inscription</h1>
-
+  <button (click)="goBack()" class="absolute top-4 left-4 text-gray-600 hover:text-gray-800">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  
   <form (ngSubmit)="onSubmit()"
         [formGroup]="registerAsMemberForm"
-        class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl grid grid-cols-2 gap-4">
+        class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl grid grid-cols-2 gap-[1.5rem]">
 
-    <div class="col-span-2 md:col-span-1">
-      <mat-form-field appearance="outline" class="w-full mb-4" floatLabel="always">
+    <h1 class="col-span-2 text-2xl font-bold">Inscription pour rejoindre une guilde</h1>
+
+    <div class="col-span-2 flex flex-col gap-2">
+      <app-alert *ngIf="registerAsMemberForm.get('username')?.hasError('usernameAlreadyTaken')"
+                 class="col-span-2"
+                 message="Ce nom de personnage est déjà pris."
+                 type="error"/>
+    </div>
+
+    <div class="col-span-2 md:col-span-1 flex flex-col gap-4">
+
+      <h3 class="text-lg">Informations du personnage</h3>
+
+      <mat-form-field appearance="outline" class="w-full">
         <input formControlName="username" matInput placeholder="Nom du personnage">
-        <mat-error *ngIf="registerAsMemberForm.get('username')?.hasError('usernameAlreadyTaken')">
-          Ce nom est déjà pris
-        </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-full mb-4">
+      <mat-form-field appearance="outline" class="w-full">
         <input formControlName="password" matInput placeholder="Choisir un mot de passe" type="password">
       </mat-form-field>
 
-      <div class="flex gap-4 mb-4 items-center">
+      <div class="flex gap-4 items-center">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Classe</mat-label>
           <mat-select formControlName="characterClass">
@@ -49,34 +60,39 @@
         </div>
       </div>
 
-      <div class="w-full flex gap-3">
-        <label>Niveau du personnage</label>
-        <label class="font-bold">{{ level.value }}</label>
+      <div class="flex flex-col">
+        <div class="w-full flex gap-3">
+          <label>Niveau du personnage</label>
+          <label class="font-bold">{{ level.value }}</label>
+        </div>
+
+        <div class="pr-5">
+          <mat-slider color="accent" max="200" min="1" showTickMark step="1">
+            <input #level class="w-full" formControlName="characterLevel" matSliderThumb>
+          </mat-slider>
+        </div>
       </div>
 
-      <div class="pr-5">
-        <mat-slider color="accent" max="200" min="1" showTickMark step="1">
-          <input #level class="w-full" formControlName="characterLevel" matSliderThumb>
-        </mat-slider>
-      </div>
     </div>
 
-    <div class="col-span-2 md:col-span-1 flex flex-col justify-between">
-      <div class="flex flex-col items-start gap-2">
-        <button (click)="onOpenGuildSelection()" [disabled]="loadingGuilds"
-                class="mb-4 w-full text-white flex items-center justify-center gap-2"
-                color="accent" mat-raised-button type="button">
-          <mat-spinner *ngIf="loadingGuilds" diameter="20"></mat-spinner>
-          <span *ngIf="!loadingGuilds">Choisir une guilde</span>
-        </button>
+    <div class="col-span-2 md:col-span-1 flex flex-col gap-4">
 
-        <app-guild-selected-card *ngIf="guildSelected" [guild]="guildSelected" class="w-full"/>
-      </div>
+      <h3 class="text-lg">Sélection de la guilde</h3>
 
-      <button [disabled]="registerAsMemberForm.invalid" class="w-full mt-3" color="primary" mat-raised-button
-              type="submit">
-        S'inscrire
+      <button (click)="onOpenGuildSelection()" [disabled]="loadingGuilds"
+              class="mb-4 w-full text-white flex items-center justify-center gap-2"
+              color="accent" mat-raised-button type="button">
+        <mat-spinner *ngIf="loadingGuilds" diameter="20"></mat-spinner>
+        <span *ngIf="!loadingGuilds">Choisir une guilde</span>
       </button>
+
+      <app-guild-selected-card *ngIf="guildSelected" [guild]="guildSelected" class="w-full"/>
     </div>
+
+    <button [disabled]="registerAsMemberForm.invalid" class="col-span-2 w-full" color="primary"
+            mat-raised-button
+            type="submit">
+      S'inscrire
+    </button>
   </form>
 </div>

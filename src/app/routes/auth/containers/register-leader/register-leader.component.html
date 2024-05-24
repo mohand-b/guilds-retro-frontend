@@ -1,1 +1,144 @@
-<p>register-leader works!</p>
+<div class="flex flex-col items-center justify-center min-h-screen p-4">
+  <button (click)="goBack()" class="absolute top-4 left-4 text-gray-600 hover:text-gray-800">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <form (ngSubmit)="onSubmit()"
+        [formGroup]="registerAsLeaderForm"
+        class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl grid grid-cols-2 gap-[1.5rem]">
+
+    <h1 class="col-span-2 text-2xl font-bold">Inscription en tant que meneur de guilde</h1>
+
+    <div class="col-span-2 flex flex-col gap-2">
+      <app-alert class="col-span-2"
+                 message="Pour vous inscrire en tant que meneur de guilde, vous devez disposer d'un code d'autorisation
+               fourni par un administrateur du site. Joignable via Discord (&#64;mohandb) ou in-game (amawtis)."/>
+
+      <app-alert *ngIf="validateGuildCodeControl.hasError('invalidGuildCode')"
+                 class="col-span-2"
+                 message="Le code d'autorisation est invalide ou a expiré."
+                 type="error"/>
+
+      <app-alert *ngIf="registerAsLeaderForm.get('username')?.hasError('usernameAlreadyTaken')"
+                 class="col-span-2"
+                 message="Ce nom de personnage est déjà pris."
+                 type="error"/>
+    </div>
+
+    <div class="col-span-2 md:col-span-1 flex flex-col gap-4">
+      <h3 class="text-lg">Informations du personnage</h3>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <input formControlName="username" matInput placeholder="Nom du personnage">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <input formControlName="password" matInput placeholder="Choisir un mot de passe" type="password">
+      </mat-form-field>
+
+      <div class="flex gap-4 items-center">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Classe</mat-label>
+          <mat-select formControlName="characterClass">
+            <mat-option *ngFor="let charClass of characterClasses" [value]="charClass">
+              {{ charClass }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="flex items-center gap-2 h-full">
+          <div
+            (click)="selectGender(GenderEnum.MALE)"
+            [ngClass]="{
+              'text-accent': registerAsLeaderForm.get('gender')?.value === 'M',
+              'text-gray-400': registerAsLeaderForm.get('gender')?.value !== 'M'
+            }"
+            class="w-12 h-12 flex items-center justify-center border-gray-400 border rounded cursor-pointer transition-colors">
+            <mat-icon>male</mat-icon>
+          </div>
+          <div
+            (click)="selectGender(GenderEnum.FEMALE)"
+            [ngClass]="{
+              'text-accent': registerAsLeaderForm.get('gender')?.value === 'F',
+              'text-gray-400': registerAsLeaderForm.get('gender')?.value !== 'F'
+            }"
+            class="w-12 h-12 flex items-center justify-center border-gray-400 border rounded cursor-pointer transition-colors">
+            <mat-icon>female</mat-icon>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="w-full flex gap-3">
+          <label>Niveau du personnage</label>
+          <label class="font-bold">{{ characterLevel.value }}</label>
+        </div>
+
+        <div class="pr-5">
+          <mat-slider color="accent" max="200" min="1" showTickMark step="1">
+            <input #characterLevel class="w-full" formControlName="characterLevel" matSliderThumb>
+          </mat-slider>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-span-2 md:col-span-1 flex flex-col gap-4">
+      <h3 class="text-lg">Informations de la guilde</h3>
+
+      <div class="flex items-center w-full">
+        <mat-form-field appearance="outline" class="flex-1 flex-grow w-full">
+          <input [formControl]="validateGuildCodeControl" matInput placeholder="Code d'autorisation">
+        </mat-form-field>
+        <button (click)="validateGuildCode()" class="ml-2" color="accent" mat-raised-button type="button">
+          Valider
+        </button>
+      </div>
+
+      <div class="flex items-center">
+        <input #importInput (change)="onImportLogo($event)" accept=".png, .jpg" hidden type="file">
+        <div (click)="importInput.click()"
+             class="flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 cursor-pointer overflow-hidden">
+          <ng-container *ngIf="logoPreview; else noLogo">
+            <img [src]="logoPreview" alt="Aperçu du logo de guilde" class="w-full h-full object-cover">
+          </ng-container>
+          <ng-template #noLogo>
+            <div class="flex flex-col items-center text-gray-500">
+              <mat-icon>photo_camera</mat-icon>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="ml-4">
+          <div *ngIf="registerAsLeaderForm.get('guildName')?.value; else noGuildName" class="font-bold text-lg">
+            {{ registerAsLeaderForm.get('guildName')?.value }}
+          </div>
+          <ng-template #noGuildName>
+            <div class="text-gray-500 text-xs border border-gray-300 border-dotted rounded p-2">
+              Renseigner un code d'autorisation ci-dessus
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="w-full flex gap-3">
+          <label>Niveau de la guilde</label>
+          <label class="font-bold">{{ guildLevel.value }}</label>
+        </div>
+
+        <div class="pr-5">
+          <mat-slider color="accent" max="200" min="1" showTickMark step="1">
+            <input #guildLevel class="w-full" formControlName="level" matSliderThumb>
+          </mat-slider>
+        </div>
+      </div>
+
+    </div>
+
+    <button [disabled]="registerAsLeaderForm.invalid" class="col-span-2 w-full" color="primary" mat-raised-button
+            type="submit">
+      S'inscrire
+    </button>
+
+  </form>
+</div>

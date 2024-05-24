@@ -8,7 +8,6 @@ import {Observable} from "rxjs";
 export class GuildsService {
 
   private http = inject(HttpClient);
-
   private readonly guildsBaseUrl = `${environment.apiUrl}/guilds`;
 
   getCurrentGuild(): Observable<GuildDto> {
@@ -20,6 +19,12 @@ export class GuildsService {
   getGuildsRecruiting(): Observable<LightGuildDto[]> {
     return this.http.get<LightGuildDto[]>(
       `${this.guildsBaseUrl}/recruiting`,
+    );
+  }
+
+  validateGuildCode(code: string): Observable<{ guildName: string }> {
+    return this.http.get<{ guildName: string }>(
+      `${this.guildsBaseUrl}/validate-guild-code?code=${code}`,
     );
   }
 }

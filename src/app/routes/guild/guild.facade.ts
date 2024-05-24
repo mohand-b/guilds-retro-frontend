@@ -105,4 +105,8 @@ export class GuildFacade {
   getGuildsRecruiting(): Observable<LightGuildDto[]> {
     return this.guildsService.getGuildsRecruiting();
   }
+
+  validateGuildCode(code: string): Observable<{ guildName: string }> {
+    return this.guildsService.validateGuildCode(code);
+  }
 }
