@@ -1,14 +1,15 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, Signal} from '@angular/core';
 import {AuthenticatedFacade} from "../../../routes/authenticated/authenticated.facade";
 import {NgIf} from "@angular/common";
-import {GuildDto} from "../../../routes/guild/state/guilds/guild.model";
 import {UserDto} from "../../../routes/authenticated/state/authed/authed.model";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    MatIcon
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -16,9 +17,8 @@ import {UserDto} from "../../../routes/authenticated/state/authed/authed.model";
 export class HeaderComponent {
 
   private authenticatedFacade = inject(AuthenticatedFacade);
-
-  readonly user: Omit<UserDto, 'guild'> = this.authenticatedFacade.getCurrentUser()!;
-  readonly guild: Pick<GuildDto, "id" | "name" | "description" | "logo"> = this.authenticatedFacade.getGuild()!;
+  
+  readonly user: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$!;
 
   logout() {
     this.authenticatedFacade.logout();

@@ -1,20 +1,21 @@
-<header class="header-bg relative flex items-center justify-center shadow-lg overflow-hidden">
-  <h1 class="text-white text-4xl font-bold shadow-md px-5 py-3 bg-black bg-opacity-60 rounded-full">
-    Guilds Retro
-  </h1>
-  <div class="absolute bottom-0 left-0 m-4 p-3 bg-black bg-opacity-60 rounded-lg shadow">
-    <div class="text-white text-xl font-bold">
-      <span>{{ user.username }}</span> |
-      <span class="text-sm font-medium">{{ user.characterClass }}</span> |
-      <span class="text-sm font-medium">{{ user.role }}</span>
-    </div>
-    <div *ngIf="guild" class="text-white text-md mt-1">
-      <i class="fas fa-users"></i> Guilde: <span class="font-semibold">{{ guild.name }}</span>
+<header class="header-bg relative flex items-center justify-between p-4 shadow-lg overflow-hidden">
+  <div class="absolute left-4 flex items-center space-x-4 bg-black bg-opacity-60 rounded-lg shadow p-4">
+    <div class="text-white">
+      <div class="text-xl font-bold">
+        {{ user()!.username }}, <span class="text-sm font-light">{{ user()!.characterClass }}</span>
+      </div>
+      <div *ngIf="user()!.guild" class="text-md mt-1 flex items-center space-x-2">
+        <mat-icon>groups</mat-icon>
+        <span class="font-semibold">{{ user()!.guild.name }}</span>
+      </div>
+      <div class="font-medium">{{ user()!.role }}</div>
     </div>
   </div>
-  <button (click)="logout()"
-          class="absolute bottom-0 right-0 m-4 p-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded shadow"
-          mat-raised-button>
-    Déconnexion
+
+  <img alt="logo" class="w-[10rem] select-none pointer-events-none mx-auto" src="assets/logo.gif">
+
+  <button (click)="logout()" class="absolute bottom-4 right-4 text-white" color="warn"
+          mat-icon-button>
+    <mat-icon>exit_to_app</mat-icon>
   </button>
 </header>

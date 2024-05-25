@@ -6,7 +6,8 @@ import {GuildDto, GuildState, LightGuildDto} from "./state/guilds/guild.model";
 import {Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {MembershipRequestsService} from "./state/membership-requests/membership-requests.service";
-import {MembershipRequestDto} from "./state/membership-requests/membership-request.request";
+import {MembershipRequestDto} from "./state/membership-requests/membership-request.model";
+import {authenticatedStore} from "../authenticated/authenticated.facade";
 
 export const GUILD_STORE_NAME = 'guild';
 
@@ -108,5 +109,35 @@ export class GuildFacade {
 
   validateGuildCode(code: string): Observable<{ guildName: string }> {
     return this.guildsService.validateGuildCode(code);
+  }
+
+  createMembershipRequest(userId: number, guildId: number): Observable<MembershipRequestDto> {
+    return this.membershipsRequestService.createMembershipRequest(userId, guildId).pipe(
+      tap({
+        next: (request: MembershipRequestDto) => {
+          authenticatedStore.update(
+            (state) => ({
+              ...state,
+              requests: [...state.requests, request],
+            }),
+          );
+        },
+        error: (error) => console.error(error),
+      }),
+    );
+  }
+
+  getMembershipRequestsForCurrentUser(): Observable<MembershipRequestDto[]> {
+    return this.membershipsRequestService.getMembershipRequestsForCurrentUser().pipe(
+      tap({
+        next: (requests: MembershipRequestDto[]) => authenticatedStore.update(
+          (state) => ({
+            ...state,
+            requests,
+          }),
+        ),
+        error: (error) => console.error(error),
+      }),
+    );
   }
 }

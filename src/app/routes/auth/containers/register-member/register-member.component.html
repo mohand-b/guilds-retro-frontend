@@ -2,7 +2,10 @@
   <button (click)="goBack()" class="absolute top-4 left-4 text-gray-600 hover:text-gray-800">
     <mat-icon>arrow_back</mat-icon>
   </button>
-  
+
+  <img alt="logo" class="w-[5rem] select-none pointer-events-none mb-10 absolute top-4 right-4 "
+       src="assets/light-logo.gif">
+
   <form (ngSubmit)="onSubmit()"
         [formGroup]="registerAsMemberForm"
         class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl grid grid-cols-2 gap-[1.5rem]">

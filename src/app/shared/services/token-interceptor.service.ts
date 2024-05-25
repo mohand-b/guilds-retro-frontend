@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, Signal} from '@angular/core';
 import {
   HTTP_INTERCEPTORS,
   HttpErrorResponse,
@@ -11,24 +11,22 @@ import {
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthenticatedFacade} from "../../routes/authenticated/authenticated.facade";
-import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenInterceptorService implements HttpInterceptor {
   private authenticatedFacade = inject(AuthenticatedFacade);
-  private router = inject(Router);
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
-    const state = this.authenticatedFacade.getState();
+    const token: Signal<string | undefined> = this.authenticatedFacade.token$;
 
-    if (state && state.token && !request.headers.has('Authorization')) {
+    if (token() && !request.headers.has('Authorization')) {
       let headers = new HttpHeaders();
-      headers = headers.set('Authorization', `Bearer ${state.token}`);
+      headers = headers.set('Authorization', `Bearer ${token()}`);
       request = request.clone({headers});
     }
 
@@ -52,4 +50,3 @@ export const TokenInterceptorProvider = {
   useClass: TokenInterceptorService,
   multi: true,
 };
-

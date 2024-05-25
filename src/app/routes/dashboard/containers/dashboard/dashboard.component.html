@@ -1,1 +1,2 @@
-<app-feed *ngIf="currentUser.role !== 'Candidat'" [currentUser]="currentUser"/>
+<app-feed *ngIf="currentUser()!.role !== UserRoleEnum.CANDIDATE" [currentUser]="currentUser()!"/>
+<app-user-membership-requests *ngIf="currentUser()!.role === UserRoleEnum.CANDIDATE"/>

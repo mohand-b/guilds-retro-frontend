@@ -1,4 +1,6 @@
-<div class="flex h-screen justify-center items-center">
+<div class="flex flex-col h-screen justify-center items-center">
+
+  <img alt="logo" class="w-[13rem] select-none pointer-events-none mb-10" src="assets/light-logo.gif">
 
   <form (ngSubmit)="login()" [formGroup]="loginForm"
         class="flex flex-col gap-[1.5rem] bg-white p-12 rounded-lg shadow-lg w-full max-w-md">
@@ -23,5 +25,5 @@
       <a [routerLink]="['/auth/register']" class="text-accent underline">S'enregistrer</a>
     </div>
   </form>
-
+  
 </div>

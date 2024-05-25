@@ -1,8 +1,8 @@
-<div [ngClass]="classes" class="flex items-center p-4 rounded-lg gap-4">
+<div [ngClass]="[bgClass, 'flex', 'items-center', 'p-4', 'rounded-lg', 'gap-4']">
   <div>
-    <mat-icon [ngClass]="classes">{{ icon }}</mat-icon>
+    <mat-icon [ngClass]="textClass">{{ icon }}</mat-icon>
   </div>
-  <div [ngClass]="classes" class="text-sm">
+  <div [ngClass]="['text-sm', textClass]">
     {{ message }}
   </div>
 </div>

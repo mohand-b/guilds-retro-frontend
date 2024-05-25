@@ -1,5 +1,5 @@
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
-import {MembershipRequestDto} from "../membership-requests/membership-request.request";
+import {MembershipRequestDto} from "../membership-requests/membership-request.model";
 
 export interface GuildDto {
   id?: number;

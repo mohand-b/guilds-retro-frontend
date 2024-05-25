@@ -1,5 +1,5 @@
 import {ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
-import {inject} from "@angular/core";
+import {inject, Signal} from "@angular/core";
 import {roleHierarchy, UserDto, UserRoleEnum} from "../state/authed/authed.model";
 import {AuthenticatedFacade} from "../authenticated.facade";
 
@@ -8,9 +8,9 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   const router: Router = inject(Router);
 
   const requiredRole: UserRoleEnum = route.data['role'];
-  const user: UserDto = authenticatedFacade.getCurrentUser()!;
+  const user: Signal<UserDto | undefined> = authenticatedFacade.currentUser$;
 
-  if (!user || !hasRequiredRole(user.role, requiredRole)) {
+  if (!user || !hasRequiredRole(user()!.role, requiredRole)) {
     return router.parseUrl('/dashboard');
   }
 

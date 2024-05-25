@@ -1,0 +1,120 @@
+import {Component, computed, DestroyRef, effect, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
+import {UserDto} from "../../../authenticated/state/authed/authed.model";
+import {
+  MembershipRequestDto,
+  RequestStatusEnum
+} from "../../../guild/state/membership-requests/membership-request.model";
+import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {CommonModule, DatePipe} from "@angular/common";
+import {MatButton} from "@angular/material/button";
+import {MatIcon} from "@angular/material/icon";
+import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
+import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
+import {GuildFacade} from "../../../guild/guild.facade";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {interval, map, Observable, switchMap, takeUntil, timer} from "rxjs";
+import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
+import {
+  UserMembershipRequestComponent
+} from "../../components/user-membership-request/user-membership-request.component";
+import {MatProgressBar} from "@angular/material/progress-bar";
+
+@Component({
+  selector: 'app-user-membership-requests',
+  standalone: true,
+  imports: [
+    AlertComponent,
+    CommonModule,
+    DatePipe,
+    MatButton,
+    MatIcon,
+    UserMembershipRequestComponent,
+    MatProgressBar,
+  ],
+  templateUrl: './user-membership-requests.component.html',
+  styleUrl: './user-membership-requests.component.scss'
+})
+export class UserMembershipRequestsComponent implements OnInit {
+  public guilds: LightGuildDto[] = [];
+  public selectedGuild: WritableSignal<LightGuildDto | undefined> = signal(undefined);
+  public progressValue = 0;
+  public bufferValue = 0;
+  protected readonly pendingRequestsCount: Signal<number> = computed(() => {
+    return this.requests$().filter(request => request.status === RequestStatusEnum.PENDING).length;
+  });
+  protected readonly rejectedRequestsCount: Signal<number> = computed(() => {
+    return this.requests$().filter(request => request.status === RequestStatusEnum.REJECTED).length;
+  });
+  protected readonly approvedRequest: Signal<MembershipRequestDto | undefined> = computed(() => {
+    return this.requests$().find(request => request.status === RequestStatusEnum.APPROVED);
+  });
+  protected readonly disableNewRequestButton: Signal<boolean> = computed(() => {
+    return this.pendingRequestsCount() > 2 || this.rejectedRequestsCount() > 4 || !!this.approvedRequest();
+  });
+  private readonly authenticatedFacade = inject(AuthenticatedFacade);
+  public readonly currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
+  public readonly requests$: Signal<MembershipRequestDto[]> = this.authenticatedFacade.requests$;
+  protected readonly guildAccepted = effect(() => {
+    if (this.approvedRequest()) {
+      const progressInterval: Observable<number> = interval(95).pipe(
+        takeUntil(timer(9500))
+      );
+
+      progressInterval.subscribe(() => {
+        this.progressValue += 1.11;
+        this.bufferValue = this.progressValue;
+      });
+
+      timer(10000).pipe(
+        switchMap(() => this.authenticatedFacade.refreshUser())
+      ).subscribe();
+    }
+  });
+
+  private readonly guildFacade = inject(GuildFacade);
+  protected readonly guildSelected = effect(() => {
+    if (!this.selectedGuild()) return;
+    this.guildFacade.createMembershipRequest(this.currentUser()!.id, this.selectedGuild()!.id)
+      .subscribe(() => this.selectedGuild.set(undefined));
+  });
+  private readonly genericModalService = inject(GenericModalService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  public get guildsFiltered(): LightGuildDto[] {
+    return this.guilds.filter(guild => !this.hasRequestForGuild(guild.id));
+  }
+
+  ngOnInit(): void {
+    this.guildFacade.getMembershipRequestsForCurrentUser().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe();
+
+    this.guildFacade.getGuildsRecruiting().pipe(
+      takeUntilDestroyed(this.destroyRef),
+      map(guilds => guilds.filter(guild => !this.hasRequestForGuild(guild.id)))
+    ).subscribe(guilds => {
+      this.guilds = guilds;
+    });
+  }
+
+  public onOpenGuildSelection(): void {
+    this.genericModalService.open(
+      'Choisir une guilde',
+      GuildSelectionComponent,
+      {primary: 'Confirmer'},
+      'xl',
+      {guilds: this.guildsFiltered},
+      true
+    ).subscribe(selectedGuild => {
+      if (selectedGuild) {
+        this.selectedGuild.set(selectedGuild);
+      }
+    });
+  }
+
+  private hasRequestForGuild(guildId: number): boolean {
+    return this.requests$().filter(request => request.status === RequestStatusEnum.PENDING)
+      .some(request => request.guild.id === guildId);
+  }
+}

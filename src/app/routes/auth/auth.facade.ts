@@ -17,7 +17,6 @@ export class AuthFacade {
 
   private authService = inject(AuthService);
 
-
   login(loginDto: LoginDto): Observable<AuthedStateDto> {
     return this.authService.login(loginDto).pipe(
       tap({

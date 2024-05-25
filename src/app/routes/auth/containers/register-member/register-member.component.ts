@@ -54,7 +54,7 @@ export class RegisterMemberComponent implements OnInit {
   protected readonly characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
   protected readonly GenderEnum = GenderEnum;
 
-  private guildsFacade = inject(GuildFacade);
+  private guildFacade = inject(GuildFacade);
   private fb = inject(NonNullableFormBuilder);
   private destroyRef = inject(DestroyRef);
   private location: Location = inject(Location);
@@ -77,7 +77,7 @@ export class RegisterMemberComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.guildsFacade.getGuildsRecruiting().pipe(
+    this.guildFacade.getGuildsRecruiting().pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(guilds => {
       this.loadingGuilds = false;

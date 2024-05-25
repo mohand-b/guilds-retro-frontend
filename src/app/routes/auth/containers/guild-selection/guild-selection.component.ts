@@ -1,11 +1,12 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
 import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogClose} from "@angular/material/dialog";
 import {debounceTime, distinctUntilChanged, filter, startWith, Subject} from "rxjs";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
+import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 
 @Component({
   selector: 'app-guild-selection',
@@ -15,7 +16,9 @@ import {FormControl, ReactiveFormsModule} from "@angular/forms";
     NgForOf,
     MatButton,
     MatDialogClose,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf,
+    AlertComponent
   ],
   templateUrl: './guild-selection.component.html',
   styleUrls: ['./guild-selection.component.scss']

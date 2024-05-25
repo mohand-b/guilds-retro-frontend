@@ -1,7 +1,7 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
-import {MembershipRequestDto} from "./membership-request.request";
+import {MembershipRequestDto} from "./membership-request.model";
 import {Observable} from "rxjs";
 
 @Injectable({providedIn: 'root'})
@@ -28,6 +28,19 @@ export class MembershipRequestsService {
     return this.http.post<void>(
       `${this.membershipRequestsBaseUrl}/${requestId}/reject`,
       {},
+    );
+  }
+
+  createMembershipRequest(userId: number, guildId: number): Observable<MembershipRequestDto> {
+    return this.http.post<MembershipRequestDto>(
+      this.membershipRequestsBaseUrl,
+      {userId, guildId},
+    );
+  }
+
+  getMembershipRequestsForCurrentUser(): Observable<MembershipRequestDto[]> {
+    return this.http.get<MembershipRequestDto[]>(
+      `${this.membershipRequestsBaseUrl}/me`,
     );
   }
 

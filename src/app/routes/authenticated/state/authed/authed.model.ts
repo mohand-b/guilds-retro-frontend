@@ -1,6 +1,10 @@
+import {GuildDto} from "../../../guild/state/guilds/guild.model";
+import {MembershipRequestDto} from "../../../guild/state/membership-requests/membership-request.model";
+
 export interface AuthedStateDto {
   user: UserDto | undefined;
   token: string | undefined;
+  requests: MembershipRequestDto[];
 }
 
 export interface UserDto {
@@ -54,19 +58,3 @@ export const roleHierarchy: RoleHierarchy = {
   [UserRoleEnum.LEADER]: [UserRoleEnum.OFFICER, UserRoleEnum.MEMBER, UserRoleEnum.CANDIDATE],
 };
 
-export interface GuildDto {
-  id: number;
-  name: string;
-  description: string;
-  members: UserDto[];
-  allianceRequests: AllianceDto[];
-  receivedRequests: AllianceDto[];
-  allies: GuildDto[];
-}
-
-export interface AllianceDto {
-  id: number;
-  requesterGuild: GuildDto;
-  targetGuild: GuildDto;
-  status: string;
-}

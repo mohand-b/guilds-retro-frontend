@@ -1,0 +1,21 @@
+<div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
+  <div class="flex items-center gap-2">
+    <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
+      <img [src]="request.guild.logo" alt="{{ request.guild.name }} Logo" class="w-14 h-14 rounded-full">
+    </div>
+    <div>
+      <div class="text-xl font-bold">{{ request.guild.name }}</div>
+      <div><span class="underline">Meneur</span> : <span>{{ request.guild.leaderUsername}}</span></div>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2 items-end">
+    <div class="flex items-center gap-2">
+      <mat-icon [ngClass]="getStatusClass()">{{ getStatusIcon() }}</mat-icon>
+      <div [ngClass]="getStatusClass()">{{ request.status }}</div>
+    </div>
+    <div class="text-xs text-gray-500">
+      Dernière mise à jour le {{ request.updatedAt | date: 'dd/MM/yyyy à HH:mm' }}
+    </div>
+  </div>
+</div>

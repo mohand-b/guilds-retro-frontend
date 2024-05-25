@@ -6,7 +6,10 @@
     type="text"
   />
 </div>
-<div class="flex flex-wrap gap-4 justify-center">
+<div *ngIf="filteredGuilds.length === 0" class="text-center">
+  <app-alert message="Aucune guilde trouvée." type="info"/>
+</div>
+<div *ngIf="filteredGuilds.length > 0" class="flex flex-wrap gap-4 justify-center">
   <div *ngFor="let guild of filteredGuilds" class="flex-1 min-w-[300px] max-w-[400px]">
     <app-guild-selection-card
       (selectGuild)="onGuildSelect($event)"
