@@ -1,4 +1,4 @@
-<mat-toolbar class="flex justify-center" color="primary">
+<mat-toolbar class="flex justify-center custom-shadow" color="primary">
   <mat-toolbar-row class="w-full justify-evenly">
     <button class="mx-4" mat-button routerLink="/dashboard">Accueil</button>
     <button *ngIf="hasRequiredRole(currentUser()!.role, UserRoleEnum.MEMBER)" class="mx-4" mat-button
