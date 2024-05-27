@@ -12,10 +12,11 @@ export class GenericModalService {
 
   open(
     title: string,
-    childComponent: any,
     button: { primary?: string, warn?: string },
     size: 'xs' | 'sm' | 'md' | 'xl',
     data: any,
+    contentComponent?: any,
+    contentText?: string,
     disableButtonUntilConditionMet: boolean = false,
   ) {
     const sizeMap = {
@@ -32,7 +33,6 @@ export class GenericModalService {
       width: sizeMap[size] || sizeMap.md,
       data: {
         title,
-        childComponent,
         buttonText,
         buttonColor,
         injector: Injector.create({
@@ -41,6 +41,8 @@ export class GenericModalService {
           ],
           parent: this.injector,
         }),
+        contentComponent,
+        contentText,
         disableButtonUntilConditionMet,
       },
       autoFocus: false,

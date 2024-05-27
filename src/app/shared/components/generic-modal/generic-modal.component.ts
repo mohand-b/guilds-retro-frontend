@@ -30,21 +30,23 @@ export class GenericModalComponent implements AfterViewInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   ngAfterViewInit(): void {
-    this.container.clear();
-    const componentRef = this.container.createComponent(this.data.childComponent, {
-      injector: this.data.injector,
-    });
-    this.childComponentRef = componentRef.instance;
+    if (this.data.contentComponent) {
+      this.container.clear();
+      const componentRef = this.container.createComponent(this.data.contentComponent, {
+        injector: this.data.injector,
+      });
+      this.childComponentRef = componentRef.instance;
 
-    if (this.data.disableButtonUntilConditionMet) {
-      if (this.childComponentRef.conditionMet$) {
-        this.childComponentRef.conditionMet$.subscribe(() => {
-          this.buttonDisabled = false;
-          this.cdr.detectChanges();
-        });
+      if (this.data.disableButtonUntilConditionMet) {
+        if (this.childComponentRef.conditionMet$) {
+          this.childComponentRef.conditionMet$.subscribe(() => {
+            this.buttonDisabled = false;
+            this.cdr.detectChanges();
+          });
+        }
       }
+      this.cdr.detectChanges();
     }
-    this.cdr.detectChanges();
   }
 
   onCancel(): void {
@@ -56,7 +58,7 @@ export class GenericModalComponent implements AfterViewInit {
       const returnValue = this.childComponentRef.getData();
       this.dialogRef.close(returnValue);
     } else {
-      this.dialogRef.close();
+      this.dialogRef.close('OK');
     }
   }
 }

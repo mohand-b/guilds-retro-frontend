@@ -101,10 +101,11 @@ export class UserMembershipRequestsComponent implements OnInit {
   public onOpenGuildSelection(): void {
     this.genericModalService.open(
       'Choisir une guilde',
-      GuildSelectionComponent,
       {primary: 'Confirmer'},
       'xl',
       {guilds: this.guildsFiltered},
+      GuildSelectionComponent,
+      undefined,
       true
     ).subscribe(selectedGuild => {
       if (selectedGuild) {

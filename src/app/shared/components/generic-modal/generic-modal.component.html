@@ -1,10 +1,11 @@
 <div class="p-4">
   <h2 class="text-2xl font-bold mb-4">{{ data.title }}</h2>
   <div class="max-h-[60vh] overflow-y-auto p-2">
-    <ng-template #dynamicComponentContainer></ng-template>
+    <ng-template #dynamicComponentContainer *ngIf="data.contentComponent"></ng-template>
+    <div *ngIf="data.contentText as text" class="text-sm">{{ text }}</div>
   </div>
   <div class="flex justify-end gap-2 mt-4">
-    <button (click)="onCancel()" color="warn" mat-stroked-button>Cancel</button>
+    <button (click)="onCancel()" color="warn" mat-stroked-button>Annuler</button>
     <button (click)="onAction()" [color]="data.buttonColor" [disabled]="buttonDisabled"
             mat-raised-button>{{ data.buttonText }}</button>
   </div>

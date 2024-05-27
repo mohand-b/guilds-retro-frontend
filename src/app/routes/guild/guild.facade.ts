@@ -8,6 +8,7 @@ import {toSignal} from "@angular/core/rxjs-interop";
 import {MembershipRequestsService} from "./state/membership-requests/membership-requests.service";
 import {MembershipRequestDto} from "./state/membership-requests/membership-request.model";
 import {authenticatedStore} from "../authenticated/authenticated.facade";
+import {UserDto, UserRoleEnum} from "../authenticated/state/authed/authed.model";
 
 export const GUILD_STORE_NAME = 'guild';
 
@@ -138,6 +139,27 @@ export class GuildFacade {
         ),
         error: (error) => console.error(error),
       }),
+    );
+  }
+
+  updateUserRole(userId: number, role: UserRoleEnum): Observable<UserDto> {
+    return this.guildsService.updateUserRole(userId, role).pipe(
+      tap({
+        next: (user: UserDto) => {
+          guildStore.update(
+            (state) => ({
+              ...state,
+              members: state.members.map((member) => {
+                if (member.id === user.id) {
+                  return user;
+                }
+                return member;
+              }),
+            }),
+          );
+        },
+        error: (error) => console.error(error),
+      })
     );
   }
 }

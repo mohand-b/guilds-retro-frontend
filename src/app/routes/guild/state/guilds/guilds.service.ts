@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {GuildDto, LightGuildDto} from "./guild.model";
 import {Observable} from "rxjs";
+import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 
 @Injectable({providedIn: 'root'})
 export class GuildsService {
@@ -25,6 +26,13 @@ export class GuildsService {
   validateGuildCode(code: string): Observable<{ guildName: string }> {
     return this.http.get<{ guildName: string }>(
       `${this.guildsBaseUrl}/validate-guild-code?code=${code}`,
+    );
+  }
+
+  updateUserRole(userId: number, role: UserRoleEnum): Observable<UserDto> {
+    return this.http.patch<UserDto>(
+      `${environment.apiUrl}/users/${userId}/role`,
+      {role},
     );
   }
 }

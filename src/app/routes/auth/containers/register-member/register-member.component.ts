@@ -88,11 +88,12 @@ export class RegisterMemberComponent implements OnInit {
   public onOpenGuildSelection(): void {
     this.genericModalService.open(
       'Choisir une guilde',
-      GuildSelectionComponent,
       {primary: 'Confirmer'},
       'xl',
       {guilds: this.guilds},
-      true
+      GuildSelectionComponent,
+      undefined,
+      true,
     ).subscribe(selectedGuild => {
       if (selectedGuild) {
         this.registerAsMemberForm.patchValue({guildId: selectedGuild.id});
