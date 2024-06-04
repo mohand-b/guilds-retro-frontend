@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {NgIf} from "@angular/common";
-import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
+import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 
 @Component({
   selector: 'app-guild-selected-card',
@@ -14,6 +14,6 @@ import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
 })
 export class GuildSelectedCardComponent {
 
-  @Input() guild!: LightGuildDto;
+  @Input() guild!: GuildSummaryDto;
 
 }

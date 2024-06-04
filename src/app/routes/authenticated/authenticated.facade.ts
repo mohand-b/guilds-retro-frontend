@@ -1,5 +1,5 @@
 import {inject, Injectable, Signal} from '@angular/core';
-import {createStore, select, withProps} from '@ngneat/elf';
+import {createStore, getRegistry, select, withProps} from '@ngneat/elf';
 import {AuthedStateDto, UserDto} from './state/authed/authed.model';
 import {createRequestsStatusOperator, updateRequestStatus, withRequestsStatus,} from '@ngneat/elf-requests';
 import {localStorageStrategy, persistState} from '@ngneat/elf-persist-state';
@@ -53,7 +53,7 @@ export class AuthenticatedFacade {
   private router: Router = inject(Router);
 
   logout(): void {
-    authenticatedStore.reset();
+    getRegistry().forEach(store => store.reset());
     this.router.navigateByUrl('/auth');
   }
 

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
+import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 import {NgClass} from "@angular/common";
 
 @Component({
@@ -14,9 +14,9 @@ import {NgClass} from "@angular/common";
 })
 export class GuildSelectionCardComponent {
 
-  @Input() guild!: LightGuildDto;
+  @Input() guild!: GuildSummaryDto;
   @Input() selected: boolean = false;
-  @Output() selectGuild = new EventEmitter<LightGuildDto>();
+  @Output() selectGuild = new EventEmitter<GuildSummaryDto>();
 
   onSelect(): void {
     this.selectGuild.emit(this.guild);

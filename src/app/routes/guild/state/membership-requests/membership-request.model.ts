@@ -1,10 +1,10 @@
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
-import {LightGuildDto} from "../guilds/guild.model";
+import {GuildSummaryDto} from "../guilds/guild.model";
 
 export interface MembershipRequestDto {
   id: number;
   user: UserDto;
-  guild: LightGuildDto;
+  guild: GuildSummaryDto;
   status: RequestStatusEnum;
   createdAt: Date;
   updatedAt: Date;

@@ -1,11 +1,11 @@
 import {Component, DestroyRef, effect, inject, OnInit, Signal, ViewChild} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
-import {GuildState} from "../../state/guilds/guild.model";
+import {GuildState, GuildSummaryDto} from "../../state/guilds/guild.model";
 import {NgForOf, NgIf} from "@angular/common";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
-import {switchMap} from "rxjs";
+import {forkJoin, switchMap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {AuthFacade} from "../../../auth/auth.facade";
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
@@ -14,6 +14,12 @@ import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 import {SortMembersPipe} from "../../../../shared/pipes/sort-members.pipe";
 import {GuildTableComponent} from "../../components/guild-table/guild-table.component";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
+import {AllianceRequestDto} from "../../state/alliances/alliance.model";
+import {MatBadge} from "@angular/material/badge";
+import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
+import {AllianceRequestsListComponent} from "../alliance-requests-list/alliance-requests-list.component";
+import {AllianceCardComponent} from "../../components/alliance-card/alliance-card.component";
 
 @Component({
   selector: 'app-guild',
@@ -27,18 +33,33 @@ import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
     CharacterIconPipe,
     SortMembersPipe,
     MatPaginatorModule,
-    GuildTableComponent
+    GuildTableComponent,
+    MatBadge,
+    AllianceCardComponent
   ],
   templateUrl: './guild.component.html',
   styleUrl: './guild.component.scss'
 })
 export class GuildComponent implements OnInit {
 
+  private authFacade = inject(AuthFacade);
+  private authenticatedFacade = inject(AuthenticatedFacade);
+  private guildFacade = inject(GuildFacade);
+
+  private genericModalService = inject(GenericModalService);
+
   displayedColumns: string[] = ['username', 'characterClass', 'characterLevel', 'role'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource: MatTableDataSource<UserDto> = new MatTableDataSource<UserDto>();
-  private guildFacade = inject(GuildFacade);
+
+  private destroyRef: DestroyRef = inject(DestroyRef);
+
+  pendingAllianceRequests$: Signal<AllianceRequestDto[]> = this.guildFacade.pendingAllianceRequests$;
+  pendingAllianceRequestsCount$: Signal<number> = this.guildFacade.pendingAllianceRequestsCount$;
   currentGuild$: Signal<GuildState> = this.guildFacade.currentGuild$;
+  pendingMembershipRequests$ = this.guildFacade.pendingMembershipRequests$;
+  currentUser$: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
+
   guildUpdated = effect(() => {
     const guild = this.currentGuild$();
     if (guild) {
@@ -47,18 +68,28 @@ export class GuildComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
     }
   });
-  pendingMembershipRequests$ = this.guildFacade.pendingMembershipRequests$;
-  private authFacade = inject(AuthFacade);
-  private authenticatedFacade = inject(AuthenticatedFacade);
-  currentUser$: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
-  private destroyRef: DestroyRef = inject(DestroyRef);
+
+  guildsForAlliance$: Signal<GuildSummaryDto[]> = this.guildFacade.possiblesGuildsForAlliance$
+
+  allianceRequests = effect(() => {
+    console.log(this.pendingAllianceRequests$())
+    console.log(this.pendingAllianceRequestsCount$())
+  })
 
   ngOnInit() {
     this.guildFacade.getCurrentGuild().pipe(
       takeUntilDestroyed(this.destroyRef),
-      switchMap((guild) => this.guildFacade.getPendingMembershipRequests(guild.id!))
+      switchMap((guild) =>
+        forkJoin([
+          this.guildFacade.getPendingMembershipRequests(guild.id!),
+          this.guildFacade.getAllianceRequests(guild.id!),
+          this.guildFacade.getGuildsForAlliance()
+        ])
+      ),
     ).subscribe();
+
   }
+
 
   acceptRequest(requestId: number) {
     this.guildFacade.acceptMembershipRequest(requestId).subscribe();
@@ -67,4 +98,33 @@ export class GuildComponent implements OnInit {
   declineRequest(requestId: number) {
     this.guildFacade.declineMembershipRequest(requestId).subscribe();
   }
+
+  public onOpenGuildSelection(): void {
+    this.genericModalService.open(
+      "Choisir une guilde à laquelle s'allier",
+      {primary: 'Propose une alliance'},
+      'xl',
+      {guilds: this.guildsForAlliance$()},
+      GuildSelectionComponent,
+      undefined,
+      true,
+    ).subscribe(selectedGuild => {
+      if (selectedGuild) {
+        this.guildFacade.createAllianceRequest(selectedGuild.id).subscribe();
+      }
+    });
+  }
+
+  public onOpenPendingAllianceRequests(): void {
+    this.genericModalService.open(
+      "Demandes d'alliances en attente",
+      {},
+      'xl',
+      {},
+      AllianceRequestsListComponent,
+      undefined,
+      true,
+    ).subscribe();
+  }
+
 }

@@ -9,7 +9,7 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
 import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
 import {GuildFacade} from "../../../guild/guild.facade";
-import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
+import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 import {AuthFacade} from "../../auth.facade";
 import {RegisterMemberDto} from "../../state/auth/auth.model";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
@@ -46,8 +46,8 @@ import {AlertComponent} from "../../../../shared/components/alert/alert.componen
   styleUrls: ['./register-member.component.scss']
 })
 export class RegisterMemberComponent implements OnInit {
-  public guilds: LightGuildDto[] = [];
-  public guildSelected: LightGuildDto | null = null;
+  public guilds: GuildSummaryDto[] = [];
+  public guildSelected: GuildSummaryDto | null = null;
   public registerAsMemberForm: FormGroup;
   public loadingGuilds = true;
 

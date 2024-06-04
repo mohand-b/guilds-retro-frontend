@@ -1,7 +1,7 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
-import {GuildDto, LightGuildDto} from "./guild.model";
+import {GuildDto, GuildSummaryDto} from "./guild.model";
 import {Observable} from "rxjs";
 import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 
@@ -17,9 +17,15 @@ export class GuildsService {
     );
   }
 
-  getGuildsRecruiting(): Observable<LightGuildDto[]> {
-    return this.http.get<LightGuildDto[]>(
+  getGuildsRecruiting(): Observable<GuildSummaryDto[]> {
+    return this.http.get<GuildSummaryDto[]>(
       `${this.guildsBaseUrl}/recruiting`,
+    );
+  }
+
+  getGuildsForAlliance(): Observable<GuildSummaryDto[]> {
+    return this.http.get<GuildSummaryDto[]>(
+      `${this.guildsBaseUrl}/to-alliance`
     );
   }
 

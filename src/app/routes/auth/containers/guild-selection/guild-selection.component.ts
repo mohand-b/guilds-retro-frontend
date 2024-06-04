@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
+import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
 import {NgForOf, NgIf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
@@ -25,12 +25,12 @@ import {AlertComponent} from "../../../../shared/components/alert/alert.componen
 })
 export class GuildSelectionComponent implements OnInit {
 
-  selectedGuild: LightGuildDto | null = null;
+  selectedGuild: GuildSummaryDto | null = null;
   conditionMet$ = new Subject<void>();
   searchControl = new FormControl<string>('', {nonNullable: true});
-  private data: { guilds: LightGuildDto[] } = inject(MAT_DIALOG_DATA);
-  @Input() guilds: LightGuildDto[] = this.data.guilds;
-  filteredGuilds: LightGuildDto[] = this.guilds!;
+  filteredGuilds: GuildSummaryDto[] = [];
+  private data: { guilds: GuildSummaryDto[] } = inject(MAT_DIALOG_DATA);
+  @Input() guilds: GuildSummaryDto[] = this.data.guilds;
 
   ngOnInit() {
     this.searchControl.valueChanges.pipe(
@@ -51,12 +51,12 @@ export class GuildSelectionComponent implements OnInit {
     }
   }
 
-  onGuildSelect(guild: LightGuildDto): void {
+  onGuildSelect(guild: GuildSummaryDto): void {
     this.conditionMet$.next();
     this.selectedGuild = guild;
   }
 
-  getData(): LightGuildDto | null {
+  getData(): GuildSummaryDto | null {
     return this.selectedGuild;
   }
 

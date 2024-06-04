@@ -64,14 +64,26 @@ export class GuildTableComponent implements OnChanges {
       `Es-tu sûr de vouloir changer le rôle de ${user.username} à ${role} ?`,
     ).pipe(
       switchMap((result) => {
-        console.log(result)
         if (result) return this.guildFacade.updateUserRole(user.id, role)
         else return EMPTY
       })
     ).subscribe()
   }
 
-  removeMember(member: UserDto) {
+  removeMember(user: UserDto) {
+    this.genericModalService.open(
+      'Confirmation',
+      {warn: 'Oui'},
+      'sm',
+      null,
+      null,
+      `Es-tu sûr de vouloir exclure ${user.username} de la guilde sur Guilds Retro ?`,
+    ).pipe(
+      switchMap((result) => {
+        if (result) return EMPTY
+        else return EMPTY
+      })
+    ).subscribe()
 
   }
 

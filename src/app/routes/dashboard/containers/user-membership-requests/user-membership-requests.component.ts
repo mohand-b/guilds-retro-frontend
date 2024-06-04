@@ -8,7 +8,7 @@ import {AlertComponent} from "../../../../shared/components/alert/alert.componen
 import {CommonModule, DatePipe} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
-import {LightGuildDto} from "../../../guild/state/guilds/guild.model";
+import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {GuildFacade} from "../../../guild/guild.facade";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
@@ -36,8 +36,8 @@ import {MatProgressBar} from "@angular/material/progress-bar";
   styleUrl: './user-membership-requests.component.scss'
 })
 export class UserMembershipRequestsComponent implements OnInit {
-  public guilds: LightGuildDto[] = [];
-  public selectedGuild: WritableSignal<LightGuildDto | undefined> = signal(undefined);
+  public guilds: GuildSummaryDto[] = [];
+  public selectedGuild: WritableSignal<GuildSummaryDto | undefined> = signal(undefined);
   public progressValue = 0;
   public bufferValue = 0;
   protected readonly pendingRequestsCount: Signal<number> = computed(() => {
@@ -81,7 +81,7 @@ export class UserMembershipRequestsComponent implements OnInit {
   private readonly genericModalService = inject(GenericModalService);
   private readonly destroyRef = inject(DestroyRef);
 
-  public get guildsFiltered(): LightGuildDto[] {
+  public get guildsFiltered(): GuildSummaryDto[] {
     return this.guilds.filter(guild => !this.hasRequestForGuild(guild.id));
   }
 

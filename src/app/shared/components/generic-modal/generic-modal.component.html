@@ -5,8 +5,10 @@
     <div *ngIf="data.contentText as text" class="text-sm">{{ text }}</div>
   </div>
   <div class="flex justify-end gap-2 mt-4">
-    <button (click)="onCancel()" color="warn" mat-stroked-button>Annuler</button>
-    <button (click)="onAction()" [color]="data.buttonColor" [disabled]="buttonDisabled"
+    <button (click)="onCancel()" color="warn" mat-stroked-button>
+      {{ data.buttonText ? 'Annuler' : 'Quitter' }}
+    </button>
+    <button *ngIf="data.buttonText" (click)="onAction()" [color]="data.buttonColor" [disabled]="buttonDisabled"
             mat-raised-button>{{ data.buttonText }}</button>
   </div>
 </div>

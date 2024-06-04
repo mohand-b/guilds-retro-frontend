@@ -1,0 +1,28 @@
+<div class="flex items-center justify-between p-4 bg-white shadow mb-4">
+  <div class="flex items-center">
+    <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+      <img [src]="allianceRequest.requesterGuild?.logo" alt="{{ allianceRequest.requesterGuild?.name }} Logo"
+           class="w-full h-full object-cover">
+    </div>
+    <div>
+      <div class="text-xl font-bold">{{ allianceRequest.requesterGuild?.name }}</div>
+      <div class="text-sm text-gray-500">Niveau : {{ allianceRequest.requesterGuild?.level }}</div>
+      <div class="text-sm text-gray-500">Meneur : {{ allianceRequest.requesterGuild?.leaderUsername }}</div>
+
+    </div>
+  </div>
+
+  <div class="flex flex-col justify-center">
+    <div class="text-sm text-gray-500">Membres inscrits : {{ allianceRequest.requesterGuild?.nbOfMembers }}</div>
+    <div class="text-sm text-gray-500">Niveau moyen
+      : {{ allianceRequest.requesterGuild?.averageLevelOfMembers }}</div>
+  </div>
+  <div class="flex space-x-2">
+    <button [disabled]="limitAllianceRequests" mat-icon-button color="primary" (click)="onAcceptRequest()">
+      <mat-icon>check</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="onDeclineRequest()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+</div>

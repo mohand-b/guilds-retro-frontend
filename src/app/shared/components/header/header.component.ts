@@ -17,7 +17,7 @@ import {MatIcon} from "@angular/material/icon";
 export class HeaderComponent {
 
   private authenticatedFacade = inject(AuthenticatedFacade);
-  
+
   readonly user: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$!;
 
   logout() {

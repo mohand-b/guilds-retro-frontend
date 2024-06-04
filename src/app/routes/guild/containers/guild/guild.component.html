@@ -1,8 +1,25 @@
-<div *ngIf="currentGuild$() as guild" class="p-4">
+<div *ngIf="currentGuild$() as guild" class="p-4 flex flex-col gap-4">
 
   <app-guild-table [currentUser]="currentUser$()!" [guild]="guild"/>
 
-  <mat-card class="overflow-hidden shadow-lg rounded-lg mt-6">
+  <button (click)="onOpenPendingAllianceRequests()" mat-raised-button
+          [matBadge]="pendingAllianceRequestsCount$()"
+          [matBadgeHidden]="pendingAllianceRequestsCount$() === 0"
+          matBadgeColor="warn"
+          color="accent">Gérer les demandes d'alliance
+  </button>
+
+  <button [disabled]="guild.allies.length > 2" (click)="onOpenGuildSelection()" mat-raised-button color="primary"
+          [matBadge]="guildsForAlliance$().length"
+          matBadgeColor="primary">Trouver
+    une alliance
+  </button>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <app-alliance-card *ngFor="let guild of guild.allies" [guild]="guild"></app-alliance-card>
+  </div>
+
+  <mat-card class="overflow-hidden shadow-lg rounded-lg">
     <mat-card-header class="bg-primary-600 text-white">
       <mat-card-subtitle>Demandes d'adhésion</mat-card-subtitle>
     </mat-card-header>
