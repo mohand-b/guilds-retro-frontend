@@ -1,61 +1,57 @@
 <div *ngIf="currentGuild$() as guild" class="p-4 flex flex-col gap-4">
 
-  <app-guild-table [currentUser]="currentUser$()!" [guild]="guild"/>
+  <mat-card class="shadow-lg rounded-lg">
+    <app-guild-header
+      [hidden]="loading"
+      [guild]="guild"
+      [currentUser]="currentUser$()!"
+      [pendingMembershipRequestsCount]="pendingMembershipRequestsCount$()"
+      (showMembershipRequests)="onOpenPendingMembershipRequests()"
+    />
 
-  <button (click)="onOpenPendingAllianceRequests()" mat-raised-button
+    <app-guild-members-table
+      [hidden]="loading"
+      [members]="guild.members"
+      [currentUser]="currentUser$()!"
+      (roleUpdated)="updateRole($event)"
+      (memberRemoved)="removeMember($event)"
+    />
+
+    <div *ngIf="loading" class="custom-shadow">
+      <mat-spinner color="accent" diameter="50" class="mx-auto min-h-[11.75rem]"></mat-spinner>
+    </div>
+  </mat-card>
+
+  <div *ngIf="!loading" class="flex flex-col gap-3">
+    <div class="flex justify-between">
+      <div class="text-2xl font-bold">Alliances</div>
+
+      <div class="flex items-center gap-3">
+        <button
+          *ngIf="hasRequiredRole(currentUser$()?.role!, UserRoleEnum.OFFICER) && currentUser$()?.guild!.id === guild.id"
+          (click)="onOpenPendingAllianceRequests()"
+          mat-raised-button
           [matBadge]="pendingAllianceRequestsCount$()"
           [matBadgeHidden]="pendingAllianceRequestsCount$() === 0"
           matBadgeColor="warn"
-          color="accent">Gérer les demandes d'alliance
-  </button>
-
-  <button [disabled]="guild.allies.length > 2" (click)="onOpenGuildSelection()" mat-raised-button color="primary"
+          color="accent">
+          Demandes d'alliance
+        </button>
+        <button
+          *ngIf="hasRequiredRole(currentUser$()?.role!, UserRoleEnum.LEADER) && currentUser$()?.guild!.id === guild.id"
+          (click)="onOpenGuildSelection()"
+          [disabled]="guild.allies.length > 2"
+          mat-raised-button
+          color="primary"
           [matBadge]="guildsForAlliance$().length"
-          matBadgeColor="primary">Trouver
-    une alliance
-  </button>
+          matBadgeColor="primary">
+          Trouver une alliance
+        </button>
+      </div>
+    </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <app-alliance-card *ngFor="let guild of guild.allies" [guild]="guild"></app-alliance-card>
+    <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <app-alliance-card *ngFor="let ally of guild.allies" [guild]="ally"/>
+    </div>
   </div>
-
-  <mat-card class="overflow-hidden shadow-lg rounded-lg">
-    <mat-card-header class="bg-primary-600 text-white">
-      <mat-card-subtitle>Demandes d'adhésion</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="p-0">
-      <table [dataSource]="guild.membershipRequests" class="min-w-full divide-y divide-gray-300" mat-table>
-        <ng-container matColumnDef="username">
-          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Nom</th>
-          <td *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap"
-              mat-cell>{{ request.user.username }}</td>
-        </ng-container>
-        <ng-container matColumnDef="characterClass">
-          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Classe</th>
-          <td *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap"
-              mat-cell>
-            <div class="flex flex-row items-center space-x-2">
-              <img [src]="request.user | characterIcon" alt="Character Icon" height="20" width="20">
-              <div>{{ request.user.characterClass }}</div>
-            </div>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="characterLevel">
-          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Level</th>
-          <td *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap"
-              mat-cell>{{ request.user.characterLevel }}</td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-          <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Actions</th>
-          <td *matCellDef="let request" class="p-3 flex justify-start space-x-2">
-            <button (click)="acceptRequest(request.id)" color="primary" mat-flat-button>Accepter</button>
-            <button (click)="declineRequest(request.id)" color="warn" mat-button>Refuser</button>
-          </td>
-        </ng-container>
-        <tr *matHeaderRowDef="['username', 'characterClass', 'characterLevel', 'actions']" class="bg-gray-100"
-            mat-header-row></tr>
-        <tr *matRowDef="let row; columns: ['username', 'characterClass', 'characterLevel','actions'];" mat-row></tr>
-      </table>
-    </mat-card-content>
-  </mat-card>
 </div>

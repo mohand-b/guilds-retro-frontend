@@ -1,0 +1,61 @@
+<mat-card-content class="p-0">
+  <table mat-table [dataSource]="dataSource" class="min-w-full divide-y divide-gray-300">
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef class="w-1/5 p-3 text-left text-sm font-semibold text-gray-700">Nom</th>
+      <td mat-cell *matCellDef="let member"
+          [ngClass]="{'bg-yellow-100': member.id === currentUser.id, 'font-bold': member.role === UserRoleEnum.LEADER}"
+          class="p-3 text-sm text-gray-700 whitespace-nowrap">
+        {{ member.username }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="characterClass">
+      <th mat-header-cell *matHeaderCellDef class="w-1/5 p-3 text-left text-sm font-semibold text-gray-700">Classe</th>
+      <td mat-cell *matCellDef="let member" class="p-3 text-sm text-gray-700 whitespace-nowrap">
+        <div class="flex flex-row items-center space-x-2">
+          <img [src]="member | characterIcon" alt="Character Icon" height="20" width="20">
+          <div>{{ member.characterClass }}</div>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="characterLevel">
+      <th mat-header-cell *matHeaderCellDef class="w-1/5 p-3 text-left text-sm font-semibold text-gray-700">Niveau</th>
+      <td mat-cell *matCellDef="let member"
+          class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ member.characterLevel }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef class="w-1/5 p-3 text-left text-sm font-semibold text-gray-700">Rôle</th>
+      <td mat-cell *matCellDef="let member"
+          [ngClass]="{'text-red-500': member.role === UserRoleEnum.LEADER, 'text-purple-500': member.role === UserRoleEnum.OFFICER}"
+          class="p-3 text-sm text-gray-700 whitespace-nowrap">
+        {{ member.role }}
+      </td>
+    </ng-container>
+
+    <ng-container *ngIf="hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER)" matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="w-1/5 p-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+      <td mat-cell *matCellDef="let member" class="p-3 space-x-2 text-sm text-gray-700 whitespace-nowrap">
+        <button *ngIf="enableUpGradeAction(member)" (click)="updateRole(member, UserRoleEnum.OFFICER)" color="accent"
+                mat-icon-button>
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button *ngIf="enableDownGradeAction(member)" (click)="updateRole(member, UserRoleEnum.MEMBER)" color="primary"
+                mat-icon-button>
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+        <button *ngIf="enableRemoveMemberAction(member)" (click)="removeMember(member)" color="warn" mat-icon-button>
+          <mat-icon class="text-red-500">block</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-primary"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [length]="members.length" [pageSizeOptions]="[10, 20, 50]" pageSize="10" hidePageSize
+                 showFirstLastButtons></mat-paginator>
+</mat-card-content>
+

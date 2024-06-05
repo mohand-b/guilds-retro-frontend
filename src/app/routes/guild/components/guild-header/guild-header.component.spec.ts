@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GuildTableComponent } from './guild-table.component';
+import { GuildHeaderComponent } from './guild-header.component';
 
-describe('GuildTableComponent', () => {
-  let component: GuildTableComponent;
-  let fixture: ComponentFixture<GuildTableComponent>;
+describe('GuildHeaderComponent', () => {
+  let component: GuildHeaderComponent;
+  let fixture: ComponentFixture<GuildHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GuildTableComponent]
+      imports: [GuildHeaderComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(GuildTableComponent);
+    fixture = TestBed.createComponent(GuildHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

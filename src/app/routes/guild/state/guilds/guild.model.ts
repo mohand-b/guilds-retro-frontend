@@ -8,6 +8,7 @@ export interface GuildDto {
   description?: string;
   members: UserDto[];
   allies: GuildSummaryDto[];
+  level: number;
   logo?: string;
 }
 

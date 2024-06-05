@@ -1,0 +1,33 @@
+<app-alert *ngIf="pendingMembershipRequestsCount$() === 0" message="Aucune demande d'adhésion en attente."
+           type="info"/>
+<table *ngIf="pendingMembershipRequestsCount$() > 0" [dataSource]="pendingMembershipRequests$()"
+       class="min-w-full divide-y divide-gray-300" mat-table>
+  <ng-container matColumnDef="username">
+    <th mat-header-cell *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700 w-1/3">Nom</th>
+    <td mat-cell *matCellDef="let request"
+        class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ request.user.username }}</td>
+  </ng-container>
+  <ng-container matColumnDef="characterClass">
+    <th mat-header-cell *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700 w-1/4">Classe</th>
+    <td mat-cell *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap">
+      <div class="flex items-center space-x-2">
+        <img [src]="request.user | characterIcon" alt="Character Icon" height="20" width="20">
+        <div>{{ request.user.characterClass }}</div>
+      </div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="characterLevel">
+    <th mat-header-cell *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700 w-1/4">Niveau</th>
+    <td mat-cell *matCellDef="let request"
+        class="p-3 text-sm text-gray-700 whitespace-nowrap">{{ request.user.characterLevel }}</td>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700 w-1/6">Actions</th>
+    <td mat-cell *matCellDef="let request" class="p-3 flex justify-start space-x-2">
+      <button (click)="acceptRequest(request.id)" color="primary" mat-button>Accepter</button>
+      <button (click)="declineRequest(request.id)" color="warn" mat-button>Refuser</button>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
