@@ -2,11 +2,16 @@
   <div class="flex flex-col gap-2">
     <div class="text-3xl font-extrabold">{{ guild.name }}</div>
     <div class="text-sm mt-2">Niveau de guilde: {{ guild.level }}</div>
-    <div class="text-md font-medium">{{ guild.members.length }} membres inscrits</div>
     <div *ngIf="guild.description; else noDescription" class="text-sm mt-2">{{ guild.description }}</div>
     <ng-template #noDescription>
       <div class="text-sm mt-2 text-gray-500">Aucune description disponible pour cette guilde.</div>
     </ng-template>
+    <div class="flex items-center mt-2">
+      <div class="text-md font-medium">
+        {{ isGuildDto(guild) ? guild.members.length : guild.nbOfMembers }} membres inscrits
+      </div>
+      <app-class-count [memberClassesCount]="guild.memberClassesCount!" class="ml-2"/>
+    </div>
   </div>
   <div class="flex flex-col items-end">
     <div *ngIf="guild.logo"
@@ -21,6 +26,26 @@
             mat-raised-button
             color="accent">
       Demandes d'adhésion
+    </button>
+
+    <button
+      *ngIf="!alreadySentAllianceRequest()
+      && hasRequiredRole(currentUser.role!, UserRoleEnum.LEADER)
+      && currentUser.guild!.id !== guild.id"
+      (click)="onSendAllianceRequest()"
+      mat-raised-button
+      color="primary">
+      Proposer une alliance
+    </button>
+
+    <button
+      *ngIf="alreadySentAllianceRequest()
+      && hasRequiredRole(currentUser.role!, UserRoleEnum.LEADER)
+      && currentUser.guild!.id !== guild.id"
+      mat-raised-button
+      color="warn"
+      disabled>
+      Demande envoyée
     </button>
   </div>
 </div>

@@ -1,4 +1,8 @@
-<div *ngIf="currentGuild$() as guild" class="p-4 flex flex-col gap-4">
+<button *ngIf="guild" (click)="goBack()" class="text-gray-600 hover:text-gray-800">
+  <mat-icon>arrow_back</mat-icon>
+</button>
+
+<div *ngIf="guild || currentGuild$() as guild" class="p-4 flex flex-col gap-4">
 
   <mat-card class="shadow-lg rounded-lg">
     <app-guild-header
@@ -7,11 +11,14 @@
       [currentUser]="currentUser$()!"
       [pendingMembershipRequestsCount]="pendingMembershipRequestsCount$()"
       (showMembershipRequests)="onOpenPendingMembershipRequests()"
+      (sendAllianceRequest)="sendAllianceRequest($event)"
     />
 
     <app-guild-members-table
+      *ngIf="guild.members"
       [hidden]="loading"
       [members]="guild.members"
+      [guildId]="guild.id!"
       [currentUser]="currentUser$()!"
       (roleUpdated)="updateRole($event)"
       (memberRemoved)="removeMember($event)"
@@ -22,9 +29,9 @@
     </div>
   </mat-card>
 
-  <div *ngIf="!loading" class="flex flex-col gap-3">
+  <div *ngIf="!loading && guild.allies" class="flex flex-col gap-3">
     <div class="flex justify-between">
-      <div class="text-2xl font-bold">Alliances</div>
+      <div class="text-2xl font-bold">Alliances <span>{{guild.allies.length}}/3</span></div>
 
       <div class="flex items-center gap-3">
         <button

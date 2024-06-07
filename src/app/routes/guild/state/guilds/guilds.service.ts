@@ -17,6 +17,12 @@ export class GuildsService {
     );
   }
 
+  getGuildById(guildId: number): Observable<GuildDto> {
+    return this.http.get<GuildDto>(
+      `${this.guildsBaseUrl}/${guildId}`,
+    );
+  }
+
   getGuildsRecruiting(): Observable<GuildSummaryDto[]> {
     return this.http.get<GuildSummaryDto[]>(
       `${this.guildsBaseUrl}/recruiting`,

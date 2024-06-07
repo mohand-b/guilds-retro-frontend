@@ -1,6 +1,10 @@
 <div
+  matRipple
   class="h-full flex flex-col items-center justify-between
-  bg-transparent p-6 shadow-lg">
+  bg-transparent p-6 shadow-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105"
+  [routerLink]="guild.id === currentUser$()!.guild.id ? ['/guild'] :
+  ['/guild', guild.id]"
+>
   <div class="flex flex-col items-center text-center">
     <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mb-4">
       <img [src]="guild.logo" alt="{{ guild.name }} Logo" class="w-full h-full object-cover">
@@ -24,7 +28,8 @@
     </div>
   </div>
 
-  <button *ngIf="hasRequiredRole(currentUser$()?.role!, UserRoleEnum.OFFICER)" mat-raised-button color="warn"
+  <button *ngIf="canDissolveAlliance"
+          mat-raised-button color="warn"
           class="mt-4"
           (click)="dissolveAlliance()">
     <mat-icon class="mr-2">gpp_bad</mat-icon>

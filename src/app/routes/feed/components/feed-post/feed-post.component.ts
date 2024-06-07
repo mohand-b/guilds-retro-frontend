@@ -6,6 +6,7 @@ import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pip
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {MatIcon} from "@angular/material/icon";
 import {FeedFacade} from "../../feed.facade";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-feed-post',
@@ -16,7 +17,8 @@ import {FeedFacade} from "../../feed.facade";
     DatePipe,
     GuildMembershipPipe,
     NgIf,
-    MatIcon
+    MatIcon,
+    RouterLink
   ],
   templateUrl: './feed-post.component.html',
   styles: ``

@@ -1,10 +1,10 @@
-import {Component, DestroyRef, inject, OnInit, Signal} from '@angular/core';
+import {Component, DestroyRef, effect, inject, OnInit, Signal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
-import {GuildState, GuildSummaryDto} from "../../state/guilds/guild.model";
-import {CommonModule} from "@angular/common";
+import {GuildDto, GuildState, GuildSummaryDto} from "../../state/guilds/guild.model";
+import {CommonModule, Location} from "@angular/common";
 import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
-import {EMPTY, forkJoin, switchMap} from "rxjs";
+import {EMPTY, forkJoin, switchMap, tap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
@@ -18,6 +18,8 @@ import {GuildHeaderComponent} from "../../components/guild-header/guild-header.c
 import {GuildMembersTableComponent} from "../../components/guild-members-table/guild-members-table.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
+import {ActivatedRoute} from "@angular/router";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-guild',
@@ -31,6 +33,7 @@ import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
     AllianceCardComponent,
     GuildHeaderComponent,
     GuildMembersTableComponent,
+    MatIcon,
   ],
   templateUrl: './guild.component.html',
   styleUrl: './guild.component.scss'
@@ -41,6 +44,8 @@ export class GuildComponent implements OnInit {
   private readonly guildFacade = inject(GuildFacade);
   private readonly genericModalService = inject(GenericModalService);
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  private location: Location = inject(Location);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
   public readonly pendingAllianceRequestsCount$: Signal<number> = this.guildFacade.pendingAllianceRequestsCount$;
   public readonly pendingMembershipRequestsCount$: Signal<number> = this.guildFacade.pendingMembershipRequestsCount$;
@@ -48,23 +53,52 @@ export class GuildComponent implements OnInit {
   public readonly currentUser$: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
   public readonly guildsForAlliance$: Signal<GuildSummaryDto[]> = this.guildFacade.possiblesGuildsForAlliance$;
 
+  public guild: GuildDto | undefined = undefined;
+
   public loading: boolean = false;
 
   ngOnInit(): void {
-    if (!this.currentGuild$().id) {
+    if (!this.currentGuild$().id || this.guild?.id) {
       this.loading = true;
     }
-    this.guildFacade.getCurrentGuild().pipe(
+    this.activatedRoute.paramMap.pipe(
+      switchMap((params) => {
+        const guildId = Number(params.get('guildId'));
+        if (guildId) {
+          this.loading = true;
+          return this.guildFacade.loadGuildById(guildId).pipe(
+            tap((guild) => {
+              this.guild = guild;
+              this.loading = false;
+            })
+          );
+        } else {
+          return this.guildFacade.getCurrentGuild().pipe(
+            tap(() => {
+              this.loading = false;
+            }),
+            switchMap((guild) =>
+              forkJoin([
+                this.guildFacade.getPendingMembershipRequests(guild.id!),
+                this.guildFacade.getGuildsForAlliance()
+              ])
+            )
+          );
+        }
+      }),
       takeUntilDestroyed(this.destroyRef),
-      switchMap((guild) =>
-        forkJoin([
-          this.guildFacade.getPendingMembershipRequests(guild.id!),
-          this.guildFacade.getAllianceRequests(guild.id!),
-          this.guildFacade.getGuildsForAlliance()
-        ])
-      ),
-    ).subscribe(() => this.loading = false);
+    ).subscribe();
   }
+
+  loadAllianceRequests = effect(() => {
+    if (this.authenticatedFacade.currentUser$()!.guild.id!)
+      this.guildFacade.getAllianceRequests(this.authenticatedFacade.currentUser$()!.guild.id!).subscribe();
+  })
+
+  logAllianceRequests = effect(() => {
+    console.log('Alliance Requests:', this.guildFacade.sentPendingAllianceRequests$()
+      .map((request) => request.targetGuild!));
+  })
 
   public onOpenGuildSelection(): void {
     this.genericModalService.open(
@@ -138,6 +172,26 @@ export class GuildComponent implements OnInit {
     ).subscribe();
   }
 
+  public sendAllianceRequest(guildId: number) {
+    this.genericModalService.open(
+      'Confirmation',
+      {primary: 'Oui'},
+      'sm',
+      null,
+      null,
+      `Es-tu sûr de vouloir envoyer une demande d'alliance à cette guilde ?`,
+    ).pipe(
+      switchMap((result) => {
+        if (result) return this.guildFacade.createAllianceRequest(guildId);
+        else return EMPTY;
+      })
+    ).subscribe();
+  }
+
   protected readonly hasRequiredRole = hasRequiredRole;
   protected readonly UserRoleEnum = UserRoleEnum;
+
+  goBack() {
+    this.location.back();
+  }
 }

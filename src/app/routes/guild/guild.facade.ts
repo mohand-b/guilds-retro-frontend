@@ -39,6 +39,7 @@ export class GuildFacade {
     (state) => state)), {
     initialValue: guildStore.value,
   });
+
   pendingMembershipRequests$: Signal<MembershipRequestDto[]> = toSignal(guildStore.pipe(select(
     (state) => state.membershipRequests)), {
     initialValue: guildStore.value.membershipRequests,
@@ -48,6 +49,14 @@ export class GuildFacade {
   sentAllianceRequests$: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
     (state) => state.sentAllianceRequests
   )), {initialValue: guildStore.value.sentAllianceRequests})
+
+  sentPendingAllianceRequests$: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
+    (state) => state.sentAllianceRequests
+      .filter(request => request.status === AllianceStatusEnum.PENDING && request.targetGuild?.nbOfAllies! < 3)
+  )), {
+    initialValue: guildStore.value.sentAllianceRequests
+      .filter(request => request.status === AllianceStatusEnum.PENDING && request.targetGuild?.nbOfAllies! < 3)
+  })
 
   receivedPendingAllianceRequests$: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
     (state) => state.receivedAllianceRequests
@@ -90,6 +99,10 @@ export class GuildFacade {
         error: (error) => console.error(error),
       }),
     );
+  }
+
+  loadGuildById(guildId: number): Observable<GuildDto> {
+    return this.guildsService.getGuildById(guildId);
   }
 
   getGuildsRecruiting(): Observable<GuildSummaryDto[]> {

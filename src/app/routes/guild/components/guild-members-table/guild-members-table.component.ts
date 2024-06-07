@@ -32,6 +32,7 @@ export class GuildMembersTableComponent implements OnChanges {
 
   @Input() members: UserDto[] = [];
   @Input() currentUser!: UserDto;
+  @Input() guildId!: number;
 
   displayedColumns: string[] = ['username', 'characterClass', 'characterLevel', 'role', 'actions'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -43,12 +44,21 @@ export class GuildMembersTableComponent implements OnChanges {
   @Output() memberRemoved = new EventEmitter<UserDto>();
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['members'] && this.members) {
+    if ((changes['members'] || changes['guildId']) && (this.members || this.guildId)) {
+      const hasOfficerRole = hasRequiredRole(this.currentUser.role, UserRoleEnum.OFFICER);
+      const isGuildIdMatching = this.guildId === this.currentUser.guild.id;
+
       const sortedMembers: UserDto[] = new SortMembersPipe().transform(this.members);
       this.dataSource.data = sortedMembers;
       this.dataSource.paginator = this.paginator;
-      this.displayedColumns = hasRequiredRole(this.currentUser.role, UserRoleEnum.OFFICER) ?
-        this.displayedColumns : this.displayedColumns.filter(column => column !== 'actions');
+
+      if (hasOfficerRole && isGuildIdMatching) {
+        if (!this.displayedColumns.includes('actions')) {
+          this.displayedColumns.push('actions');
+        }
+      } else {
+        this.displayedColumns = this.displayedColumns.filter(column => column !== 'actions');
+      }
     }
   }
 

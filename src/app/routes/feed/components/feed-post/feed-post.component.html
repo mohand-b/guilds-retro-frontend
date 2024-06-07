@@ -15,10 +15,14 @@
           {{ post.user.role }} de ma guilde
         </span>
         <span *ngIf="(post.user | guildMembership:currentUser) === 'alliedGuild'">
-          {{ post.user.role }} de la guilde <span class="text-pink-600">alliée</span> {{ post.user.guild.name }}
+          {{ post.user.role }} de la guilde <span class="text-pink-600">alliée </span><span
+          class="cursor-pointer underline"
+          [routerLink]="['/guild', post.user.guild.id]">{{ post.user.guild.name }}</span>
         </span>
         <span *ngIf="(post.user | guildMembership:currentUser) === 'externalGuild'">
-          {{ post.user.role }} de la guilde {{ post.user.guild.name }}
+          {{ post.user.role }} de la guilde
+          <span class="cursor-pointer underline"
+                [routerLink]="['/guild', post.user.guild.id]">{{ post.user.guild.name }}</span>
         </span>
       </div>
     </div>
