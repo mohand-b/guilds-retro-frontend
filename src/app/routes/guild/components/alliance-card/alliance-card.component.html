@@ -2,8 +2,7 @@
   matRipple
   class="h-full flex flex-col items-center justify-between
   bg-transparent p-6 shadow-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105"
-  [routerLink]="guild.id === currentUser$()!.guild.id ? ['/guild'] :
-  ['/guild', guild.id]"
+  [routerLink]="guild.id === currentUser$()!.guild.id ? ['/guild'] : ['/guild', guild.id]"
 >
   <div class="flex flex-col items-center text-center">
     <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mb-4">
@@ -31,9 +30,8 @@
   <button *ngIf="canDissolveAlliance"
           mat-raised-button color="warn"
           class="mt-4"
-          (click)="dissolveAlliance()">
+          (click)="$event.stopPropagation(); dissolveAlliance()">
     <mat-icon class="mr-2">gpp_bad</mat-icon>
     Dissoudre l'alliance
   </button>
 </div>
-

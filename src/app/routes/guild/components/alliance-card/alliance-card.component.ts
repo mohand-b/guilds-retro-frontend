@@ -10,6 +10,8 @@ import {NgIf} from "@angular/common";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {MatRipple} from "@angular/material/core";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
+import {EMPTY, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-alliance-card',
@@ -30,6 +32,7 @@ export class AllianceCardComponent {
   @Input() guild!: GuildSummaryDto;
   private guildFacade = inject(GuildFacade);
   private authenticatedFacade = inject(AuthenticatedFacade);
+  private genericModalService = inject(GenericModalService);
 
   private readonly activatedRoute = inject(ActivatedRoute);
 
@@ -42,7 +45,19 @@ export class AllianceCardComponent {
   }
 
   dissolveAlliance() {
-    this.guildFacade.dissolveAlliance(this.guildFacade.currentGuild$().id!, this.guild.id).subscribe();
+    this.genericModalService.open(
+      'Confirmation',
+      {warn: 'Oui'},
+      'sm',
+      null,
+      null,
+      `Es-tu sûr de vouloir rompre l'alliance avec ${this.guild.name} ?`,
+    ).pipe(
+      switchMap((result) => {
+        if (result) return this.guildFacade.dissolveAlliance(this.guildFacade.currentGuild$().id!, this.guild.id)
+        else return EMPTY;
+      })
+    ).subscribe();
   }
 
   protected readonly hasRequiredRole = hasRequiredRole;
