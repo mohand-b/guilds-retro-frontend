@@ -12,6 +12,7 @@ import {ActivatedRoute, RouterLink} from "@angular/router";
 import {MatRipple} from "@angular/material/core";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {EMPTY, switchMap} from "rxjs";
+import {PermissionsService} from "../../../../shared/services/permissions.service";
 
 @Component({
   selector: 'app-alliance-card',
@@ -33,6 +34,7 @@ export class AllianceCardComponent {
   private guildFacade = inject(GuildFacade);
   private authenticatedFacade = inject(AuthenticatedFacade);
   private genericModalService = inject(GenericModalService);
+  private permissionsService = inject(PermissionsService);
 
   private readonly activatedRoute = inject(ActivatedRoute);
 
@@ -41,7 +43,7 @@ export class AllianceCardComponent {
   public readonly UserRoleEnum = UserRoleEnum;
 
   get canDissolveAlliance(): boolean {
-    return !this.activatedRoute.snapshot.params['guildId'] && hasRequiredRole(this.currentUser$()?.role!, UserRoleEnum.LEADER);
+    return this.permissionsService.canDissolveAlliance(this.currentUser$()!, this.activatedRoute.snapshot.params['guildId']);
   }
 
   dissolveAlliance() {

@@ -24,3 +24,4 @@ export const hasRequiredRole = (userRole: UserRoleEnum, requiredRole: UserRoleEn
 
   return roleHierarchy[userRole].includes(requiredRole);
 };
+

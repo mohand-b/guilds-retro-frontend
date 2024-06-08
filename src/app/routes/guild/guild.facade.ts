@@ -87,6 +87,7 @@ export class GuildFacade {
     );
   });
 
+
   private guildsService = inject(GuildsService);
   private alliancesService = inject(AlliancesService);
   private membershipsRequestService = inject(MembershipRequestsService);
