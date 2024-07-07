@@ -15,11 +15,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/guilds-retro-frontend",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -36,6 +36,20 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -47,8 +61,7 @@
                   "maximumWarning": "2kb",
                   "maximumError": "4kb"
                 }
-              ],
-              "outputHashing": "all"
+              ]
             },
             "development": {
               "optimization": false,
@@ -62,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "guilds-retro-frontend:build:production"
+              "browserTarget": "guilds-retro-frontend:build:production"
             },
             "development": {
-              "buildTarget": "guilds-retro-frontend:build:development"
+              "browserTarget": "guilds-retro-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +86,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "guilds-retro-frontend:build"
+            "browserTarget": "guilds-retro-frontend:build"
           }
         },
         "test": {
@@ -94,24 +107,6 @@
             ],
             "scripts": []
           }
-        },
-        "storybook": {
-          "builder": "@storybook/angular:start-storybook",
-          "options": {
-            "configDir": ".storybook",
-            "browserTarget": "guilds-retro-frontend:build",
-            "compodoc": false,
-            "port": 6006
-          }
-        },
-        "build-storybook": {
-          "builder": "@storybook/angular:build-storybook",
-          "options": {
-            "configDir": ".storybook",
-            "browserTarget": "guilds-retro-frontend:build",
-            "compodoc": false,
-            "outputDir": "storybook-static"
-          }
         }
       }
     }
@@ -120,3 +115,4 @@
     "analytics": false
   }
 }
+
