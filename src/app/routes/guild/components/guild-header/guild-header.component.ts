@@ -40,10 +40,8 @@ export class GuildHeaderComponent {
   protected readonly UserRoleEnum = UserRoleEnum;
 
   public alreadySentAllianceRequest: Signal<boolean> = computed(() => {
-    const alreadyAlly = this.authenticatedFacade.currentUser$()?.guild.allies
-      .some((ally) => ally.id === this.guild.id)!;
-    console.log('Already Ally:', this.authenticatedFacade.currentUser$()?.guild.allies.map((ally) => ally.id));
-    console.log('Guild ID:', this.guild);
+    const alreadyAlly = this.authenticatedFacade.currentUser$()?.guildAlliesIds!
+      .some((allyId: number) => allyId === this.guild.id)!;
     return alreadyAlly && this.alliancesRequests().some((request) => request.targetGuild!.id === this.guild.id);
   })
 
