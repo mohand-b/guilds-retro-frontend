@@ -1,0 +1,30 @@
+import {UserDto} from "../../../authenticated/state/authed/authed.model";
+
+export interface EventDto {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  dungeonName?: string;
+  arenaTargets?: string;
+  date: Date;
+  maxParticipants: number;
+  minLevel?: number;
+  requiredClasses?: string[];
+  requiresOptimization?: boolean;
+  creator: UserDto;
+  participants: UserDto[];
+}
+
+export interface CreateEventDto {
+  title: string;
+  description: string;
+  type: string;
+  dungeonName?: string;
+  arenaTargets?: string;
+  date: string;
+  maxParticipants: number;
+  minLevel?: number;
+  requiredClasses?: string[];
+  requiresOptimization?: boolean;
+}
