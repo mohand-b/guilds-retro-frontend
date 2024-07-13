@@ -27,6 +27,15 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <app-feed-post *ngFor="let post of feed$()" [currentUser]="currentUser" [post]="post"/>
+    @for (item of feed$(); track item.id) {
+      @if (isPostFeedDto(item)) {
+        <app-feed-post [currentUser]="currentUser" [post]="item"/>
+      } @else if (isEventFeedDto(item)) {
+        <div>Event</div>
+        {{ item.title }} par {{ item.creator.username }}
+      }
+
+    }
+
   </div>
 </div>

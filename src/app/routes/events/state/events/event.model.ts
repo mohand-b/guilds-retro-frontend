@@ -14,6 +14,7 @@ export interface EventDto {
   requiresOptimization?: boolean;
   creator: UserDto;
   participants: UserDto[];
+  createdAt: Date;
 }
 
 export interface CreateEventDto {

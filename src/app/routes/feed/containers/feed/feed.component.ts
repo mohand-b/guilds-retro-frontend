@@ -6,9 +6,9 @@ import {NgForOf} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {FeedFacade} from "../../feed.facade";
-import {Post} from "../../state/posts/post.model";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {CreatePostModalComponent} from "../../components/create-post-modal/create-post-modal.component";
+import {EventFeedDto, FeedItem, PostFeedDto} from "../../state/feed/feed.model";
 
 @Component({
   selector: 'app-feed',
@@ -26,7 +26,7 @@ export class FeedComponent {
   @Input() currentUser!: UserDto;
   public dialog = inject(MatDialog);
   private feedFacade = inject(FeedFacade);
-  feed$: Signal<Post[]> = this.feedFacade.feed$;
+  feed$: Signal<(PostFeedDto | EventFeedDto)[]> = this.feedFacade.feed$;
   feedClosingToGuildAndAllies$: Signal<boolean> = this.feedFacade.feedClosingToGuildAndAllies$;
   private destroyRef: DestroyRef = inject(DestroyRef);
 
@@ -49,6 +49,14 @@ export class FeedComponent {
 
   toggleFeedClosingToGuildAndAllies(checked: boolean) {
     this.feedFacade.updateFeedPreference(checked).subscribe();
+  }
+
+  isPostFeedDto(item: FeedItem): item is PostFeedDto {
+    return item.feedType === 'post';
+  }
+
+  isEventFeedDto(item: FeedItem): item is EventFeedDto {
+    return item.feedType === 'event';
   }
 
 }

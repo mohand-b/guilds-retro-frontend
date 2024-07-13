@@ -4,11 +4,12 @@ import {inject, Injectable, Signal} from "@angular/core";
 import {map, Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {FeedService} from "./state/feed/feed.service";
-import {CreatePost, Post} from "./state/posts/post.model";
+import {CreatePost} from "./state/posts/post.model";
 import {PostsService} from "./state/posts/posts.service";
 import {authenticatedStore} from "../authenticated/authenticated.facade";
 import {LikesService} from "./state/likes/likes.service";
 import {LikeDto} from "./state/likes/like.model";
+import {FeedItem, PostFeedDto} from "./state/feed/feed.model";
 
 export const FEED_STORE_NAME = 'feed';
 
@@ -16,7 +17,7 @@ export const feedStore = createStore(
   {
     name: FEED_STORE_NAME,
   },
-  withEntities<Post>(),
+  withEntities<FeedItem, 'feedId'>({idKey: 'feedId'}),
   withProps<{ feedClosingToGuildAndAllies: boolean }>({
     feedClosingToGuildAndAllies: authenticatedStore.value.user?.feedClosingToGuildAndAllies!
   }),
@@ -24,7 +25,7 @@ export const feedStore = createStore(
 
 @Injectable({providedIn: 'root'})
 export class FeedFacade {
-  feed$: Signal<Post[]> = toSignal(feedStore.pipe(
+  feed$: Signal<FeedItem[]> = toSignal(feedStore.pipe(
     selectAllEntities(),
     map(posts => posts.sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -42,19 +43,19 @@ export class FeedFacade {
   private postsService = inject(PostsService);
   private likesService = inject(LikesService);
 
-  setFeed(): Observable<Post[]> {
+  setFeed(): Observable<FeedItem[]> {
     return this.feedService.getFeed().pipe(
       tap({
-        next: (posts: Post[]) => feedStore.update(setEntities(posts)),
+        next: (feedItem: FeedItem[]) => feedStore.update(setEntities(feedItem)),
         error: (error) => console.error(error),
       }),
     );
   }
 
-  createPost(post: CreatePost): Observable<Post> {
+  createPost(post: CreatePost): Observable<PostFeedDto> {
     return this.postsService.create(post).pipe(
       tap({
-        next: (post: Post) => {
+        next: (post: PostFeedDto) => {
           feedStore.update(addEntities(post))
           console.log('Post created:', post)
         },
@@ -79,33 +80,46 @@ export class FeedFacade {
   }
 
   likePost(postId: number): Observable<LikeDto> {
+    const prefixedPostId = `post-${postId}`;
     return this.likesService.likePost(postId).pipe(
       tap({
         next: (like: LikeDto) => {
-          feedStore.update(updateEntities(like.post.id, (post) => ({
-              ...post,
-              likes: [...post.likes, like],
-            }))
-          );
+          feedStore.update(updateEntities(prefixedPostId, (entity) => {
+            if (entity.feedType === 'post') {
+              const post = entity as PostFeedDto;
+              return {
+                ...post,
+                likes: [...post.likes, like],
+              };
+            }
+            return entity;
+          }));
         },
         error: (error) => console.error(error),
       }),
     );
   }
 
+
   unlikePost(postId: number): Observable<void> {
+    const prefixedPostId = `post-${postId}`;
     return this.likesService.unlikePost(postId).pipe(
       tap({
         next: () => {
-          feedStore.update(updateEntities(postId, (post) => ({
-              ...post,
-              likes: post.likes.filter(like => like.user.id !== authenticatedStore.value.user!.id),
-            }))
-          );
+          feedStore.update(updateEntities(prefixedPostId, (entity) => {
+            if (entity.feedType === 'post') {
+              const post = entity as PostFeedDto;
+              return {
+                ...post,
+                likes: post.likes.filter(like => like.user.id !== authenticatedStore.value.user!.id),
+              };
+            }
+            return entity;
+          }));
         },
         error: (error) => console.error(error),
       }),
-    )
+    );
   }
 
 

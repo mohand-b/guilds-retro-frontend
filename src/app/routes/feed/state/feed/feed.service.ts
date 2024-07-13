@@ -2,7 +2,7 @@ import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {Observable} from "rxjs";
-import {Post} from "../posts/post.model";
+import {EventFeedDto, PostFeedDto} from "./feed.model";
 
 @Injectable({providedIn: 'root'})
 export class FeedService {
@@ -11,8 +11,8 @@ export class FeedService {
 
   private readonly feedBaseUrl = `${environment.apiUrl}/feed`;
 
-  getFeed(): Observable<Post[]> {
-    return this.http.get<Post[]>(
+  getFeed(): Observable<(PostFeedDto | EventFeedDto)[]> {
+    return this.http.get<(PostFeedDto | EventFeedDto)[]>(
       `${this.feedBaseUrl}`,
     );
   }

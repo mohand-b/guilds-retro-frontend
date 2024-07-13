@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
-import {Post} from "../../state/posts/post.model";
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {DatePipe, NgIf} from "@angular/common";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
@@ -7,6 +6,7 @@ import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {MatIcon} from "@angular/material/icon";
 import {FeedFacade} from "../../feed.facade";
 import {RouterLink} from "@angular/router";
+import {PostFeedDto} from "../../state/feed/feed.model";
 
 @Component({
   selector: 'app-feed-post',
@@ -25,7 +25,7 @@ import {RouterLink} from "@angular/router";
 })
 export class FeedPostComponent {
 
-  @Input() post!: Post;
+  @Input() post!: PostFeedDto;
   @Input() currentUser!: UserDto;
 
   private feedFacade = inject(FeedFacade);
