@@ -1,10 +1,12 @@
 import {createStore} from "@ngneat/elf";
 import {inject, Injectable, Signal} from "@angular/core";
-import {addEntities, selectAllEntities, setEntities, withEntities} from "@ngneat/elf-entities";
+import {addEntities, selectAllEntities, setEntities, updateEntities, withEntities} from "@ngneat/elf-entities";
 import {CreateEventDto, EventDto} from "./state/events/event.model";
 import {EventsService} from "./state/events/events.service";
 import {Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {feedStore} from "../feed/feed.facade";
+import {EventFeedDto} from "../feed/state/feed/feed.model";
 
 export const EVENTS_STORE_NAME = 'events';
 
@@ -18,11 +20,10 @@ export const eventsStore = createStore(
 @Injectable({providedIn: 'root'})
 export class EventsFacade {
 
-  private eventsService = inject(EventsService);
-
   events$: Signal<EventDto[]> = toSignal(eventsStore.pipe(selectAllEntities()), {
     initialValue: []
   });
+  private eventsService = inject(EventsService);
 
   setEvents(): Observable<EventDto[]> {
     return this.eventsService.getEvents().pipe(
@@ -39,6 +40,30 @@ export class EventsFacade {
         next: (event: EventDto) => {
           eventsStore.update(addEntities(event))
           console.log('Event created:', event)
+        },
+        error: (error) => console.error(error),
+      }),
+    );
+  }
+
+  joinEvent(eventId: number): Observable<EventFeedDto> {
+    return this.eventsService.joinEvent(eventId).pipe(
+      tap({
+        next: (event: EventFeedDto) => {
+          eventsStore.update(updateEntities(event.id, event))
+          feedStore.update(updateEntities(event.feedId, event))
+        },
+        error: (error) => console.error(error),
+      }),
+    );
+  }
+
+  withdrawFromEvent(eventId: number): Observable<EventFeedDto> {
+    return this.eventsService.withdrawFromEvent(eventId).pipe(
+      tap({
+        next: (event: EventFeedDto) => {
+          eventsStore.update(updateEntities(event.id, event))
+          feedStore.update(updateEntities(event.feedId, event))
         },
         error: (error) => console.error(error),
       }),

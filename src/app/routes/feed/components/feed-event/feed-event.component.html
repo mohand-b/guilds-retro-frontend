@@ -1,0 +1,83 @@
+<div class="w-full flex flex-col p-4 bg-white relative rounded-lg">
+  <div class="absolute right-4 top-2">
+    <mat-chip>Event</mat-chip>
+
+  </div>
+  <div class="flex">
+    <div class="relative w-40 h-40 bg-gray-200 rounded-lg overflow-hidden mr-4">
+      @if (!isCreator) {
+        <div class="absolute bottom-0 w-full p-2 flex justify-center gap-2 mt-4">
+          @if (isFull && !isParticipant) {
+            <button disabled color="warn" mat-raised-button>
+              Complet
+            </button>
+          } @else if (isParticipant) {
+            <button (click)="withdraw()" color="warn" mat-raised-button>
+              Se retirer
+            </button>
+          } @else {
+            <button (click)="participate()" color="primary" mat-raised-button>
+              Participer
+            </button>
+          }
+        </div>
+
+      }
+    </div>
+    <div class="flex flex-col flex-grow">
+      <div class="text-sm font-semibold">{{ event.title }}</div>
+      <div class="text-sm mb-2">{{ event.description }}</div>
+      <div class="text-xs text-gray-400 mb-2">
+        Participants: {{ event.participants.length }} / {{ event.maxParticipants }}
+      </div>
+
+      <div class="flex flex-grow gap-1">
+        @for (participant of event.participants; track participant.id; let isLast = $last) {
+          <div class="flex items-baseline gap-1">
+            <div class="w-6 h-6 rounded bg-beige border border-gray-300 flex items-center justify-center">
+              <img [src]="participant | characterIcon" alt="Avatar"
+                   class="w-5 h-5 rounded object-cover no-select no-copy">
+            </div>
+            <div class="text-xs text-gray-600">
+              {{ participant.username }}
+              @if (!isLast) {
+                <span>,</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+
+      <div class="flex gap-4 mt-2">
+        @if (event.minLevel) {
+          <div [ngClass]="event.minLevel <= currentUser.level ? 'text-red-500' : 'text-green-500'"
+               class="text-xs text-gray-600">
+            <span class="underline">Niveau minimum:</span> {{ event.minLevel }}
+          </div>
+        }
+        @if (event.requiredClasses!.length > 0) {
+          <div class="text-xs text-gray-600">
+            <span class="underline">Classes requises:</span>
+            @for (requiredClass of filteredRequiredClasses; track requiredClass; let isLast = $last) {
+              <span
+                [ngClass]="{'text-green-500': currentUser.characterClass === requiredClass}">
+                {{ requiredClass }}
+                @if (!isLast) {
+                  <span>,</span>
+                }
+              </span>
+            }
+          </div>
+        }
+        @if (event.requiresOptimization) {
+          <div class="text-xs text-gray-600">
+            <span class="underline">Optimisation requise:</span>
+            {{ event.requiresOptimization ? 'Oui' : 'Non' }}
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+</div>

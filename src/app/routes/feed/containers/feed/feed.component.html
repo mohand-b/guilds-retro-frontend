@@ -26,16 +26,17 @@
     </div>
   </div>
 
-  <div class="flex flex-col gap-2">
-    @for (item of feed$(); track item.id) {
+  @for (item of feed$(); track item.id) {
+    <div class="flex flex-col gap-4">
       @if (isPostFeedDto(item)) {
         <app-feed-post [currentUser]="currentUser" [post]="item"/>
       } @else if (isEventFeedDto(item)) {
-        <div>Event</div>
-        {{ item.title }} par {{ item.creator.username }}
+        <app-feed-event [currentUser]="currentUser" [event]="item"/>
       }
-
-    }
-
-  </div>
+    </div>
+  } @empty {
+    <div class="text-center text-gray-400">
+      Aucune publication
+    </div>
+  }
 </div>

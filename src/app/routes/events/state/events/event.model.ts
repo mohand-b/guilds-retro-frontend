@@ -1,4 +1,4 @@
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
+import {CharacterClassEnum, UserDto} from "../../../authenticated/state/authed/authed.model";
 
 export interface EventDto {
   id: number;
@@ -10,7 +10,7 @@ export interface EventDto {
   date: Date;
   maxParticipants: number;
   minLevel?: number;
-  requiredClasses?: string[];
+  requiredClasses?: CharacterClassEnum[];
   requiresOptimization?: boolean;
   creator: UserDto;
   participants: UserDto[];

@@ -9,6 +9,7 @@ import {FeedFacade} from "../../feed.facade";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {CreatePostModalComponent} from "../../components/create-post-modal/create-post-modal.component";
 import {EventFeedDto, FeedItem, PostFeedDto} from "../../state/feed/feed.model";
+import {FeedEventComponent} from "../../components/feed-event/feed-event.component";
 
 @Component({
   selector: 'app-feed',
@@ -17,7 +18,8 @@ import {EventFeedDto, FeedItem, PostFeedDto} from "../../state/feed/feed.model";
     CharacterIconPipe,
     FeedPostComponent,
     MatSlideToggle,
-    NgForOf
+    NgForOf,
+    FeedEventComponent
   ],
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.scss'
