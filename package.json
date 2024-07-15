@@ -25,6 +25,7 @@
     "@ngneat/elf-entities": "^5.0.2",
     "@ngneat/elf-persist-state": "^1.2.1",
     "@ngneat/elf-requests": "^1.9.2",
+    "dayjs": "^1.11.11",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

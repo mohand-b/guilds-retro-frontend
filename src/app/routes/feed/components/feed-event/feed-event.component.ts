@@ -8,6 +8,7 @@ import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MatChip} from "@angular/material/chips";
 import {EventsFacade} from "../../../events/events.facade";
+import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 
 @Component({
   selector: 'app-feed-event',
@@ -21,7 +22,8 @@ import {EventsFacade} from "../../../events/events.facade";
     MatButton,
     NgClass,
     NgForOf,
-    MatChip
+    MatChip,
+    DateFormatPipe
   ],
   templateUrl: './feed-event.component.html',
   styleUrl: './feed-event.component.scss'
@@ -52,15 +54,27 @@ export class FeedEventComponent {
     ) || [];
   }
 
-  get canParticipate(): boolean {
-    if (this.isFull || this.isParticipant) {
-      return false;
+  get meetsClassRequirements(): boolean {
+    if (!this.event.requiredClasses || this.event.requiredClasses.length === 0) {
+      return true;
     }
-    if (this.filteredRequiredClasses.length > 0) {
-      return this.filteredRequiredClasses.includes(this.currentUser.characterClass);
+
+    const remainingRequiredClasses = this.event.requiredClasses.filter(
+      requiredClass => !this.event.participants.some(participant => participant.characterClass === requiredClass)
+    );
+
+    if (remainingRequiredClasses.length === 0) {
+      return true;
     }
+
+    const remainingSpots = this.event.maxParticipants - this.event.participants.length;
+    if (remainingSpots <= remainingRequiredClasses.length) {
+      return remainingRequiredClasses.includes(this.currentUser.characterClass);
+    }
+
     return true;
   }
+
 
   participate(): void {
     this.eventFacade.joinEvent(this.event.id).subscribe();
