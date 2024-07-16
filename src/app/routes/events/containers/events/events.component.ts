@@ -1,10 +1,13 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {EventsFacade} from "../../events.facade";
+import {CreateEventComponent} from "../create-event/create-event.component";
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [],
+  imports: [
+    CreateEventComponent
+  ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })

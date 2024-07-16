@@ -14,6 +14,7 @@ export interface UserDto {
   role: UserRoleEnum;
   guild: GuildDto;
   gender: GenderEnum;
+  characterLevel: number;
   level: number;
   feedClosingToGuildAndAllies: boolean;
   guildId?: number;

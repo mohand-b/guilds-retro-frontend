@@ -20,6 +20,7 @@ export interface EventDto {
 export interface CreateEventDto {
   title: string;
   description: string;
+  isAccessibleToAllies?: boolean;
   type: string;
   dungeonName?: string;
   arenaTargets?: string;
@@ -28,4 +29,9 @@ export interface CreateEventDto {
   minLevel?: number;
   requiredClasses?: string[];
   requiresOptimization?: boolean;
+}
+
+export enum EventTypesEnum {
+  DUNGEON = 'DUNGEON',
+  ARENA = 'ARENA',
 }

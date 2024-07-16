@@ -9,6 +9,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
+import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,10 @@ export const appConfig: ApplicationConfig = {
         subscriptSizing: 'dynamic'
       }
     },
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'fr-FR'
+    },
     provideHttpClient(withInterceptorsFromDi()),
     TokenInterceptorProvider,
     provideRouter(routes),
@@ -26,5 +31,6 @@ export const appConfig: ApplicationConfig = {
       BrowserModule,
       BrowserAnimationsModule,
       MatSnackBarModule,
+      MatNativeDateModule
     ])]
 };

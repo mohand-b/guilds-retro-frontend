@@ -79,6 +79,10 @@ export class FeedEventComponent {
     return true;
   }
 
+  get levelRequirementMet(): boolean {
+    return !this.event.minLevel || this.currentUser.characterLevel >= this.event.minLevel;
+  }
+
 
   participate(): void {
     this.eventFacade.joinEvent(this.event.id).subscribe();

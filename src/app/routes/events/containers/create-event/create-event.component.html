@@ -1,0 +1,107 @@
+<mat-horizontal-stepper #stepper [linear]="true">
+  <mat-step [stepControl]="generalInfoFormGroup" label="Informations Générales">
+    <form [formGroup]="generalInfoFormGroup" class="flex flex-col gap-4">
+      <h2 class="text-2xl font-bold mb-4">Créer un événement</h2>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <input formControlName="title" matInput placeholder="Titre de l'événement"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <input formControlName="description" matInput placeholder="Description"/>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="isAccessibleToAllies">Ouvert aux guildes alliées</mat-checkbox>
+
+      <div class="flex justify-end mt-4">
+        <button [disabled]="generalInfoFormGroup.invalid" color="primary" mat-raised-button matStepperNext>Suivant
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="eventDetailsFormGroup" label="Détails de l'événement">
+    <form [formGroup]="eventDetailsFormGroup" class="flex flex-col gap-4">
+      <div class="flex gap-4">
+        <div class="flex items-center gap-2 h-full">
+          <div
+            (click)="selectType(EventTypes.DUNGEON)"
+            [ngClass]="{
+              'text-accent': eventDetailsFormGroup.get('type')?.value === EventTypes.DUNGEON,
+              'text-gray-400': eventDetailsFormGroup.get('type')?.value !== EventTypes.DUNGEON
+            }"
+            class="h-14 flex items-center gap-2 justify-center border-gray-400 border rounded px-4 py-2 cursor-pointer transition-colors">
+            <mat-icon>stadium</mat-icon>
+            <span>Donjon</span>
+          </div>
+          <div
+            (click)="selectType(EventTypes.ARENA)"
+            [ngClass]="{
+              'text-accent': eventDetailsFormGroup.get('type')?.value === EventTypes.ARENA,
+              'text-gray-400': eventDetailsFormGroup.get('type')?.value !== EventTypes.ARENA
+            }"
+            class="h-14 flex items-center gap-2 justify-center border-gray-400 border rounded px-4 py-2 cursor-pointer transition-colors">
+            <mat-icon>stadium</mat-icon>
+            <span>Arène</span>
+          </div>
+        </div>
+
+        <div class="flex-1">
+          @if (eventDetailsFormGroup.get('type')?.value === EventTypes.DUNGEON) {
+            <mat-form-field appearance="outline" class="w-full">
+              <input formControlName="dungeonName" matInput placeholder="Nom du donjon"/>
+            </mat-form-field>
+          } @else if (eventDetailsFormGroup.get('type')?.value === EventTypes.ARENA) {
+            <mat-form-field appearance="outline" class="w-full">
+              <input formControlName="arenaTargets" matInput placeholder="Cibles en arène"/>
+            </mat-form-field>
+          }
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <mat-form-field appearance="outline" class="flex-1 w-full">
+          <input (focus)="picker.open()" [matDatepicker]="picker" [min]="minDate" formControlName="date" matInput
+                 placeholder="Date"/>
+          <mat-icon matSuffix>calendar_today</mat-icon>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="flex-1 w-full">
+          <input #t="matTimepicker" formControlName="time" matInput matTimepicker placeholder="Heure">
+          <mat-icon (click)="t.showDialog()" matSuffix>access_time</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="flex justify-between mt-4">
+        <button color="primary" mat-raised-button matStepperPrevious>Précédent</button>
+        <button [disabled]="eventDetailsFormGroup.invalid" color="primary" mat-raised-button matStepperNext>Suivant
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="participationRequirementsFormGroup" label="Exigences de Participation">
+    <form [formGroup]="participationRequirementsFormGroup">
+      <mat-form-field appearance="outline" class="w-full">
+        <input formControlName="maxParticipants" matInput placeholder="Nombre maximum de participants" type="number"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <input formControlName="minLevel" matInput placeholder="Niveau minimum" type="number"/>
+      </mat-form-field>
+
+      <label class="font-semibold">Classes requises:</label>
+      <div *ngFor="let className of characterClasses">
+        <mat-checkbox (change)="onCheckboxChange($event)" [value]="className">{{ className }}</mat-checkbox>
+      </div>
+
+      <mat-checkbox formControlName="requiresOptimization">Optimisation requise</mat-checkbox>
+
+      <div class="flex justify-between mt-4">
+        <button color="primary" mat-raised-button matStepperPrevious>Précédent</button>
+        <button (click)="onSubmit()" [disabled]="eventForm.invalid" color="primary" mat-raised-button>Créer</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>

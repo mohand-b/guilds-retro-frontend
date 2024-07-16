@@ -20,7 +20,8 @@
               Se retirer
             </button>
           } @else if (!isParticipant && !isFull) {
-            <button [disabled]="!meetsClassRequirements" (click)="participate()" color="primary" mat-raised-button>
+            <button [disabled]="!meetsClassRequirements || !levelRequirementMet" (click)="participate()" color="primary"
+                    mat-raised-button>
               Participer
             </button>
           }
@@ -64,7 +65,7 @@
 
       <div class="flex gap-4 mt-2">
         @if (event.minLevel) {
-          <div [ngClass]="event.minLevel <= currentUser.level ? 'text-red-500' : 'text-green-500'"
+          <div [ngClass]="levelRequirementMet ? 'text-green-500' : 'text-red-500'"
                class="text-xs text-gray-600">
             <span class="underline">Niveau minimum:</span> {{ event.minLevel }}
           </div>
