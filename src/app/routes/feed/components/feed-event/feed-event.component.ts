@@ -46,6 +46,10 @@ export class FeedEventComponent {
     return this.event.participants.length >= this.event.maxParticipants
   }
 
+  get isFinished(): boolean {
+    return new Date(this.event.date) < new Date();
+  }
+
   get filteredRequiredClasses(): CharacterClassEnum[] {
     return this.event.requiredClasses?.filter(
       requiredClass => !this.event.participants.some(
