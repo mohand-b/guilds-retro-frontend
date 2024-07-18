@@ -1,5 +1,5 @@
-import {Component, inject} from '@angular/core';
-import {FormArray, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Component, inject, signal, WritableSignal} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
@@ -15,6 +15,10 @@ import {NgClass, NgForOf} from "@angular/common";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatButton} from "@angular/material/button";
 import {MatRadioModule} from "@angular/material/radio";
+import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocomplete";
+import {DUNGEONS} from "../../state/dungeons/dungeons.data";
+import {dungeonNameValidator} from "../../../../shared/validators/dungeon-name.validator";
+import {MatSlideToggle} from "@angular/material/slide-toggle";
 
 @Component({
   selector: 'app-create-event',
@@ -34,7 +38,10 @@ import {MatRadioModule} from "@angular/material/radio";
     MatInput,
     NgForOf,
     MatButton,
-    NgClass
+    NgClass,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatSlideToggle
   ],
   templateUrl: './create-event.component.html',
   styleUrl: './create-event.component.scss'
@@ -42,26 +49,24 @@ import {MatRadioModule} from "@angular/material/radio";
 export class CreateEventComponent {
 
   eventForm: FormGroup;
-  generalInfoFormGroup: FormGroup;
   eventDetailsFormGroup: FormGroup;
   participationRequirementsFormGroup: FormGroup;
 
   characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
+  dungeonNames: WritableSignal<string[]> = signal(DUNGEONS.map(dungeon => dungeon.dungeonName));
   protected readonly EventTypes = EventTypesEnum;
   protected readonly GenderEnum = GenderEnum;
   private eventsFacade = inject(EventsFacade);
 
-  constructor(private fb: NonNullableFormBuilder) {
-    this.generalInfoFormGroup = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-      isAccessibleToAllies: [false]
-    });
+  constructor(private fb: FormBuilder) {
 
     this.eventDetailsFormGroup = this.fb.group({
       type: [EventTypesEnum.DUNGEON, Validators.required],
-      dungeonName: [''],
+      title: [''],
+      dungeonName: ['', dungeonNameValidator()],
       arenaTargets: [''],
+      description: ['', Validators.required],
+      isAccessibleToAllies: [false],
       date: ['', Validators.required],
       time: ['', Validators.required]
     });
@@ -74,9 +79,21 @@ export class CreateEventComponent {
     });
 
     this.eventForm = this.fb.group({
-      generalInfoStep: this.generalInfoFormGroup,
       eventDetailsStep: this.eventDetailsFormGroup,
       participationRequirementsStep: this.participationRequirementsFormGroup
+    });
+
+    this.eventDetailsFormGroup.get('type')!.valueChanges.subscribe(type => {
+      this.updateDungeonNameValidator(type);
+    });
+
+    this.eventDetailsFormGroup.get('dungeonName')!.valueChanges.subscribe(input => {
+      if (input) {
+        this.dungeonNames.set(
+          DUNGEONS.map(dungeon => dungeon.dungeonName)
+            .filter(dungeonName => dungeonName.toLowerCase().includes(input.toLowerCase()))
+        );
+      }
     });
   }
 
@@ -89,15 +106,16 @@ export class CreateEventComponent {
   }
 
   onSubmit() {
-    if (this.generalInfoFormGroup.valid && this.eventDetailsFormGroup.valid && this.participationRequirementsFormGroup.valid) {
-      const formValues = {
-        ...this.generalInfoFormGroup.value,
+    if (this.eventDetailsFormGroup.valid && this.participationRequirementsFormGroup.valid) {
+      let formValues = {
         ...this.eventDetailsFormGroup.value,
         ...this.participationRequirementsFormGroup.value,
       };
 
       const combinedDateTime = this.combineDateAndTime(formValues.date, formValues.time);
       delete formValues.time;
+
+      formValues = this.filterFormValuesByType(formValues);
 
       const createEventDto: CreateEventDto = {
         ...formValues,
@@ -123,12 +141,20 @@ export class CreateEventComponent {
         i++;
       });
     }
-
-
   }
 
   selectType(type: EventTypesEnum) {
     this.eventDetailsFormGroup.patchValue({type});
+  }
+
+  private updateDungeonNameValidator(type: EventTypesEnum) {
+    const dungeonNameControl = this.eventDetailsFormGroup.get('dungeonName');
+    if (type === EventTypesEnum.DUNGEON) {
+      dungeonNameControl!.setValidators([dungeonNameValidator()]);
+    } else {
+      dungeonNameControl!.clearValidators();
+    }
+    dungeonNameControl!.updateValueAndValidity();
   }
 
   private combineDateAndTime(date: string, time: string): string {
@@ -138,5 +164,27 @@ export class CreateEventComponent {
     const dateTime = dayjs(`${formattedDate}T${formattedTime}`);
 
     return dateTime.toISOString();
+  }
+
+  private filterFormValuesByType(formValues: any) {
+    const type = formValues.type;
+
+    switch (type) {
+      case EventTypesEnum.OTHER:
+        delete formValues.dungeonName;
+        delete formValues.arenaTargets;
+        break;
+      case EventTypesEnum.DUNGEON:
+        delete formValues.arenaTargets;
+        delete formValues.title;
+        break;
+      case EventTypesEnum.ARENA:
+        delete formValues.dungeonName;
+        delete formValues.title;
+        formValues.arenaTargets = `Capture de ${formValues.arenaTargets}`;
+        break;
+    }
+
+    return formValues;
   }
 }

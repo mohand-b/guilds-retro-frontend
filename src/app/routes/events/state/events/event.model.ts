@@ -2,11 +2,11 @@ import {CharacterClassEnum, UserDto} from "../../../authenticated/state/authed/a
 
 export interface EventDto {
   id: number;
-  title: string;
-  description: string;
   type: string;
+  title?: string;
   dungeonName?: string;
   arenaTargets?: string;
+  description: string;
   date: Date;
   maxParticipants: number;
   minLevel?: number;
@@ -18,12 +18,12 @@ export interface EventDto {
 }
 
 export interface CreateEventDto {
-  title: string;
-  description: string;
-  isAccessibleToAllies?: boolean;
   type: string;
+  title?: string;
   dungeonName?: string;
   arenaTargets?: string;
+  description: string;
+  isAccessibleToAllies?: boolean;
   date: string;
   maxParticipants: number;
   minLevel?: number;
@@ -34,4 +34,5 @@ export interface CreateEventDto {
 export enum EventTypesEnum {
   DUNGEON = 'DUNGEON',
   ARENA = 'ARENA',
+  OTHER = 'OTHER'
 }

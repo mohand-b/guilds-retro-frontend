@@ -30,7 +30,14 @@
       }
     </div>
     <div class="flex flex-col flex-grow">
-      <div class="text-sm font-semibold">{{ event.title }}
+      <div class="text-sm font-semibold">
+        @if (event.title) {
+          {{ event.title }}
+        } @else if (event.dungeonName) {
+          {{ event.dungeonName }}
+        } @else if (event.arenaTargets) {
+          {{ event.arenaTargets }}
+        }
         <span class="font-light">
         - @if (isFinished) {
           terminé
