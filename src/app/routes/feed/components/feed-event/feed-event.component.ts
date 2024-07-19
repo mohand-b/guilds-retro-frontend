@@ -9,6 +9,7 @@ import {MatButton} from "@angular/material/button";
 import {MatChip} from "@angular/material/chips";
 import {EventsFacade} from "../../../events/events.facade";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
+import {EventImagePipe} from "../../../../shared/pipes/event-image.pipe";
 
 @Component({
   selector: 'app-feed-event',
@@ -23,7 +24,8 @@ import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
     NgClass,
     NgForOf,
     MatChip,
-    DateFormatPipe
+    DateFormatPipe,
+    EventImagePipe
   ],
   templateUrl: './feed-event.component.html',
   styleUrl: './feed-event.component.scss'
