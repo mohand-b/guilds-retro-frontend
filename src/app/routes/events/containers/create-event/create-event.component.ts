@@ -19,6 +19,7 @@ import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocom
 import {DUNGEONS} from "../../state/dungeons/dungeons.data";
 import {dungeonNameValidator} from "../../../../shared/validators/dungeon-name.validator";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-create-event',
@@ -51,11 +52,11 @@ export class CreateEventComponent {
   eventForm: FormGroup;
   eventDetailsFormGroup: FormGroup;
   participationRequirementsFormGroup: FormGroup;
-
   characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
   dungeonNames: WritableSignal<string[]> = signal(DUNGEONS.map(dungeon => dungeon.dungeonName));
   protected readonly EventTypes = EventTypesEnum;
   protected readonly GenderEnum = GenderEnum;
+  private dialogRef: MatDialogRef<CreateEventComponent> = inject(MatDialogRef);
   private eventsFacade = inject(EventsFacade);
 
   constructor(private fb: FormBuilder) {
@@ -65,7 +66,7 @@ export class CreateEventComponent {
       title: [''],
       dungeonName: ['', dungeonNameValidator()],
       arenaTargets: [''],
-      description: ['', Validators.required],
+      description: [''],
       isAccessibleToAllies: [false],
       date: ['', Validators.required],
       time: ['', Validators.required]
@@ -101,10 +102,6 @@ export class CreateEventComponent {
     return new Date();
   }
 
-  get requiredClassesFormArray(): FormArray {
-    return this.eventForm.get('requiredClasses') as FormArray;
-  }
-
   onSubmit() {
     if (this.eventDetailsFormGroup.valid && this.participationRequirementsFormGroup.valid) {
       let formValues = {
@@ -122,7 +119,8 @@ export class CreateEventComponent {
         date: combinedDateTime
       };
 
-      this.eventsFacade.createEvent(createEventDto).subscribe();
+      this.eventsFacade.createEvent(createEventDto)
+        .subscribe(event => this.dialogRef.close(event));
     }
   }
 

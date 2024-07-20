@@ -80,9 +80,8 @@
 
       <mat-slide-toggle formControlName="isAccessibleToAllies">Ouvert aux guildes alliées</mat-slide-toggle>
 
-      <div class="flex justify-between mt-4">
-        <button color="primary" mat-raised-button matStepperPrevious>Précédent</button>
-        <button color="primary" mat-raised-button matStepperNext>Suivant
+      <div class="flex justify-end">
+        <button [disabled]="eventDetailsFormGroup.invalid" color="primary" mat-raised-button matStepperNext>Suivant
         </button>
       </div>
 
@@ -90,7 +89,7 @@
     </form>
   </mat-step>
 
-  <mat-step [stepControl]="participationRequirementsFormGroup" label="Exigences de Participation">
+  <mat-step [stepControl]="participationRequirementsFormGroup" label="Exigences de participation">
     <form [formGroup]="participationRequirementsFormGroup" class="flex flex-col gap-4 pt-4">
 
       <div class="flex items-center gap-4">
@@ -122,7 +121,7 @@
         }
       </div>
 
-      <div class="flex justify-between mt-4">
+      <div class="flex justify-between">
         <button color="primary" mat-raised-button matStepperPrevious>Précédent</button>
         <button (click)="onSubmit()" [disabled]="eventForm.invalid" color="primary" mat-raised-button>Créer</button>
       </div>
