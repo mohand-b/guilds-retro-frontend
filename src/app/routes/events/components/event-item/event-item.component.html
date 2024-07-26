@@ -1,0 +1,40 @@
+<div class="bg-white shadow-md rounded-lg p-4 mb-4">
+  <h3 class="text-lg font-bold mb-2">{{ event.title || event.dungeonName || event.arenaTargets }}</h3>
+  <p class="text-gray-600 mb-2">{{ event.description }}</p>
+  <p class="text-gray-800 mb-2">
+    {{ event.date | dateFormat }}
+  </p>
+  <div class="flex flex-grow gap-1">
+    @for (participant of event.participants; track participant.id; let isLast = $last) {
+      <div class="flex items-baseline gap-1">
+        <div class="w-6 h-6 rounded bg-beige border border-gray-300 flex items-center justify-center">
+          <img [src]="participant | characterIcon" alt="Avatar"
+               class="w-5 h-5 rounded object-cover no-select no-copy">
+        </div>
+        <div class="text-xs text-gray-600">
+          {{ participant.username }}
+          @if (!isLast) {
+            <span>,</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+  @if (event.minLevel) {
+    <p class="text-gray-800 mb-2">
+      Niveau minimum: {{ event.minLevel }}
+    </p>
+  }
+  @if (event.requiredClasses?.length) {
+    <p class="text-gray-800 mb-2">
+      Classes requises: {{ event.requiredClasses!.join(', ') }}
+    </p>
+  }
+  @if (event.requiresOptimization) {
+    <p class="text-greeb-500 mb-2">
+      Optimisation requise
+    </p>
+  }
+
+
+</div>

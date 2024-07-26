@@ -1,13 +1,41 @@
-<div class="w- full flex flex-col gap-6">
+<div class="w-full flex flex-col gap-6">
 
   <div class="flex items-center justify-between">
-    <h2 class="text-2xl font-bold">Fil d'actualité</h2>
+    <h2 class="text-2xl font-bold">Événements</h2>
     <button (click)="openCreateEventModal()" color="primary" mat-raised-button>Créer un événement</button>
   </div>
 
-  <div class="flex flex-col gap-4">
-    @for (event of events$(); track event.id) {
-      {{ event.title || event.dungeonName || event.arenaTargets }}
-    }
+  <div class="p-4">
+
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Événements à venir (non rejoints)</h2>
+      @if (futureEventsNotJoined$().length > 0) {
+        <div class="flex flex-wrap gap-4">
+          <app-event-item *ngFor="let event of futureEventsNotJoined$()" [event]="event"></app-event-item>
+        </div>
+      } @else {
+        <p class="text-gray-600">Aucun événement à venir que vous n'avez pas rejoint.</p>
+      }
+
+      <h2 class="text-xl font-semibold mb-2">Événements à venir (rejoints)</h2>
+      @if (futureEventsJoined$().length > 0) {
+        <div class="flex flex-wrap gap-4">
+          <app-event-item *ngFor="let event of futureEventsJoined$()" [event]="event"></app-event-item>
+        </div>
+      } @else {
+        <p class="text-gray-600">Aucun événement à venir auquel vous êtes inscrit.</p>
+      }
+
+      <h2 class="text-xl font-semibold mb-2">Événements passés</h2>
+      @if (pastEvents$().length > 0) {
+        <div class="flex flex-wrap gap-4">
+          <app-event-item *ngFor="let event of pastEvents$()" [event]="event"></app-event-item>
+        </div>
+      } @else {
+        <p class="text-gray-600">Aucun événement passé.</p>
+      }
+    </div>
   </div>
+
 </div>
+
