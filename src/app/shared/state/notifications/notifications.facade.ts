@@ -2,9 +2,16 @@ import {inject, Injectable, Signal} from '@angular/core';
 import {NotificationsService} from './notifications.service';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {createStore, withProps} from "@ngneat/elf";
-import {addEntities, selectAllEntities, selectEntitiesCount, setEntities, withEntities} from "@ngneat/elf-entities";
+import {
+  addEntities,
+  deleteEntities,
+  selectAllEntities,
+  selectEntitiesCount,
+  setEntities,
+  withEntities
+} from "@ngneat/elf-entities";
 import {NotificationDto} from "./notification.model";
-import {Observable, tap} from "rxjs";
+import {forkJoin, Observable, tap} from "rxjs";
 
 export const NOTIFICATIONS_STORE_NAME = 'notifications';
 
@@ -31,11 +38,18 @@ export class NotificationsFacade {
   private notificationsService = inject(NotificationsService);
 
   constructor() {
-    this.notificationsService.listen('notification').subscribe(
-      (notification: NotificationDto) => {
-        notificationsStore.update(addEntities(notification));
-      }
-    );
+    forkJoin([
+      this.notificationsService.listen('notification').pipe(
+        tap((notification: NotificationDto) => {
+          notificationsStore.update(addEntities(notification));
+        })
+      ),
+      this.notificationsService.listen('cancel-notification').pipe(
+        tap((notificationId: number) => {
+          notificationsStore.update(deleteEntities(notificationId));
+        })
+      )
+    ]).subscribe();
   }
 
   loadNotifications(): Observable<NotificationDto[]> {
