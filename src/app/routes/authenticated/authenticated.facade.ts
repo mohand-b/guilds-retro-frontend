@@ -52,6 +52,10 @@ export class AuthenticatedFacade {
   private authedService = inject(AuthedService);
   private router: Router = inject(Router);
 
+  get userId(): number {
+    return this.currentUser$()!.id!;
+  }
+
   logout(): void {
     getRegistry().forEach(store => store.reset());
     this.router.navigateByUrl('/auth');
