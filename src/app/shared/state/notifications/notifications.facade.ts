@@ -11,7 +11,7 @@ import {
   withEntities
 } from "@ngneat/elf-entities";
 import {NotificationDto} from "./notification.model";
-import {forkJoin, Observable, tap} from "rxjs";
+import {forkJoin, map, Observable, tap} from "rxjs";
 
 export const NOTIFICATIONS_STORE_NAME = 'notifications';
 
@@ -25,7 +25,11 @@ const notificationsStore = createStore(
 export class NotificationsFacade {
 
   notifications$: Signal<NotificationDto[]> = toSignal(
-    notificationsStore.pipe(selectAllEntities()),
+    notificationsStore.pipe(
+      selectAllEntities(),
+      map(notifications => notifications
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
+    ),
     {initialValue: []}
   );
   notificationsCount$: Signal<number> = toSignal(

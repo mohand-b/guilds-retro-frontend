@@ -1,12 +1,13 @@
-import {Component, inject, Signal} from '@angular/core';
+import {Component, inject, input, Input, InputSignal, Signal} from '@angular/core';
 import {MatToolbar, MatToolbarRow} from "@angular/material/toolbar";
 import {RouterLink} from "@angular/router";
 import {AuthenticatedFacade} from "../../../routes/authenticated/authenticated.facade";
 import {UserDto, UserRoleEnum} from "../../../routes/authenticated/state/authed/authed.model";
 import {hasRequiredRole} from "../../../routes/authenticated/guards/role.guard";
 import {NgIf} from "@angular/common";
-import {NotificationsFacade} from "../../state/notifications/notifications.facade";
 import {MatBadge} from "@angular/material/badge";
+import {MatDrawer} from "@angular/material/sidenav";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-main-menu',
@@ -16,7 +17,8 @@ import {MatBadge} from "@angular/material/badge";
     MatToolbarRow,
     RouterLink,
     NgIf,
-    MatBadge
+    MatBadge,
+    MatIcon
   ],
   templateUrl: './main-menu.component.html',
   styleUrl: './main-menu.component.scss'
@@ -25,8 +27,8 @@ export class MainMenuComponent {
 
   UserRoleEnum = UserRoleEnum;
   hasRequiredRole = hasRequiredRole;
+  @Input() drawer!: MatDrawer;
+  notificationsCount: InputSignal<number> = input<number>(0);
   private authenticatedFacade = inject(AuthenticatedFacade);
   currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
-  private notificationsFacade = inject(NotificationsFacade);
-  notificationsCount: Signal<number> = this.notificationsFacade.notificationsCount$;
 }

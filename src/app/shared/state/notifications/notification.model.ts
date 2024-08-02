@@ -3,4 +3,5 @@ export interface NotificationDto {
   type: string;
   message: string;
   read: boolean;
+  createdAt: Date;
 }

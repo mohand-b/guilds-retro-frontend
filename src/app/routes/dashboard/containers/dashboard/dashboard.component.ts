@@ -4,6 +4,7 @@ import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.
 import {FeedComponent} from "../../../feed/containers/feed/feed.component";
 import {NgIf} from "@angular/common";
 import {UserMembershipRequestsComponent} from "../user-membership-requests/user-membership-requests.component";
+import {NotificationsComponent} from "../notifications/notifications.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +12,8 @@ import {UserMembershipRequestsComponent} from "../user-membership-requests/user-
   imports: [
     FeedComponent,
     NgIf,
-    UserMembershipRequestsComponent
+    UserMembershipRequestsComponent,
+    NotificationsComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'

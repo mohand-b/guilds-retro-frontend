@@ -4,6 +4,10 @@ import {HeaderComponent} from "../../../../shared/components/header/header.compo
 import {RouterOutlet} from "@angular/router";
 import {NotificationsFacade} from "../../../../shared/state/notifications/notifications.facade";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {NotificationsComponent} from "../../../dashboard/containers/notifications/notifications.component";
+import {MatIcon} from "@angular/material/icon";
+import {MatBadgeModule} from "@angular/material/badge";
 
 @Component({
   selector: 'app-authenticated',
@@ -12,14 +16,19 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
     MainMenuComponent,
     HeaderComponent,
     RouterOutlet,
-
+    MatSidenavModule,
+    MatBadgeModule,
+    NotificationsComponent,
+    MatIcon
   ],
   templateUrl: './authenticated.component.html',
   styleUrl: './authenticated.component.scss'
 })
 export class AuthenticatedComponent {
 
+  public showNotifications = false;
   private notificationsFacade = inject(NotificationsFacade);
+  public readonly notificationsCount = this.notificationsFacade.notificationsCount$;
   private readonly destroyRef = inject(DestroyRef);
 
   constructor() {

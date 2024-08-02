@@ -1,6 +1,8 @@
 <mat-toolbar class="flex justify-center custom-shadow" color="primary">
   <mat-toolbar-row class="w-full justify-evenly">
-    <button [matBadge]="notificationsCount()" class="mx-4" mat-button routerLink="/dashboard">Accueil</button>
+    <button class="mx-4" mat-button routerLink="/dashboard">
+      Accueil
+    </button>
     <button *ngIf="hasRequiredRole(currentUser()!.role, UserRoleEnum.MEMBER)" class="mx-4" mat-button
             routerLink="/guild">
       Guilde
@@ -16,5 +18,15 @@
             routerLink="/profile">
       Profil
     </button>
+
+    <button
+      (click)="drawer.toggle()"
+      [matBadge]="notificationsCount()"
+      mat-icon-button
+      matBadgeColor="warn"
+    >
+      <mat-icon>notifications</mat-icon>
+    </button>
+
   </mat-toolbar-row>
 </mat-toolbar>
