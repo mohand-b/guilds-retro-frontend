@@ -1,10 +1,10 @@
 <div class="flex flex-col h-screen overflow-hidden">
   <app-header class="flex-none"></app-header>
-  <app-main-menu [drawer]="drawer" [notificationsCount]="notificationsCount()" class="flex-none"></app-main-menu>
+  <app-main-menu [drawer]="drawer" [notificationsCount]="unreadNotificationsCount()" class="flex-none"></app-main-menu>
 
   <div class="h-full flex flex-grow relative overflow-hidden">
     <mat-drawer-container class="h-full flex flex-grow relative overflow-hidden">
-      <div class="p-10 body-background flex-grow overflow-y-auto overflow-x-hidden">
+      <div class="p-10 h-full body-background flex-grow overflow-y-auto overflow-x-hidden">
         <router-outlet/>
       </div>
 

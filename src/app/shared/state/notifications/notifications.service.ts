@@ -35,5 +35,14 @@ export class NotificationsService {
     );
   }
 
+  markNotificationsAsRead(notificationIds: number[]): Observable<NotificationDto[]> {
+    return this.http.patch<NotificationDto[]>(
+      `${environment.apiUrl}/notifications/mark-as-read`,
+      {
+        notificationIds,
+      }
+    );
+  }
+
 }
 

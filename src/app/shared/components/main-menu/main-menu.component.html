@@ -21,6 +21,7 @@
 
     <button
       (click)="drawer.toggle()"
+      [matBadgeHidden]="notificationsCount() === 0"
       [matBadge]="notificationsCount()"
       mat-icon-button
       matBadgeColor="warn"

@@ -2,7 +2,9 @@
   <h2 class="text-2xl font-bold p-4">Notifications</h2>
 
   @for (notification of notifications(); track notification.id) {
-    <app-notification-item [notification]="notification"/>
+    <div #notificationItem [attr.data-id]="notification.id">
+      <app-notification-item [notification]="notification"></app-notification-item>
+    </div>
   } @empty {
     <div class="text-center text-gray-400 p-4">
       Aucune notification

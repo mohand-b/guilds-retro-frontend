@@ -1,4 +1,4 @@
-<div class="border-b border-gray-200 p-4">
+<div [ngClass]="{ 'bg-slate-200': !notification.read }" class="border-b border-gray-200 p-4">
   {{ notification.message }}
   <div class="text-xs text-gray-700">{{ notification.createdAt | dateFormat }}</div>
 </div>

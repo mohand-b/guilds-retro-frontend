@@ -28,7 +28,7 @@ export class AuthenticatedComponent {
 
   public showNotifications = false;
   private notificationsFacade = inject(NotificationsFacade);
-  public readonly notificationsCount = this.notificationsFacade.notificationsCount$;
+  public readonly unreadNotificationsCount = this.notificationsFacade.unreadNotificationsCount$;
   private readonly destroyRef = inject(DestroyRef);
 
   constructor() {

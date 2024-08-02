@@ -6,8 +6,9 @@ import {
   addEntities,
   deleteEntities,
   selectAllEntities,
-  selectEntitiesCount,
+  selectEntitiesCountByPredicate,
   setEntities,
+  updateEntities,
   withEntities
 } from "@ngneat/elf-entities";
 import {NotificationDto} from "./notification.model";
@@ -24,6 +25,7 @@ const notificationsStore = createStore(
 @Injectable({providedIn: 'root'})
 export class NotificationsFacade {
 
+
   notifications$: Signal<NotificationDto[]> = toSignal(
     notificationsStore.pipe(
       selectAllEntities(),
@@ -32,9 +34,9 @@ export class NotificationsFacade {
     ),
     {initialValue: []}
   );
-  notificationsCount$: Signal<number> = toSignal(
+  unreadNotificationsCount$: Signal<number> = toSignal(
     notificationsStore.pipe(
-      selectEntitiesCount(),
+      selectEntitiesCountByPredicate(notification => !notification.read),
     ),
     {initialValue: 0}
   );
@@ -60,6 +62,17 @@ export class NotificationsFacade {
     return this.notificationsService.getNotifications().pipe(
       tap({
         next: (notifications: NotificationDto[]) => notificationsStore.update(setEntities(notifications)),
+        error: (error) => console.error(error),
+      }),
+    );
+  }
+
+  markNotificationsAsRead(notificationIds: number[]): Observable<NotificationDto[]> {
+    return this.notificationsService.markNotificationsAsRead(notificationIds).pipe(
+      tap({
+        next: (notifications: NotificationDto[]) => notificationsStore.update(
+          updateEntities(notifications.map(notification => notification.id), {read: true})
+        ),
         error: (error) => console.error(error),
       }),
     );
