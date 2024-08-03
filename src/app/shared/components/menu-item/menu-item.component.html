@@ -2,5 +2,5 @@
   @if (selected) {
     <img alt="tofu" class="absolute -left-3 -top-3 z-10" height="20" ngSrc="assets/bestiaries/1558.svg" width="20"/>
   }
-  {{ text }}
+  <span [ngClass]="{'font-bold' : selected}">{{ text }}</span>
 </div>

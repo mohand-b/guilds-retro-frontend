@@ -2,6 +2,27 @@
 
 @include mat.core();
 
+@font-face {
+  font-family: 'Nunito';
+  src: url('/assets/fonts/Nunito-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/assets/fonts/Nunito-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/assets/fonts/Nunito-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
 $guilds-retro-primary: mat.define-palette(mat.$green-palette, 600);
 $guilds-retro-accent: mat.define-palette(mat.$amber-palette, 500);
 $guilds-retro-warn: mat.define-palette(mat.$deep-orange-palette, 700);
@@ -15,7 +36,9 @@ $guilds-retro-theme: mat.define-light-theme(
         accent: $guilds-retro-accent,
         warn: $guilds-retro-warn
       ),
-      typography: mat.define-typography-config(),
+      typography: mat.define-typography-config(
+        $font-family: 'Nunito, sans-serif',
+      ),
       foreground: (
         base: white,
         text: white,
