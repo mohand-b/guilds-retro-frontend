@@ -1,6 +1,6 @@
 import {Component, inject, input, Input, InputSignal, Signal} from '@angular/core';
 import {MatToolbar, MatToolbarRow} from "@angular/material/toolbar";
-import {RouterLink} from "@angular/router";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 import {AuthenticatedFacade} from "../../../routes/authenticated/authenticated.facade";
 import {UserDto, UserRoleEnum} from "../../../routes/authenticated/state/authed/authed.model";
 import {hasRequiredRole} from "../../../routes/authenticated/guards/role.guard";
@@ -8,6 +8,7 @@ import {NgIf} from "@angular/common";
 import {MatBadge} from "@angular/material/badge";
 import {MatDrawer} from "@angular/material/sidenav";
 import {MatIcon} from "@angular/material/icon";
+import {MenuItemComponent} from "../menu-item/menu-item.component";
 
 @Component({
   selector: 'app-main-menu',
@@ -18,7 +19,9 @@ import {MatIcon} from "@angular/material/icon";
     RouterLink,
     NgIf,
     MatBadge,
-    MatIcon
+    MatIcon,
+    MenuItemComponent,
+    RouterLinkActive
   ],
   templateUrl: './main-menu.component.html',
   styleUrl: './main-menu.component.scss'

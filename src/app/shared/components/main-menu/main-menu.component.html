@@ -1,33 +1,39 @@
 <mat-toolbar class="flex justify-center custom-shadow" color="primary">
   <mat-toolbar-row class="w-full justify-evenly">
-    <button class="mx-4" mat-button routerLink="/dashboard">
-      Accueil
-    </button>
-    <button *ngIf="hasRequiredRole(currentUser()!.role, UserRoleEnum.MEMBER)" class="mx-4" mat-button
-            routerLink="/guild">
-      Guilde
-    </button>
-    <button *ngIf="hasRequiredRole(currentUser()!.role, UserRoleEnum.MEMBER)" class="mx-4" mat-button
-            routerLink="/events">
-      Événements
-    </button>
-    <button *ngIf="hasRequiredRole(currentUser()!.role, UserRoleEnum.MEMBER)" class="mx-4" mat-button
-            routerLink="/eternal-harvest">Éternelle Moisson
-    </button>
-    <button *ngIf="hasRequiredRole(currentUser()!.role, UserRoleEnum.CANDIDATE)" class="mx-4" mat-button
-            routerLink="/profile">
-      Profil
-    </button>
+    <a #dashboard="routerLinkActive" routerLink="/dashboard" routerLinkActive>
+      <app-menu-item [selected]="dashboard.isActive" text="Accueil"/>
+    </a>
 
-    <button
-      (click)="drawer.toggle()"
-      [matBadgeHidden]="notificationsCount() === 0"
-      [matBadge]="notificationsCount()"
-      mat-icon-button
-      matBadgeColor="warn"
-    >
-      <mat-icon>notifications</mat-icon>
-    </button>
+    @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.MEMBER)) {
+      <a #guild="routerLinkActive" routerLink="/guild" routerLinkActive>
+        <app-menu-item text="Guilde" [selected]="guild.isActive"/>
+      </a>
+
+      <a #events="routerLinkActive" routerLink="/events" routerLinkActive>
+        <app-menu-item text="Événements" [selected]="events.isActive"/>
+      </a>
+
+      <a #eternalHarvest="routerLinkActive" routerLink="/eternal-harvest" routerLinkActive>
+        <app-menu-item text="Éternelle Moisson" [selected]="eternalHarvest.isActive"/>
+      </a>
+    }
+    @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.CANDIDATE)) {
+      <a #profile="routerLinkActive" routerLink="/profile" routerLinkActive>
+        <app-menu-item text="Profil" [selected]="profile.isActive"/>
+      </a>
+
+      <button
+        (click)="drawer.toggle()"
+        [matBadgeHidden]="notificationsCount() === 0"
+        [matBadge]="notificationsCount()"
+        mat-icon-button
+        matBadgeColor="warn"
+        class="-mb-2"
+      >
+        <mat-icon>notifications</mat-icon>
+      </button>
+
+    }
 
   </mat-toolbar-row>
 </mat-toolbar>
