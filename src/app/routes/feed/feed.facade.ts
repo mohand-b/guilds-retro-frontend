@@ -4,7 +4,6 @@ import {inject, Injectable, Signal} from "@angular/core";
 import {map, Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {FeedService} from "./state/feed/feed.service";
-import {CreatePost} from "./state/posts/post.model";
 import {PostsService} from "./state/posts/posts.service";
 import {authenticatedStore} from "../authenticated/authenticated.facade";
 import {LikesService} from "./state/likes/likes.service";
@@ -52,13 +51,10 @@ export class FeedFacade {
     );
   }
 
-  createPost(post: CreatePost): Observable<PostFeedDto> {
-    return this.postsService.create(post).pipe(
+  createPost(postFormData: FormData): Observable<PostFeedDto> {
+    return this.postsService.create(postFormData).pipe(
       tap({
-        next: (post: PostFeedDto) => {
-          feedStore.update(addEntities(post))
-          console.log('Post created:', post)
-        },
+        next: (post: PostFeedDto) => feedStore.update(addEntities(post)),
         error: (error) => console.error(error),
       }),
     );

@@ -1,9 +1,23 @@
-<div class="flex flex-col gap-2 p-4">
+<form [formGroup]="postForm" class="flex flex-col gap-2">
   <mat-form-field appearance="outline" class="w-full">
-    <mat-label>Post Content</mat-label>
-    <textarea [formControl]="postFormControl" matInput rows="4"></textarea>
+    <textarea formControlName="text" matInput placeholder="Ecris un message" rows="4"></textarea>
   </mat-form-field>
+  @if (postForm.get('image')?.value && imagePreview) {
+    <div class="relative">
+      <img [src]="imagePreview" alt="Aperçu" class="w-full h-full object-cover">
+      <div class="absolute top-2 right-2">
+        <button mat-icon-button (click)="removeImage()" class="bg-black bg-opacity-70">
+          <mat-icon class="text-white">close</mat-icon>
+        </button>
+      </div>
+    </div>
+  } @else {
+    <button (click)="importInput.click()" mat-icon-button>
+      <mat-icon>add_a_photo</mat-icon>
+    </button>
+  }
 
-  <button (click)="onSubmit()" [disabled]="!postFormControl.valid" color="primary" mat-raised-button>Post</button>
-</div>
+</form>
 
+
+<input #importInput (change)="onImportLogo($event)" accept=".png, .jpg" hidden type="file">

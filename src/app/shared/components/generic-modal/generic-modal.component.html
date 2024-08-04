@@ -8,7 +8,8 @@
     <button (click)="onCancel()" color="warn" mat-stroked-button>
       {{ data.buttonText ? 'Annuler' : 'Quitter' }}
     </button>
-    <button *ngIf="data.buttonText" (click)="onAction()" [color]="data.buttonColor" [disabled]="buttonDisabled"
-            mat-raised-button>{{ data.buttonText }}</button>
+    <button (click)="onAction()" *ngIf="data.buttonText" [color]="data.buttonColor" [disabled]="buttonDisabled()"
+            mat-raised-button>{{ data.buttonText }}
+    </button>
   </div>
 </div>

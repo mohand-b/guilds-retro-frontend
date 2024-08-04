@@ -28,11 +28,17 @@
       </div>
     </div>
   </div>
-  <div class="text-sm mb-2">
-    {{ post.text }}
-  </div>
+  @if (post.text) {
+    <div class="text-sm mb-2">
+      {{ post.text }}
+    </div>
+  }
+
+  @if (post.image) {
+    <img [src]="post.image" alt="post image" class="w-full h-full object-cover"/>
+  }
   <div class="text-xs text-gray-400 mb-2">
-    {{ post.createdAt | date:'short' }}
+    {{ post.createdAt | dateFormat }}
   </div>
 
   <div class="flex items-center gap-2">

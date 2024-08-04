@@ -20,6 +20,6 @@ export interface Comment {
 }
 
 export interface CreatePost {
-  text?: string;
-  image?: string;
+  text?: string | null;
+  image?: File | null;
 }

@@ -2,10 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  effect,
   inject,
-  Injector,
+  signal,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
+  WritableSignal
 } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {CommonModule} from "@angular/common";
@@ -18,15 +20,19 @@ import {CdkPortalOutlet} from "@angular/cdk/portal";
   standalone: true,
   imports: [CommonModule, MatButtonModule, MatIconModule, CdkPortalOutlet],
   templateUrl: './generic-modal.component.html',
-  styleUrl: './generic-modal.component.scss'
+  styleUrls: ['./generic-modal.component.scss']
 })
 export class GenericModalComponent implements AfterViewInit {
   @ViewChild('dynamicComponentContainer', {read: ViewContainerRef}) container!: ViewContainerRef;
   public data: any = inject(MAT_DIALOG_DATA);
-  buttonDisabled: boolean = this.data.disableButtonUntilConditionMet;
+  buttonDisabled: WritableSignal<boolean> = signal(this.data.disableButtonUntilConditionMet);
   private childComponentRef: any;
+  conditionMetEffect = effect(() => {
+    if (this.data.disableButtonUntilConditionMet) {
+      this.buttonDisabled.set(!this.childComponentRef.conditionMet());
+    }
+  }, {allowSignalWrites: true})
   private dialogRef: MatDialogRef<GenericModalComponent> = inject(MatDialogRef);
-  private injector: Injector = inject(Injector);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   ngAfterViewInit(): void {
@@ -37,14 +43,6 @@ export class GenericModalComponent implements AfterViewInit {
       });
       this.childComponentRef = componentRef.instance;
 
-      if (this.data.disableButtonUntilConditionMet) {
-        if (this.childComponentRef.conditionMet$) {
-          this.childComponentRef.conditionMet$.subscribe(() => {
-            this.buttonDisabled = false;
-            this.cdr.detectChanges();
-          });
-        }
-      }
       this.cdr.detectChanges();
     }
   }

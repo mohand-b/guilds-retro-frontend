@@ -1,10 +1,10 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit, signal, WritableSignal} from '@angular/core';
 import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
 import {NgForOf, NgIf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogClose} from "@angular/material/dialog";
-import {debounceTime, distinctUntilChanged, filter, startWith, Subject} from "rxjs";
+import {debounceTime, distinctUntilChanged, filter, startWith} from "rxjs";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 
@@ -26,7 +26,7 @@ import {AlertComponent} from "../../../../shared/components/alert/alert.componen
 export class GuildSelectionComponent implements OnInit {
 
   selectedGuild: GuildSummaryDto | null = null;
-  conditionMet$ = new Subject<void>();
+  conditionMet: WritableSignal<boolean> = signal<boolean>(false);
   searchControl = new FormControl<string>('', {nonNullable: true});
   filteredGuilds: GuildSummaryDto[] = [];
   private data: { guilds: GuildSummaryDto[] } = inject(MAT_DIALOG_DATA);
@@ -52,7 +52,7 @@ export class GuildSelectionComponent implements OnInit {
   }
 
   onGuildSelect(guild: GuildSummaryDto): void {
-    this.conditionMet$.next();
+    this.conditionMet.set(true);
     this.selectedGuild = guild;
   }
 

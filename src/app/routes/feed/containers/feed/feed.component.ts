@@ -10,6 +10,10 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {CreatePostModalComponent} from "../../components/create-post-modal/create-post-modal.component";
 import {EventFeedDto, FeedItem, PostFeedDto} from "../../state/feed/feed.model";
 import {FeedEventComponent} from "../../components/feed-event/feed-event.component";
+import {GenericModalService} from '../../../../shared/services/generic-modal.service';
+import {EMPTY, switchMap} from "rxjs";
+import {CreatePost} from "../../state/posts/post.model";
+import {toFormData} from "../../../../shared/extensions/object.extension";
 
 @Component({
   selector: 'app-feed',
@@ -31,22 +35,30 @@ export class FeedComponent {
   feed$: Signal<(PostFeedDto | EventFeedDto)[]> = this.feedFacade.feed$;
   feedClosingToGuildAndAllies$: Signal<boolean> = this.feedFacade.feedClosingToGuildAndAllies$;
   private destroyRef: DestroyRef = inject(DestroyRef);
-
   feedPreferenceChanged = effect(() => {
     const feedPreference = this.feedClosingToGuildAndAllies$();
     this.feedFacade.setFeed().pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   })
+  private genericModalService = inject(GenericModalService);
 
   openCreatePostModal() {
-    const dialogRef = this.dialog.open(CreatePostModalComponent, {});
+    this.genericModalService.open(
+      'Créer une publication',
+      {primary: 'Poster'},
+      'md',
+      {},
+      CreatePostModalComponent,
+      undefined,
+      true,
+    ).pipe(
+      switchMap((post: CreatePost) => {
+        if (!post) return EMPTY;
+        return this.feedFacade.createPost(toFormData(post));
+      })
+    ).subscribe();
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('Post data received:', result);
-      }
-    });
   }
 
   toggleFeedClosingToGuildAndAllies(checked: boolean) {
