@@ -1,7 +1,7 @@
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {LikeDto} from "../likes/like.model";
 
-export interface Post {
+export interface PostDto {
   id: number;
   text: string;
   createdAt: Date;

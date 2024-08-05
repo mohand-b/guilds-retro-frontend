@@ -6,12 +6,12 @@ import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {MatIcon} from "@angular/material/icon";
 import {FeedFacade} from "../../feed.facade";
 import {RouterLink} from "@angular/router";
-import {PostFeedDto} from "../../state/feed/feed.model";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {LineClampDirective} from "../../../../shared/directives/line-clamp.directive";
 import {MatMenuModule} from "@angular/material/menu";
 import {EMPTY, switchMap} from "rxjs";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
+import {PostDto} from "../../state/posts/post.model";
 
 @Component({
   selector: 'app-feed-post',
@@ -33,7 +33,7 @@ import {GenericModalService} from "../../../../shared/services/generic-modal.ser
 })
 export class FeedPostComponent {
 
-  @Input() post!: PostFeedDto;
+  @Input() post!: PostDto;
   @Input() currentUser!: UserDto;
   public showMore = false;
   public isClamped = false;

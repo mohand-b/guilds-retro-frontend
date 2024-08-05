@@ -1,5 +1,4 @@
 import {Component, inject, Input} from '@angular/core';
-import {EventFeedDto} from "../../state/feed/feed.model";
 import {CharacterClassEnum, UserDto} from "../../../authenticated/state/authed/authed.model";
 import {RouterLink} from "@angular/router";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
@@ -10,6 +9,7 @@ import {MatChip} from "@angular/material/chips";
 import {EventsFacade} from "../../../events/events.facade";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {EventImagePipe} from "../../../../shared/pipes/event-image.pipe";
+import {EventDto} from "../../../events/state/events/event.model";
 
 @Component({
   selector: 'app-feed-event',
@@ -31,7 +31,7 @@ import {EventImagePipe} from "../../../../shared/pipes/event-image.pipe";
   styleUrl: './feed-event.component.scss'
 })
 export class FeedEventComponent {
-  @Input() event!: EventFeedDto;
+  @Input() event!: EventDto;
   @Input() currentUser!: UserDto;
   private eventFacade = inject(EventsFacade);
 

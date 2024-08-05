@@ -2,7 +2,7 @@ import {inject, Injectable} from "@angular/core";
 import {environment} from "../../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {PostFeedDto} from "../feed/feed.model";
+import {PostDto} from "./post.model";
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
@@ -11,8 +11,8 @@ export class PostsService {
 
   private readonly postsBaseUrl = `${environment.apiUrl}/posts`;
 
-  create(postFormData: FormData): Observable<PostFeedDto> {
-    return this.http.post<PostFeedDto>(`${this.postsBaseUrl}`, postFormData);
+  create(postFormData: FormData): Observable<PostDto> {
+    return this.http.post<PostDto>(`${this.postsBaseUrl}`, postFormData);
   }
 
   delete(id: number): Observable<void> {

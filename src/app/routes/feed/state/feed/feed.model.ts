@@ -1,14 +1,9 @@
-import {Post} from "../posts/post.model";
+import {PostDto} from "../posts/post.model";
 import {EventDto} from "../../../events/state/events/event.model";
 
-export interface PostFeedDto extends Post {
-  feedId: string;
-  feedType: string;
+export interface FeedDto {
+  id: number,
+  post?: PostDto,
+  event?: EventDto,
+  createdAt: Date
 }
-
-export interface EventFeedDto extends EventDto {
-  feedId: string;
-  feedType: string;
-}
-
-export type FeedItem = PostFeedDto | EventFeedDto;
