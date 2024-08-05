@@ -15,5 +15,9 @@ export class PostsService {
     return this.http.post<PostFeedDto>(`${this.postsBaseUrl}`, postFormData);
   }
 
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.postsBaseUrl}/${id}`);
+  }
+
 
 }

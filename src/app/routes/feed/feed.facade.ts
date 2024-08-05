@@ -1,5 +1,12 @@
 import {createStore, select, setProps, withProps} from "@ngneat/elf";
-import {addEntities, selectAllEntities, setEntities, updateEntities, withEntities} from "@ngneat/elf-entities";
+import {
+  addEntities,
+  deleteEntities,
+  selectAllEntities,
+  setEntities,
+  updateEntities,
+  withEntities
+} from "@ngneat/elf-entities";
 import {inject, Injectable, Signal} from "@angular/core";
 import {map, Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
@@ -55,6 +62,15 @@ export class FeedFacade {
     return this.postsService.create(postFormData).pipe(
       tap({
         next: (post: PostFeedDto) => feedStore.update(addEntities(post)),
+        error: (error) => console.error(error),
+      }),
+    );
+  }
+
+  deletePost(postId: number): Observable<void> {
+    return this.postsService.delete(postId).pipe(
+      tap({
+        next: () => feedStore.update(deleteEntities(`post-${postId}`)),
         error: (error) => console.error(error),
       }),
     );

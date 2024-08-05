@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
-import {DatePipe, NgIf, NgOptimizedImage} from "@angular/common";
+import {DatePipe, NgOptimizedImage} from "@angular/common";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {MatIcon} from "@angular/material/icon";
@@ -9,6 +9,9 @@ import {RouterLink} from "@angular/router";
 import {PostFeedDto} from "../../state/feed/feed.model";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {LineClampDirective} from "../../../../shared/directives/line-clamp.directive";
+import {MatMenuModule} from "@angular/material/menu";
+import {EMPTY, switchMap} from "rxjs";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 
 @Component({
   selector: 'app-feed-post',
@@ -18,14 +21,13 @@ import {LineClampDirective} from "../../../../shared/directives/line-clamp.direc
     CharacterIconPipe,
     DatePipe,
     GuildMembershipPipe,
-    NgIf,
+    MatMenuModule,
     MatIcon,
     RouterLink,
     DateFormatPipe,
     NgOptimizedImage,
     LineClampDirective
   ],
-  providers: [LineClampDirective],
   templateUrl: './feed-post.component.html',
   styles: ``
 })
@@ -37,6 +39,7 @@ export class FeedPostComponent {
   public isClamped = false;
 
   private feedFacade = inject(FeedFacade);
+  private genericModalService = inject(GenericModalService);
 
   get isLiked(): boolean {
     return this.post.likes.some(like => like.user.id === this.currentUser.id);
@@ -60,5 +63,25 @@ export class FeedPostComponent {
 
   handleContentClamped(clamped: boolean) {
     this.isClamped = clamped;
+  }
+
+  deletePost() {
+    this.genericModalService.open(
+      'Confirmation',
+      {warn: 'Oui'},
+      'sm',
+      null,
+      null,
+      `Es-tu sûr de vouloir supprimer ce post ?`,
+    ).pipe(
+      switchMap((result) => {
+        if (result) return this.feedFacade.deletePost(this.post.id)
+        else return EMPTY;
+      })
+    ).subscribe();
+  }
+
+  reportPost() {
+
   }
 }

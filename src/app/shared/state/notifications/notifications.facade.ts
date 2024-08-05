@@ -46,15 +46,11 @@ export class NotificationsFacade {
   constructor() {
     forkJoin([
       this.notificationsService.listen('notification').pipe(
-        tap((notification: NotificationDto) => {
-          notificationsStore.update(addEntities(notification));
-        })
+        tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
       ),
       this.notificationsService.listen('cancel-notification').pipe(
-        tap((notificationId: number) => {
-          notificationsStore.update(deleteEntities(notificationId));
-        })
-      )
+        tap((notificationId: number) => notificationsStore.update(deleteEntities(notificationId)))
+      ),
     ]).subscribe();
   }
 
