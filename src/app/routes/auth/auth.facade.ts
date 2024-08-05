@@ -46,6 +46,7 @@ export class AuthFacade {
     return this.authService.registerAsMember(registerMemberDto).pipe(
       tap({
         next: (response) => {
+          console.log('response', response)
           authenticatedStore.update(
             (state) => ({
               ...state,

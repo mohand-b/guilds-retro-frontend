@@ -8,48 +8,58 @@
     <div class="ml-4">
       <div class="text-sm font-semibold">{{ post.user.username }}</div>
       <div class="text-xs text-gray-500">
-        <span *ngIf="(post.user | guildMembership:currentUser) === 'currentUser'">
+        @if ((post.user | guildMembership:currentUser) === 'currentUser') {
           Moi
-        </span>
-
-        <span *ngIf="(post.user | guildMembership:currentUser) === 'myGuild'">
+        } @else if ((post.user | guildMembership:currentUser) === 'myGuild') {
           {{ post.user.role }} de ma guilde
-        </span>
-        <span *ngIf="(post.user | guildMembership:currentUser) === 'alliedGuild'">
+        } @else if ((post.user | guildMembership:currentUser) === 'alliedGuild') {
           {{ post.user.role }} de la guilde <span class="text-pink-600">alliée </span><span
-          [routerLink]="['/guild', post.user.guild.id]"
-          class="cursor-pointer underline">{{ post.user.guild.name }}</span>
-        </span>
-        <span *ngIf="(post.user | guildMembership:currentUser) === 'externalGuild'">
+            [routerLink]="['/guild', post.user.guild.id]"
+            class="cursor-pointer underline">{{ post.user.guild.name }}</span>
+        } @else if ((post.user | guildMembership:currentUser) === 'externalGuild') {
           {{ post.user.role }} de la guilde
           <span [routerLink]="['/guild', post.user.guild.id]"
                 class="cursor-pointer underline">{{ post.user.guild.name }}</span>
-        </span>
+        }
+      </div>
+      <div class="text-xs text-gray-400 mb-2">
+        {{ post.createdAt | dateFormat }}
       </div>
     </div>
   </div>
-  @if (post.text) {
-    <div class="text-sm mb-2">
-      {{ post.text }}
-    </div>
-  }
 
-  @if (post.image) {
-    <img [src]="post.image" alt="post image" class="w-full h-full object-cover"/>
-  }
-  <div class="text-xs text-gray-400 mb-2">
-    {{ post.createdAt | dateFormat }}
+  <div class="flex flex-col gap-2">
+    @if (post.text) {
+      <div class="text-sm whitespace-pre-wrap" [appLineClamp]="showMore ? null : 5"
+           (contentClamped)="handleContentClamped($event)">
+        {{ post.text }}
+      </div>
+      @if (isClamped || showMore) {
+        <div>
+          <button (click)="toggleShowMore()" class="text-blue-500 text-sm">
+            {{ showMore ? 'Voir moins' : 'Voir plus' }}
+          </button>
+        </div>
+      }
+    }
+
+    @if (post.image) {
+      <img [src]="post.image" alt="post image" class="max-h-[30rem] object-contain object-left"/>
+    }
+
   </div>
 
-  <div class="flex items-center gap-2">
-    <button (click)="likePost()" *ngIf="!isLiked" mat-icon-button>
-      <mat-icon>favorite_border</mat-icon>
-    </button>
 
-    <button (click)="unlikePost()" *ngIf="isLiked" mat-icon-button>
-      <mat-icon>favorite</mat-icon>
-    </button>
-
+  <div class="flex items-center mt-4 gap-2">
+    @if (isLiked) {
+      <button (click)="unlikePost()" mat-icon-button>
+        <mat-icon class="text-rose-600">favorite</mat-icon>
+      </button>
+    } @else {
+      <button (click)="likePost()" mat-icon-button>
+        <mat-icon class="text-rose-600">favorite_border</mat-icon>
+      </button>
+    }
     <div>{{ likesCount }}</div>
   </div>
 
