@@ -1,4 +1,4 @@
-import {Component, DestroyRef, effect, inject, Input, Signal} from '@angular/core';
+import {Component, DestroyRef, effect, HostListener, inject, Input, Signal} from '@angular/core';
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {FeedPostComponent} from "../../components/feed-post/feed-post.component";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
@@ -14,6 +14,7 @@ import {EMPTY, switchMap} from "rxjs";
 import {CreatePost} from "../../state/posts/post.model";
 import {toFormData} from "../../../../shared/extensions/object.extension";
 import {FeedDto} from "../../state/feed/feed.model";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-feed',
@@ -23,7 +24,8 @@ import {FeedDto} from "../../state/feed/feed.model";
     FeedPostComponent,
     MatSlideToggle,
     NgForOf,
-    FeedEventComponent
+    FeedEventComponent,
+    MatProgressSpinnerModule
   ],
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.scss'
@@ -31,17 +33,33 @@ import {FeedDto} from "../../state/feed/feed.model";
 export class FeedComponent {
   @Input() currentUser!: UserDto;
   public dialog = inject(MatDialog);
+  isLoading = false;
+  currentPage = 1;
+  pageSize = 10;
   private feedFacade = inject(FeedFacade);
   feed$: Signal<FeedDto[]> = this.feedFacade.feed$;
   feedClosingToGuildAndAllies$: Signal<boolean> = this.feedFacade.feedClosingToGuildAndAllies$;
   private destroyRef: DestroyRef = inject(DestroyRef);
   feedPreferenceChanged = effect(() => {
     const feedPreference = this.feedClosingToGuildAndAllies$();
-    this.feedFacade.setFeed().pipe(
+    this.feedFacade.loadFeed(1, 10).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   })
   private genericModalService = inject(GenericModalService);
+
+  @HostListener('scroll', ['$event'])
+  onScroll(event: Event): void {
+    const target = event.target as HTMLElement;
+    const scrollPosition = target.scrollHeight - target.scrollTop - target.clientHeight;
+
+    if (scrollPosition < 1) {
+      console.log('Scrolled to bottom');
+      if (!this.isLoading) {
+        this.loadNextPage();
+      }
+    }
+  }
 
   openCreatePostModal() {
     this.genericModalService.open(
@@ -65,4 +83,22 @@ export class FeedComponent {
     this.feedFacade.updateFeedPreference(checked).subscribe();
   }
 
+  loadNextPage(): void {
+    this.loadPage(this.currentPage + 1);
+  }
+
+  private loadPage(page: number): void {
+    if (this.isLoading) return;
+
+    this.isLoading = true;
+    this.feedFacade.loadFeed(page, this.pageSize).subscribe({
+      next: () => {
+        this.currentPage = page;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
+  }
 }

@@ -1,4 +1,6 @@
-<div class="w-full h-full flex flex-col gap-6">
+<div (scroll)="onScroll($event)"
+     class="w-full flex flex-col gap-6 h-full overflow-y-auto no-scrollbar"
+>
 
   <h2 class="text-2xl font-bold">Fil d'actualité</h2>
 
@@ -26,17 +28,23 @@
     </div>
   </div>
 
-  @for (item of feed$(); track item.id) {
-    <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4  mb-10">
+    @for (item of feed$(); track item.id) {
       @if (item.post) {
         <app-feed-post [currentUser]="currentUser" [post]="item.post"/>
       } @else if (item.event) {
         <app-feed-event [currentUser]="currentUser" [event]="item.event"/>
       }
-    </div>
-  } @empty {
-    <div class="text-center text-gray-400">
-      Aucune publication
-    </div>
-  }
+    } @empty {
+      <div class="text-center text-gray-400">
+        Aucune publication
+      </div>
+    }
+    @if (isLoading) {
+      <div class="flex justify-center">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+    }
+  </div>
+  
 </div>

@@ -19,7 +19,7 @@ import {MatBadgeModule} from "@angular/material/badge";
     MatSidenavModule,
     MatBadgeModule,
     NotificationsComponent,
-    MatIcon
+    MatIcon,
   ],
   templateUrl: './authenticated.component.html',
   styleUrl: './authenticated.component.scss'
@@ -27,6 +27,7 @@ import {MatBadgeModule} from "@angular/material/badge";
 export class AuthenticatedComponent {
 
   public showNotifications = false;
+  protected readonly scroll = scroll;
   private notificationsFacade = inject(NotificationsFacade);
   public readonly unreadNotificationsCount = this.notificationsFacade.unreadNotificationsCount$;
   private readonly destroyRef = inject(DestroyRef);
@@ -36,5 +37,4 @@ export class AuthenticatedComponent {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe()
   }
-
 }

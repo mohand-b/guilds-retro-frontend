@@ -68,7 +68,6 @@ export class EventsFacade {
       tap({
         next: (event: EventDto) => {
           eventsStore.update(addEntities(event))
-          console.log('Event created:', event)
         },
         error: (error) => console.error(error),
       }),

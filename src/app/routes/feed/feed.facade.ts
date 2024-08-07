@@ -4,7 +4,6 @@ import {
   deleteEntities,
   getAllEntities,
   selectAllEntities,
-  setEntities,
   updateEntities,
   withEntities
 } from "@ngneat/elf-entities";
@@ -17,6 +16,13 @@ import {authenticatedStore} from "../authenticated/authenticated.facade";
 import {LikesService} from "./state/likes/likes.service";
 import {LikeDto} from "./state/likes/like.model";
 import {FeedDto} from "./state/feed/feed.model";
+import {
+  getPaginationData,
+  selectPaginationData,
+  setPage,
+  skipWhilePageExists,
+  withPagination
+} from '@ngneat/elf-pagination';
 
 export const FEED_STORE_NAME = 'feed';
 
@@ -26,6 +32,7 @@ export const feedStore = createStore(
     name: FEED_STORE_NAME,
   },
   withEntities<FeedDto>(),
+  withPagination(),
   withProps<{ feedClosingToGuildAndAllies: boolean }>({
     feedClosingToGuildAndAllies: authenticatedStore.value.user?.feedClosingToGuildAndAllies!
   }),
@@ -46,18 +53,30 @@ export class FeedFacade {
       select(state => state.feedClosingToGuildAndAllies)),
     {initialValue: authenticatedStore.value.user?.feedClosingToGuildAndAllies!}
   );
+  pagination = toSignal(feedStore.pipe(selectPaginationData()));
+
 
   private feedService = inject(FeedService);
   private postsService = inject(PostsService);
   private likesService = inject(LikesService);
 
-  setFeed(): Observable<FeedDto[]> {
-    return this.feedService.getFeed().pipe(
+  loadFeed(page: number, limit: number): Observable<FeedDto[]> {
+    return this.feedService.getFeed(page, limit).pipe(
       tap({
-        next: (feedItem: FeedDto[]) => feedStore.update(setEntities(feedItem)),
+        next: (feedItems: FeedDto[]) => {
+          feedStore.update(
+            addEntities(feedItems),
+            setPage(page, feedItems.map(item => item.id))
+          );
+        },
         error: (error) => console.error(error),
       }),
+      skipWhilePageExists(feedStore, page)
     );
+  }
+
+  getPageData() {
+    return feedStore.query(getPaginationData());
   }
 
   createPost(postFormData: FormData): Observable<FeedDto> {

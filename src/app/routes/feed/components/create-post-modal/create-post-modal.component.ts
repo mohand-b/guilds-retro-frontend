@@ -34,7 +34,6 @@ export class CreatePostModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.postForm.valueChanges.subscribe(() => {
-      console.log(this.postForm.valid);
       this.conditionMet.set(this.postForm.valid);
     });
   }
