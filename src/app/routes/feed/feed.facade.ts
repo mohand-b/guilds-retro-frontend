@@ -4,10 +4,11 @@ import {
   deleteEntities,
   getAllEntities,
   selectAllEntities,
+  setEntities,
   updateEntities,
   withEntities
 } from "@ngneat/elf-entities";
-import {inject, Injectable, Signal} from "@angular/core";
+import {computed, effect, inject, Injectable, Signal} from "@angular/core";
 import {map, Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {FeedService} from "./state/feed/feed.service";
@@ -17,10 +18,11 @@ import {LikesService} from "./state/likes/likes.service";
 import {LikeDto} from "./state/likes/like.model";
 import {FeedDto} from "./state/feed/feed.model";
 import {
+  deleteAllPages,
   getPaginationData,
   selectPaginationData,
   setPage,
-  skipWhilePageExists,
+  updatePaginationData,
   withPagination
 } from '@ngneat/elf-pagination';
 
@@ -40,7 +42,7 @@ export const feedStore = createStore(
 
 @Injectable({providedIn: 'root'})
 export class FeedFacade {
-  feed$: Signal<FeedDto[]> = toSignal(feedStore.pipe(
+  feed: Signal<FeedDto[]> = toSignal(feedStore.pipe(
     selectAllEntities(),
     map(posts => posts.sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -48,35 +50,80 @@ export class FeedFacade {
   ), {
     initialValue: []
   });
-
-  feedClosingToGuildAndAllies$: Signal<boolean> = toSignal(feedStore.pipe(
+  feedClosingToGuildAndAllies: Signal<boolean> = toSignal(feedStore.pipe(
       select(state => state.feedClosingToGuildAndAllies)),
     {initialValue: authenticatedStore.value.user?.feedClosingToGuildAndAllies!}
   );
   pagination = toSignal(feedStore.pipe(selectPaginationData()));
-
+  isFeedComplete: Signal<boolean> = computed(() => {
+    const pagination = this.pagination();
+    return pagination!.currentPage !== 0 && pagination!.currentPage >= pagination!.lastPage;
+  });
+  feedPrivacyUpdated = effect(() => {
+    this.feedClosingToGuildAndAllies();
+    this.loadFeed(1,
+      this.perPage !== 0
+        ? (this.perPage * this.currentPage)
+        : 10,
+      true
+    ).subscribe();
+  }, {
+    allowSignalWrites: true
+  })
 
   private feedService = inject(FeedService);
   private postsService = inject(PostsService);
   private likesService = inject(LikesService);
 
-  loadFeed(page: number, limit: number): Observable<FeedDto[]> {
+  get perPage(): number {
+    return feedStore.query(getPaginationData()).perPage
+  }
+
+  get currentPage(): number {
+    return feedStore.query(getPaginationData()).currentPage
+  }
+
+  loadFeed(page: number, limit: number, loadFromEffect: boolean = false): Observable<FeedDto[]> {
     return this.feedService.getFeed(page, limit).pipe(
       tap({
-        next: (feedItems: FeedDto[]) => {
-          feedStore.update(
-            addEntities(feedItems),
-            setPage(page, feedItems.map(item => item.id))
-          );
+        next: (response) => {
+          const {total, page, limit, data} = response;
+
+          if (loadFromEffect) {
+            feedStore.update(
+              setEntities(data),
+              deleteAllPages(),
+              updatePaginationData({
+                currentPage: page,
+                perPage: limit,
+                total,
+                lastPage: Math.ceil(total / limit)
+              }),
+              setPage(
+                page,
+                data.map((f) => f.id)
+              )
+            );
+          } else {
+            feedStore.update(
+              addEntities(data),
+              updatePaginationData({
+                currentPage: page,
+                perPage: limit,
+                total,
+                lastPage: Math.ceil(total / limit)
+              }),
+              setPage(
+                page,
+                data.map((f) => f.id)
+              )
+            );
+          }
         },
         error: (error) => console.error(error),
       }),
-      skipWhilePageExists(feedStore, page)
+      map(response => response.data)
     );
-  }
-
-  getPageData() {
-    return feedStore.query(getPaginationData());
   }
 
   createPost(postFormData: FormData): Observable<FeedDto> {
@@ -114,7 +161,6 @@ export class FeedFacade {
       }),
     );
   }
-
 
   likePost(postId: number): Observable<LikeDto> {
     return this.likesService.likePost(postId).pipe(
@@ -157,6 +203,5 @@ export class FeedFacade {
       }),
     );
   }
-
 
 }

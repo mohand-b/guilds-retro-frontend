@@ -6,7 +6,7 @@
 
   <mat-slide-toggle
     (change)="toggleFeedClosingToGuildAndAllies($event.checked)"
-    [checked]="feedClosingToGuildAndAllies$()"
+    [checked]="feedClosingToGuildAndAllies()"
     color="primary">
     Fermer son fil d'actualité au gens de sa guilde et des guilde alliées
   </mat-slide-toggle>
@@ -29,7 +29,7 @@
   </div>
 
   <div class="flex flex-col gap-4  mb-10">
-    @for (item of feed$(); track item.id) {
+    @for (item of feed(); track item.id) {
       @if (item.post) {
         <app-feed-post [currentUser]="currentUser" [post]="item.post"/>
       } @else if (item.event) {
@@ -46,5 +46,5 @@
       </div>
     }
   </div>
-  
+
 </div>

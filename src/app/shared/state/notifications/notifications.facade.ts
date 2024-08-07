@@ -26,7 +26,7 @@ const notificationsStore = createStore(
 export class NotificationsFacade {
 
 
-  notifications$: Signal<NotificationDto[]> = toSignal(
+  notifications: Signal<NotificationDto[]> = toSignal(
     notificationsStore.pipe(
       selectAllEntities(),
       map(notifications => notifications
@@ -34,7 +34,7 @@ export class NotificationsFacade {
     ),
     {initialValue: []}
   );
-  unreadNotificationsCount$: Signal<number> = toSignal(
+  unreadNotificationsCount: Signal<number> = toSignal(
     notificationsStore.pipe(
       selectEntitiesCountByPredicate(notification => !notification.read),
     ),

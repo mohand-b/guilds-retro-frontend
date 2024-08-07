@@ -29,7 +29,7 @@ export class AuthenticatedComponent {
   public showNotifications = false;
   protected readonly scroll = scroll;
   private notificationsFacade = inject(NotificationsFacade);
-  public readonly unreadNotificationsCount = this.notificationsFacade.unreadNotificationsCount$;
+  public readonly unreadNotificationsCount = this.notificationsFacade.unreadNotificationsCount;
   private readonly destroyRef = inject(DestroyRef);
 
   constructor() {

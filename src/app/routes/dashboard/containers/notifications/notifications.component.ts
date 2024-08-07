@@ -18,7 +18,7 @@ export class NotificationsComponent implements AfterViewInit, OnDestroy {
   private timeoutId!: any;
   private visibleNotifications: Set<number> = new Set();
   private notificationsFacade = inject(NotificationsFacade);
-  notifications: Signal<NotificationDto[]> = this.notificationsFacade.notifications$;
+  notifications: Signal<NotificationDto[]> = this.notificationsFacade.notifications;
 
   ngAfterViewInit() {
     this.observer = new IntersectionObserver(entries => {

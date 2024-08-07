@@ -11,10 +11,15 @@ export class FeedService {
 
   private readonly feedBaseUrl = `${environment.apiUrl}/feed`;
 
-  getFeed(page: number = 1, limit: number = 10): Observable<FeedDto[]> {
-    return this.http.get<FeedDto[]>(
-      `${this.feedBaseUrl}?page=${page}&limit=${limit}`,
-    );
+  getFeed(page: number, limit: number): Observable<{
+    total: number, page: number, limit: number, data: FeedDto[]
+  }> {
+    return this.http.get<{
+      total: number,
+      page: number,
+      limit: number,
+      data: FeedDto[]
+    }>(`${this.feedBaseUrl}?page=${page}&limit=${limit}`);
   }
 
 

@@ -1,4 +1,4 @@
-import {Component, DestroyRef, effect, HostListener, inject, Input, Signal} from '@angular/core';
+import {Component, DestroyRef, HostListener, inject, Input, Signal} from '@angular/core';
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {FeedPostComponent} from "../../components/feed-post/feed-post.component";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
@@ -6,7 +6,6 @@ import {NgForOf} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {FeedFacade} from "../../feed.facade";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {CreatePostModalComponent} from "../../components/create-post-modal/create-post-modal.component";
 import {FeedEventComponent} from "../../components/feed-event/feed-event.component";
 import {GenericModalService} from '../../../../shared/services/generic-modal.service';
@@ -28,7 +27,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MatProgressSpinnerModule
   ],
   templateUrl: './feed.component.html',
-  styleUrl: './feed.component.scss'
+  styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent {
   @Input() currentUser!: UserDto;
@@ -37,15 +36,11 @@ export class FeedComponent {
   currentPage = 1;
   pageSize = 10;
   private feedFacade = inject(FeedFacade);
-  feed$: Signal<FeedDto[]> = this.feedFacade.feed$;
-  feedClosingToGuildAndAllies$: Signal<boolean> = this.feedFacade.feedClosingToGuildAndAllies$;
+  isFeedComplete: Signal<boolean> = this.feedFacade.isFeedComplete;
+  feed: Signal<FeedDto[]> = this.feedFacade.feed;
+  feedClosingToGuildAndAllies: Signal<boolean> = this.feedFacade.feedClosingToGuildAndAllies;
   private destroyRef: DestroyRef = inject(DestroyRef);
-  feedPreferenceChanged = effect(() => {
-    const feedPreference = this.feedClosingToGuildAndAllies$();
-    this.feedFacade.loadFeed(1, 10).pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe();
-  })
+
   private genericModalService = inject(GenericModalService);
 
   @HostListener('scroll', ['$event'])
@@ -54,8 +49,7 @@ export class FeedComponent {
     const scrollPosition = target.scrollHeight - target.scrollTop - target.clientHeight;
 
     if (scrollPosition < 1) {
-      console.log('Scrolled to bottom');
-      if (!this.isLoading) {
+      if (!this.isLoading && !this.isFeedComplete()) {
         this.loadNextPage();
       }
     }
@@ -76,7 +70,6 @@ export class FeedComponent {
         return this.feedFacade.createPost(toFormData(post));
       })
     ).subscribe();
-
   }
 
   toggleFeedClosingToGuildAndAllies(checked: boolean) {
@@ -88,6 +81,7 @@ export class FeedComponent {
   }
 
   private loadPage(page: number): void {
+    
     if (this.isLoading) return;
 
     this.isLoading = true;
@@ -101,4 +95,5 @@ export class FeedComponent {
       }
     });
   }
+
 }
