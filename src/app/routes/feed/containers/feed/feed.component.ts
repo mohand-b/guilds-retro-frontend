@@ -77,11 +77,22 @@ export class FeedComponent {
   }
 
   loadNextPage(): void {
-    this.loadPage(this.currentPage + 1);
+    if (this.isLoading || this.isFeedComplete()) return;
+
+    this.isLoading = true;
+    this.feedFacade.loadFeed(this.currentPage + 1, this.pageSize).subscribe({
+      next: () => {
+        this.currentPage++;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   private loadPage(page: number): void {
-    
+
     if (this.isLoading) return;
 
     this.isLoading = true;

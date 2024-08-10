@@ -6,6 +6,7 @@ import {
   selectAllEntities,
   setEntities,
   updateEntities,
+  upsertEntities,
   withEntities
 } from "@ngneat/elf-entities";
 import {computed, effect, inject, Injectable, Signal} from "@angular/core";
@@ -83,7 +84,12 @@ export class FeedFacade {
     return feedStore.query(getPaginationData()).currentPage
   }
 
+  get totalItems(): number {
+    return feedStore.query(getPaginationData()).total
+  }
+
   loadFeed(page: number, limit: number, loadFromEffect: boolean = false): Observable<FeedDto[]> {
+
     return this.feedService.getFeed(page, limit).pipe(
       tap({
         next: (response) => {
@@ -106,7 +112,7 @@ export class FeedFacade {
             );
           } else {
             feedStore.update(
-              addEntities(data),
+              upsertEntities(data),
               updatePaginationData({
                 currentPage: page,
                 perPage: limit,
@@ -129,11 +135,22 @@ export class FeedFacade {
   createPost(postFormData: FormData): Observable<FeedDto> {
     return this.postsService.create(postFormData).pipe(
       tap({
-        next: (post: FeedDto) => feedStore.update(addEntities(post)),
+        next: (post: FeedDto) => {
+          feedStore.update(addEntities(post));
+          feedStore.update(
+            updatePaginationData({
+              currentPage: this.currentPage,
+              perPage: this.perPage,
+              total: this.totalItems + 1,
+              lastPage: Math.ceil((this.totalItems + 1) / this.perPage),
+            })
+          );
+        },
         error: (error) => console.error(error),
       }),
     );
   }
+
 
   deletePost(postId: number): Observable<void> {
     return this.postsService.delete(postId).pipe(
