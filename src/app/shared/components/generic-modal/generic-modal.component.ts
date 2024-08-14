@@ -29,7 +29,7 @@ export class GenericModalComponent implements AfterViewInit {
   private childComponentRef: any;
   conditionMetEffect = effect(() => {
     if (this.data.disableButtonUntilConditionMet) {
-      this.buttonDisabled.set(!this.childComponentRef.conditionMet());
+      this.buttonDisabled.set(!this.childComponentRef.conditionMet);
     }
   }, {allowSignalWrites: true})
   private dialogRef: MatDialogRef<GenericModalComponent> = inject(MatDialogRef);

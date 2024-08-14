@@ -22,6 +22,6 @@ export class DashboardComponent {
 
   protected readonly UserRoleEnum = UserRoleEnum;
   private authenticatedFacade = inject(AuthenticatedFacade);
-  currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
+  currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser;
 
 }

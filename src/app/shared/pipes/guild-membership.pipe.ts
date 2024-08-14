@@ -9,15 +9,15 @@ import {AuthenticatedFacade} from "../../routes/authenticated/authenticated.faca
 export class GuildMembershipPipe implements PipeTransform {
 
   private authenticatedFacade = inject(AuthenticatedFacade);
-  currentUser$ = this.authenticatedFacade.currentUser$;
+  currentUser = this.authenticatedFacade.currentUser;
 
   transform(user: UserDto, currentUser: UserDto): string {
-    if (user.id === this.currentUser$()!.id) {
+    if (user.id === this.currentUser()!.id) {
       return 'currentUser';
     }
-    if (user.guild.id === this.currentUser$()!.guild.id) {
+    if (user.guild.id === this.currentUser()!.guild.id) {
       return 'myGuild';
-    } else if (this.currentUser$()!.guildAlliesIds?.some((allyId: number) => allyId === user.guild.id)) {
+    } else if (this.currentUser()!.guildAlliesIds?.some((allyId: number) => allyId === user.guild.id)) {
       return 'alliedGuild';
     } else {
       return 'externalGuild';

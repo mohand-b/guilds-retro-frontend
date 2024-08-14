@@ -18,7 +18,7 @@ export class HeaderComponent {
 
   private authenticatedFacade = inject(AuthenticatedFacade);
 
-  readonly user: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$!;
+  readonly user: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser!;
 
   logout() {
     this.authenticatedFacade.logout();

@@ -1,0 +1,72 @@
+@if (guild(); as guild) {
+  <div class="p-4 flex flex-col gap-4">
+
+    <mat-card class="shadow-lg rounded-lg">
+      <app-guild-header
+        (showMembershipRequests)="onOpenPendingMembershipRequests()"
+        [currentUser]="currentUser()"
+        [guild]="guild"
+        [hidden]="loading"
+        [pendingMembershipRequestsCount]="pendingMembershipRequestsCount()"
+      />
+
+      @if (guild.members) {
+        <app-guild-members-table
+          (memberRemoved)="removeMember($event)"
+          (roleUpdated)="updateRole($event)"
+          [guild]="guild"
+          [currentUser]="currentUser()!"
+          [hidden]="loading"
+        />
+      }
+
+      @if (loading) {
+        <mat-spinner class="mx-auto min-h-[11.75rem]" color="accent" diameter="50"></mat-spinner>
+      }
+    </mat-card>
+
+    @if (!loading && guild.allies) {
+      <div class="flex flex-col gap-3">
+        <div class="flex justify-between">
+          <div class="text-2xl font-bold">Alliances <span>{{ guild.allies.length }}/3</span></div>
+
+          <div class="flex items-center gap-3">
+            @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
+              <button
+                (click)="onOpenPendingAllianceRequests()"
+                [matBadgeHidden]="pendingAllianceRequestsCount() === 0"
+                [matBadge]="pendingAllianceRequestsCount()"
+                color="accent"
+                mat-raised-button
+                matBadgeColor="warn">
+                Demandes d'alliance
+              </button>
+            }
+
+            @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.LEADER)) {
+              <button
+                (click)="onOpenGuildSelection()"
+                [disabled]="guild.allies.length > 2"
+                [matBadge]="guildsForAlliance().length"
+                color="primary"
+                mat-raised-button
+                matBadgeColor="primary">
+                Trouver une alliance
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (!loading) {
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            @for (ally of guild.allies; track ally.id) {
+              <app-alliance-card [guild]="ally"/>
+            }
+          </div>
+        }
+      </div>
+
+    }
+  </div>
+
+}

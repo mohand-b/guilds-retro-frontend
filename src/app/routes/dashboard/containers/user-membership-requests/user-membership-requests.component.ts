@@ -53,7 +53,7 @@ export class UserMembershipRequestsComponent implements OnInit {
     return this.pendingRequestsCount() > 2 || this.rejectedRequestsCount() > 4 || !!this.approvedRequest();
   });
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
-  public readonly currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
+  public readonly currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser;
   public readonly requests$: Signal<MembershipRequestDto[]> = this.authenticatedFacade.requests$;
   protected readonly guildAccepted = effect(() => {
     if (this.approvedRequest()) {

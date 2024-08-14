@@ -31,19 +31,17 @@ import {PermissionsService} from "../../../../shared/services/permissions.servic
 export class AllianceCardComponent {
 
   @Input() guild!: GuildSummaryDto;
+  public readonly UserRoleEnum = UserRoleEnum;
+  protected readonly hasRequiredRole = hasRequiredRole;
   private guildFacade = inject(GuildFacade);
   private authenticatedFacade = inject(AuthenticatedFacade);
+  public readonly currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser;
   private genericModalService = inject(GenericModalService);
   private permissionsService = inject(PermissionsService);
-
   private readonly activatedRoute = inject(ActivatedRoute);
 
-  public readonly currentUser$: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
-
-  public readonly UserRoleEnum = UserRoleEnum;
-
   get canDissolveAlliance(): boolean {
-    return this.permissionsService.canDissolveAlliance(this.currentUser$()!, this.activatedRoute.snapshot.params['guildId']);
+    return this.permissionsService.canDissolveAlliance(this.currentUser()!, this.activatedRoute.snapshot.params['guildId']);
   }
 
   dissolveAlliance() {
@@ -56,11 +54,9 @@ export class AllianceCardComponent {
       `Es-tu sûr de vouloir rompre l'alliance avec ${this.guild.name} ?`,
     ).pipe(
       switchMap((result) => {
-        if (result) return this.guildFacade.dissolveAlliance(this.guildFacade.currentGuild$().id!, this.guild.id)
+        if (result) return this.guildFacade.dissolveAlliance(this.guildFacade.currentGuild().id!, this.guild.id)
         else return EMPTY;
       })
     ).subscribe();
   }
-
-  protected readonly hasRequiredRole = hasRequiredRole;
 }

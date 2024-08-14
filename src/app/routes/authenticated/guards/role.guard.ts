@@ -8,7 +8,7 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   const router: Router = inject(Router);
 
   const requiredRole: UserRoleEnum = route.data['role'];
-  const user: Signal<UserDto | undefined> = authenticatedFacade.currentUser$;
+  const user: Signal<UserDto | undefined> = authenticatedFacade.currentUser;
 
   if (!user || !hasRequiredRole(user()!.role, requiredRole)) {
     return router.parseUrl('/dashboard');

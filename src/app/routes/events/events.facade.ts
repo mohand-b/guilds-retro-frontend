@@ -122,7 +122,7 @@ export class EventsFacade {
   }
 
   private getCurrentUserId(): number {
-    return this.authenticatedFacade.currentUser$()?.id!
+    return this.authenticatedFacade.currentUser()?.id!
   }
 
 }

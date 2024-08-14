@@ -23,11 +23,9 @@ import {GuildState} from "../../state/guilds/guild.model";
 export class AllianceRequestsListComponent {
 
   private guildFacade = inject(GuildFacade);
+  currentGuild: Signal<GuildState> = this.guildFacade.currentGuild;
+  receivedPendingAllianceRequests = this.guildFacade.receivedPendingAllianceRequests;
   private genericModalService = inject(GenericModalService);
-
-  currentGuild$: Signal<GuildState> = this.guildFacade.currentGuild$;
-
-  receivedPendingAllianceRequests$ = this.guildFacade.receivedPendingAllianceRequests$;
 
   onAcceptRequest(request: AllianceRequestDto) {
     this.genericModalService.open(

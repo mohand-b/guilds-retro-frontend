@@ -1,4 +1,4 @@
-import {Component, computed, EventEmitter, inject, Input, Output, Signal} from '@angular/core';
+import {Component, computed, EventEmitter, inject, input, Input, Output, Signal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
 import {GuildDto, GuildSummaryDto} from "../../state/guilds/guild.model";
 import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
@@ -24,23 +24,19 @@ import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
   styleUrl: './guild-header.component.scss'
 })
 export class GuildHeaderComponent {
-
   @Input() guild!: GuildDto | GuildSummaryDto;
-  @Input() currentUser!: UserDto;
-  @Input() pendingMembershipRequestsCount!: number;
+  currentUser = input<UserDto>();
+  pendingMembershipRequestsCount = input<number>(0);
 
   @Output() showMembershipRequests = new EventEmitter<void>();
   @Output() sendAllianceRequest = new EventEmitter<number>();
-
+  protected readonly UserRoleEnum = UserRoleEnum;
+  protected readonly hasRequiredRole = hasRequiredRole;
   private guildFacade = inject(GuildFacade);
   private authenticatedFacade = inject(AuthenticatedFacade);
-
-  private alliancesRequests = this.guildFacade.sentPendingAllianceRequests$
-
-  protected readonly UserRoleEnum = UserRoleEnum;
-
+  private alliancesRequests = this.guildFacade.sentPendingAllianceRequests
   public alreadySentAllianceRequest: Signal<boolean> = computed(() => {
-    const alreadyAlly = this.authenticatedFacade.currentUser$()?.guildAlliesIds!
+    const alreadyAlly = this.authenticatedFacade.currentUser()?.guildAlliesIds!
       .some((allyId: number) => allyId === this.guild.id)!;
     return alreadyAlly && this.alliancesRequests().some((request) => request.targetGuild!.id === this.guild.id);
   })
@@ -56,7 +52,4 @@ export class GuildHeaderComponent {
   isGuildDto(guild: GuildDto | GuildSummaryDto): guild is GuildDto {
     return (guild as GuildDto).members !== undefined;
   }
-
-
-  protected readonly hasRequiredRole = hasRequiredRole;
 }

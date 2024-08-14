@@ -40,7 +40,6 @@ export class EventsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return;
-      console.log(`Dialog result: ${result}`);
     });
   }
 }

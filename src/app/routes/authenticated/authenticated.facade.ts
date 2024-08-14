@@ -44,7 +44,7 @@ export class AuthenticatedFacade {
       select(state => state.token)
     ), {initialValue: authenticatedStore.value.token});
 
-  readonly currentUser$: Signal<UserDto | undefined> =
+  readonly currentUser: Signal<UserDto | undefined> =
     toSignal(authenticatedStore.pipe(
       select(state => state.user)
     ), {initialValue: authenticatedStore.value.user});
@@ -53,11 +53,13 @@ export class AuthenticatedFacade {
   private router: Router = inject(Router);
 
   get userId(): number {
-    return this.currentUser$()!.id!;
+    return this.currentUser()!.id!;
   }
 
   logout(): void {
+
     getRegistry().forEach(store => store.reset());
+
     this.router.navigateByUrl('/auth');
   }
 

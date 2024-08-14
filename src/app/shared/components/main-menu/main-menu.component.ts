@@ -33,5 +33,5 @@ export class MainMenuComponent {
   @Input() drawer!: MatDrawer;
   notificationsCount: InputSignal<number> = input<number>(0);
   private authenticatedFacade = inject(AuthenticatedFacade);
-  currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser$;
+  currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser;
 }

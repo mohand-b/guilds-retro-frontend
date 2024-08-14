@@ -35,22 +35,18 @@ export const guildStore = createStore(
 @Injectable({providedIn: 'root'})
 export class GuildFacade {
 
-  currentGuild$: Signal<GuildState> = toSignal(guildStore.pipe(select(
+  currentGuild: Signal<GuildState> = toSignal(guildStore.pipe(select(
     (state) => state)), {
     initialValue: guildStore.value,
   });
 
-  pendingMembershipRequests$: Signal<MembershipRequestDto[]> = toSignal(guildStore.pipe(select(
+  pendingMembershipRequests: Signal<MembershipRequestDto[]> = toSignal(guildStore.pipe(select(
     (state) => state.membershipRequests)), {
     initialValue: guildStore.value.membershipRequests,
   });
-  pendingMembershipRequestsCount$: Signal<number> = computed(() => this.pendingMembershipRequests$().length);
+  pendingMembershipRequestsCount: Signal<number> = computed(() => this.pendingMembershipRequests().length);
 
-  sentAllianceRequests$: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
-    (state) => state.sentAllianceRequests
-  )), {initialValue: guildStore.value.sentAllianceRequests})
-
-  sentPendingAllianceRequests$: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
+  sentPendingAllianceRequests: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
     (state) => state.sentAllianceRequests
       .filter(request => request.status === AllianceStatusEnum.PENDING && request.targetGuild?.nbOfAllies! < 3)
   )), {
@@ -58,32 +54,32 @@ export class GuildFacade {
       .filter(request => request.status === AllianceStatusEnum.PENDING && request.targetGuild?.nbOfAllies! < 3)
   })
 
-  receivedPendingAllianceRequests$: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
+  receivedPendingAllianceRequests: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
     (state) => state.receivedAllianceRequests
       .filter(request => request.status === AllianceStatusEnum.PENDING && request.requesterGuild?.nbOfAllies! < 3)
   )), {
     initialValue: guildStore.value.receivedAllianceRequests
       .filter(request => request.status === AllianceStatusEnum.PENDING && request.requesterGuild?.nbOfAllies! < 3)
   })
-  pendingAllianceRequestsCount$: Signal<number> = computed(() => this.receivedPendingAllianceRequests$().length)
+  pendingAllianceRequestsCount: Signal<number> = computed(() => this.receivedPendingAllianceRequests().length)
 
 
-  guildsForAlliance$: WritableSignal<GuildSummaryDto[]> = signal([]);
+  guildsForAlliance: WritableSignal<GuildSummaryDto[]> = signal([]);
 
-  possiblesGuildsForAlliance$: Signal<GuildSummaryDto[]> = computed(() => {
-    const currentAlliesId: number[] = this.currentGuild$().allies.map(ally => ally.id);
+  possiblesGuildsForAlliance: Signal<GuildSummaryDto[]> = computed(() => {
+    const currentAlliesId: number[] = this.currentGuild().allies.map(ally => ally.id);
 
-    const sentRequestedGuildsId: number[] = this.sentAllianceRequests$()
+    const sentRequestedGuildsId: number[] = guildStore.value.sentAllianceRequests
       .filter(request => request.status === AllianceStatusEnum.PENDING)
       .map(request => request.targetGuild?.id ?? -1);
 
-    const receivedRequestedGuildsId: number[] = this.receivedPendingAllianceRequests$()
+    const receivedRequestedGuildsId: number[] = this.receivedPendingAllianceRequests()
       .map(request => request.requesterGuild?.id ?? -1);
 
     const allRequestedGuildsId = [...sentRequestedGuildsId, ...receivedRequestedGuildsId];
 
-    return this.guildsForAlliance$().filter(guild =>
-      !currentAlliesId.includes(guild.id) && !allRequestedGuildsId.includes(guild.id) && guild.id !== this.currentGuild$().id
+    return this.guildsForAlliance().filter(guild =>
+      !currentAlliesId.includes(guild.id) && !allRequestedGuildsId.includes(guild.id) && guild.id !== this.currentGuild().id
     );
   });
 
@@ -113,7 +109,7 @@ export class GuildFacade {
   getGuildsForAlliance(): Observable<GuildSummaryDto[]> {
     return this.guildsService.getGuildsForAlliance().pipe(
       tap({
-        next: (guilds) => this.guildsForAlliance$.set(guilds),
+        next: (guilds) => this.guildsForAlliance.set(guilds),
         error: (error) => console.log(error),
       })
     );
@@ -149,7 +145,6 @@ export class GuildFacade {
     return this.membershipsRequestService.getPendingMembershipRequests(guildId).pipe(
       tap({
         next: (requests: MembershipRequestDto[]) => {
-          console.log(requests);
           guildStore.update(
             (state) => ({
               ...state,
@@ -298,7 +293,7 @@ export class GuildFacade {
   }
 
   createAllianceRequest(targetGuildId: number): Observable<AllianceDto> {
-    return this.alliancesService.createAllianceRequest(this.currentGuild$().id!, targetGuildId).pipe(
+    return this.alliancesService.createAllianceRequest(this.currentGuild().id!, targetGuildId).pipe(
       tap({
         next: (alliance: AllianceDto) => {
           guildStore.update(

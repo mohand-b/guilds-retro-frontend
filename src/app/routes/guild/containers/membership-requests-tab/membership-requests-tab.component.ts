@@ -22,11 +22,10 @@ import {MembershipRequestDto} from "../../state/membership-requests/membership-r
 })
 export class MembershipRequestsTabComponent {
 
-  private guildFacade = inject(GuildFacade);
-  pendingMembershipRequests$: Signal<MembershipRequestDto[]> = this.guildFacade.pendingMembershipRequests$;
-  pendingMembershipRequestsCount$: Signal<number> = this.guildFacade.pendingMembershipRequestsCount$;
-
   displayedColumns: string[] = ['username', 'characterClass', 'characterLevel', 'actions'];
+  private guildFacade = inject(GuildFacade);
+  pendingMembershipRequests: Signal<MembershipRequestDto[]> = this.guildFacade.pendingMembershipRequests;
+  pendingMembershipRequestsCount: Signal<number> = this.guildFacade.pendingMembershipRequestsCount;
 
   acceptRequest(requestId: number) {
     this.guildFacade.acceptMembershipRequest(requestId).subscribe();

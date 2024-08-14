@@ -1,13 +1,14 @@
 <div class="flex flex-col gap-3">
-  <app-alert *ngIf="receivedPendingAllianceRequests$().length === 0" message="Aucune demande d'alliance en attente."/>
-  <app-alert *ngIf="currentGuild$().allies.length > 2 && receivedPendingAllianceRequests$().length > 0" type="error"
-             message="Ta guilde a atteint la limite de 3 guildes alliées. Tu ne peux plus accepter de nouvelles demandes d'alliance."/>
+  <app-alert *ngIf="receivedPendingAllianceRequests().length === 0" message="Aucune demande d'alliance en attente."/>
+  <app-alert *ngIf="currentGuild().allies.length > 2 && receivedPendingAllianceRequests().length > 0"
+             message="Ta guilde a atteint la limite de 3 guildes alliées. Tu ne peux plus accepter de nouvelles demandes d'alliance."
+             type="error"/>
   <app-alliance-request-row
-    *ngFor="let request of receivedPendingAllianceRequests$()"
-    [allianceRequest]="request"
-    [limitAllianceRequests]="currentGuild$().allies.length > 2"
     (acceptRequest)="onAcceptRequest($event)"
     (declineRequest)="onDeclineRequest($event)"
+    *ngFor="let request of receivedPendingAllianceRequests()"
+    [allianceRequest]="request"
+    [limitAllianceRequests]="currentGuild().allies.length > 2"
   />
 </div>
 
