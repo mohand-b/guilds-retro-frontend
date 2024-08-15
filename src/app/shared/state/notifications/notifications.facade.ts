@@ -51,6 +51,9 @@ export class NotificationsFacade {
       this.notificationsService.listen('cancel-notification').pipe(
         tap((notificationId: number) => notificationsStore.update(deleteEntities(notificationId)))
       ),
+      this.notificationsService.listen('link_account').pipe(
+        tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
+      ),
     ]).subscribe();
   }
 

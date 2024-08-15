@@ -12,4 +12,12 @@ export class AuthedService {
   refreshUser(): Observable<AuthedStateDto> {
     return this.http.get<AuthedStateDto>(`${environment.apiUrl}/auth/refresh`);
   }
+
+  acceptAccountlinkRequest(requestId: number): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/users/link-requests/${requestId}/accept`, {});
+  }
+
+  rejectAccountlinkRequest(requestId: number): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/users/link-requests/${requestId}/reject`, {});
+  }
 }
