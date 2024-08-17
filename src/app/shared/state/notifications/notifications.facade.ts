@@ -54,6 +54,12 @@ export class NotificationsFacade {
       this.notificationsService.listen('link_account').pipe(
         tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
       ),
+      this.notificationsService.listen('membership_request').pipe(
+        tap((notificationId: number) => {
+
+          notificationsStore.update(deleteEntities(notificationId))
+        })
+      ),
     ]).subscribe();
   }
 
@@ -75,5 +81,9 @@ export class NotificationsFacade {
         error: (error) => console.error(error),
       }),
     );
+  }
+
+  removeNotification(notificationId: number): void {
+    notificationsStore.update(deleteEntities(notificationId));
   }
 }

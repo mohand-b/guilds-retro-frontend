@@ -61,6 +61,7 @@ export class GuildFacade {
     initialValue: guildStore.value.receivedAllianceRequests
       .filter(request => request.status === AllianceStatusEnum.PENDING && request.requesterGuild?.nbOfAllies! < 3)
   })
+
   pendingAllianceRequestsCount: Signal<number> = computed(() => this.receivedPendingAllianceRequests().length)
 
 

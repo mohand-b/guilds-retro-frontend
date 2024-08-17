@@ -55,9 +55,7 @@ export class GuildMembersTableComponent {
     } else {
       this.displayedColumns = this.displayedColumns.filter(column => column !== 'actions');
     }
-  })
-  protected readonly hasRequiredRole = hasRequiredRole;
-
+  });
 
   updateRole(member: UserDto, role: UserRoleEnum) {
     this.roleUpdated.emit({user: member, role});

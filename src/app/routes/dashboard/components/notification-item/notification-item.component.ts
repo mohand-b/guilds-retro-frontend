@@ -1,9 +1,11 @@
-import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, inject, Input} from '@angular/core';
 import {NotificationDto} from "../../../../shared/state/notifications/notification.model";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {NgClass} from "@angular/common";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {MatButton} from "@angular/material/button";
+import {GuildFacade} from "../../../guild/guild.facade";
+import {NotificationsFacade} from "../../../../shared/state/notifications/notifications.facade";
 
 @Component({
   selector: 'app-notification-item',
@@ -20,7 +22,24 @@ import {MatButton} from "@angular/material/button";
 export class NotificationItemComponent {
 
   @Input() notification!: NotificationDto;
+  log = effect(() => {
+    console.log(this.notification);
+  })
+  private notificationsFacade = inject(NotificationsFacade);
   private authenticatedFacade = inject(AuthenticatedFacade);
+  private guildFacade = inject(GuildFacade);
+
+  onAcceptMembershipRequest() {
+    this.guildFacade.acceptMembershipRequest(this.notification.membershipRequest!.id).subscribe(
+      () => this.notificationsFacade.removeNotification(this.notification.id)
+    );
+  }
+
+  onDeclineMembershipRequest() {
+    this.guildFacade.declineMembershipRequest(this.notification.membershipRequest!.id).subscribe(
+      () => this.notificationsFacade.removeNotification(this.notification.id)
+    );
+  }
 
   onAcceptRequest() {
     this.authenticatedFacade.acceptAccountlinkRequest(this.notification.accountLinkRequest.id).subscribe();

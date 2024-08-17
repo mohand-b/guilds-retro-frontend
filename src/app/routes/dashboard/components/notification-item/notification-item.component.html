@@ -1,5 +1,17 @@
 <div [ngClass]="{ 'bg-slate-200': !notification.read }" class="flex flex-col border-b border-gray-200 p-4">
   {{ notification.message }}
+
+  @if (notification.membershipRequest) {
+    <div class="flex gap-2">
+      <button mat-button color="primary" (click)="onAcceptMembershipRequest()">
+        Accepter
+      </button>
+      <button mat-button color="warn" (click)="onDeclineMembershipRequest()">
+        Refuser
+      </button>
+    </div>
+  }
+  
   @if (notification.accountLinkRequest) {
     <div class="flex gap-2">
       <button mat-button color="primary" (click)="onAcceptRequest()">

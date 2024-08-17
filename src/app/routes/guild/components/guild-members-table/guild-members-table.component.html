@@ -2,7 +2,8 @@
   <table [dataSource]="dataSource" class="min-w-full divide-y divide-gray-300" mat-table>
     <ng-container matColumnDef="username">
       <th *matHeaderCellDef class="w-1/5 p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Nom</th>
-      <td *matCellDef="let member" [ngClass]="{'bg-yellow-100': member.id === currentUser.id, 'font-bold': member.role === UserRoleEnum.LEADER}"
+      <td *matCellDef="let member"
+          [ngClass]="{'bg-yellow-100': member.id === currentUser.id, 'font-bold': member.role === UserRoleEnum.LEADER}"
           class="p-3 text-sm text-gray-700 whitespace-nowrap"
           mat-cell>
         {{ member.username }}
@@ -28,14 +29,15 @@
 
     <ng-container matColumnDef="role">
       <th *matHeaderCellDef class="w-1/5 p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Rôle</th>
-      <td *matCellDef="let member" [ngClass]="{'text-red-500': member.role === UserRoleEnum.LEADER, 'text-purple-500': member.role === UserRoleEnum.OFFICER}"
+      <td *matCellDef="let member"
+          [ngClass]="{'text-red-500': member.role === UserRoleEnum.LEADER, 'text-purple-500': member.role === UserRoleEnum.OFFICER}"
           class="p-3 text-sm text-gray-700 whitespace-nowrap"
           mat-cell>
         {{ member.role }}
       </td>
     </ng-container>
 
-    <ng-container *ngIf="hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER)" matColumnDef="actions">
+    <ng-container matColumnDef="actions">
       <th *matHeaderCellDef class="w-1/5 p-3 text-left text-sm font-semibold text-gray-700" mat-header-cell>Actions</th>
       <td *matCellDef="let member" class="p-3 space-x-2 text-sm text-gray-700 whitespace-nowrap" mat-cell>
         <button (click)="updateRole(member, UserRoleEnum.OFFICER)" *ngIf="enableUpGradeAction(member)" color="accent"
@@ -59,4 +61,3 @@
   <mat-paginator [length]="guild()!.members.length" [pageSizeOptions]="[10, 20, 50]" hidePageSize pageSize="10"
                  showFirstLastButtons></mat-paginator>
 </mat-card-content>
-

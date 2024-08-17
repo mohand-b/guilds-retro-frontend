@@ -13,7 +13,7 @@ import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {GuildFacade} from "../../../guild/guild.facade";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {interval, map, Observable, switchMap, takeUntil, timer} from "rxjs";
+import {interval, Observable, switchMap, takeUntil, timer} from "rxjs";
 import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
 import {
   UserMembershipRequestComponent
@@ -41,20 +41,20 @@ export class UserMembershipRequestsComponent implements OnInit {
   public progressValue = 0;
   public bufferValue = 0;
   protected readonly pendingRequestsCount: Signal<number> = computed(() => {
-    return this.requests$().filter(request => request.status === RequestStatusEnum.PENDING).length;
+    return this.requests().filter(request => request.status === RequestStatusEnum.PENDING).length;
   });
   protected readonly rejectedRequestsCount: Signal<number> = computed(() => {
-    return this.requests$().filter(request => request.status === RequestStatusEnum.REJECTED).length;
+    return this.requests().filter(request => request.status === RequestStatusEnum.REJECTED).length;
   });
   protected readonly approvedRequest: Signal<MembershipRequestDto | undefined> = computed(() => {
-    return this.requests$().find(request => request.status === RequestStatusEnum.APPROVED);
+    return this.requests().find(request => request.status === RequestStatusEnum.APPROVED);
   });
   protected readonly disableNewRequestButton: Signal<boolean> = computed(() => {
-    return this.pendingRequestsCount() > 2 || this.rejectedRequestsCount() > 4 || !!this.approvedRequest();
+    return this.pendingRequestsCount() >= 1 || this.rejectedRequestsCount() > 4 || !!this.approvedRequest();
   });
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
   public readonly currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser;
-  public readonly requests$: Signal<MembershipRequestDto[]> = this.authenticatedFacade.requests$;
+  public readonly requests: Signal<MembershipRequestDto[]> = this.authenticatedFacade.requests$;
   protected readonly guildAccepted = effect(() => {
     if (this.approvedRequest()) {
       const progressInterval: Observable<number> = interval(95).pipe(
@@ -81,9 +81,6 @@ export class UserMembershipRequestsComponent implements OnInit {
   private readonly genericModalService = inject(GenericModalService);
   private readonly destroyRef = inject(DestroyRef);
 
-  public get guildsFiltered(): GuildSummaryDto[] {
-    return this.guilds.filter(guild => !this.hasRequestForGuild(guild.id));
-  }
 
   ngOnInit(): void {
     this.guildFacade.getMembershipRequestsForCurrentUser().pipe(
@@ -92,7 +89,6 @@ export class UserMembershipRequestsComponent implements OnInit {
 
     this.guildFacade.getGuildsRecruiting().pipe(
       takeUntilDestroyed(this.destroyRef),
-      map(guilds => guilds.filter(guild => !this.hasRequestForGuild(guild.id)))
     ).subscribe(guilds => {
       this.guilds = guilds;
     });
@@ -103,7 +99,7 @@ export class UserMembershipRequestsComponent implements OnInit {
       'Choisir une guilde',
       {primary: 'Confirmer'},
       'xl',
-      {guilds: this.guildsFiltered},
+      {guilds: this.guilds},
       GuildSelectionComponent,
       undefined,
       true
@@ -114,8 +110,4 @@ export class UserMembershipRequestsComponent implements OnInit {
     });
   }
 
-  private hasRequestForGuild(guildId: number): boolean {
-    return this.requests$().filter(request => request.status === RequestStatusEnum.PENDING)
-      .some(request => request.guild.id === guildId);
-  }
 }
