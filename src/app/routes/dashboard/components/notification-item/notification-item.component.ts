@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, effect, inject, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
 import {NotificationDto} from "../../../../shared/state/notifications/notification.model";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {NgClass} from "@angular/common";
@@ -22,9 +22,7 @@ import {NotificationsFacade} from "../../../../shared/state/notifications/notifi
 export class NotificationItemComponent {
 
   @Input() notification!: NotificationDto;
-  log = effect(() => {
-    console.log(this.notification);
-  })
+
   private notificationsFacade = inject(NotificationsFacade);
   private authenticatedFacade = inject(AuthenticatedFacade);
   private guildFacade = inject(GuildFacade);

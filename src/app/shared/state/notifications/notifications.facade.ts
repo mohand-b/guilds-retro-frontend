@@ -54,6 +54,9 @@ export class NotificationsFacade {
       this.notificationsService.listen('link_account').pipe(
         tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
       ),
+      this.notificationsService.listen('alliance_request').pipe(
+        tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
+      ),
       this.notificationsService.listen('membership_request').pipe(
         tap((notificationId: number) => {
 
