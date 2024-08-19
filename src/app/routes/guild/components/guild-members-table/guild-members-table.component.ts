@@ -10,6 +10,7 @@ import {SortMembersPipe} from "../../../../shared/pipes/sort-members.pipe";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {CustomPaginatorComponent} from "../../../../shared/components/custom-paginator/custom-paginator.component";
 import {GuildDto} from "../../state/guilds/guild.model";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-guild-members-table',
@@ -21,7 +22,8 @@ import {GuildDto} from "../../state/guilds/guild.model";
     MatPaginatorModule,
     MatIconModule,
     SortMembersPipe,
-    CharacterIconPipe
+    CharacterIconPipe,
+    RouterLink
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: CustomPaginatorComponent},

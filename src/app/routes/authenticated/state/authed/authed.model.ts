@@ -19,6 +19,16 @@ export interface UserDto {
   feedClosingToGuildAndAllies: boolean;
   guildId?: number;
   guildAlliesIds?: number[];
+  linkedAccounts?: UserDto[];
+  showInRegistry: boolean;
+  jobs: JobDto[];
+}
+
+export interface JobDto {
+  id: number;
+  name: string;
+  level: number;
+  isForgemaging: boolean;
 }
 
 export enum GenderEnum {
