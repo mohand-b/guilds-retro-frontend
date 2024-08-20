@@ -1,5 +1,6 @@
 import {GuildDto} from "../../../guild/state/guilds/guild.model";
 import {MembershipRequestDto} from "../../../guild/state/membership-requests/membership-request.model";
+import {JobDto} from "../../../profile/state/jobs/job.model";
 
 export interface AuthedStateDto {
   user: UserDto | undefined;
@@ -24,12 +25,6 @@ export interface UserDto {
   jobs: JobDto[];
 }
 
-export interface JobDto {
-  id: number;
-  name: string;
-  level: number;
-  isForgemaging: boolean;
-}
 
 export enum GenderEnum {
   MALE = "M",

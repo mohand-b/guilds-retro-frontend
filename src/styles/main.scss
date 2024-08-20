@@ -26,6 +26,7 @@
 $guilds-retro-primary: mat.define-palette(mat.$green-palette, 600);
 $guilds-retro-accent: mat.define-palette(mat.$amber-palette, 500);
 $guilds-retro-warn: mat.define-palette(mat.$deep-orange-palette, 700);
+$guilds-retro-tertiary: mat.define-palette(mat.$pink-palette, 800);
 
 $guilds-retro-gold: mat.define-palette(mat.$amber-palette, 500);
 
@@ -34,7 +35,8 @@ $guilds-retro-theme: mat.define-light-theme(
       color: (
         primary: $guilds-retro-primary,
         accent: $guilds-retro-accent,
-        warn: $guilds-retro-warn
+        warn: $guilds-retro-warn,
+        tertiary: $guilds-retro-tertiary,
       ),
       typography: mat.define-typography-config(
         $font-family: 'Nunito, sans-serif',
@@ -49,6 +51,7 @@ $guilds-retro-theme: mat.define-light-theme(
       )
     )
 );
+
 
 @include mat.core-theme($guilds-retro-theme);
 @include mat.all-component-themes($guilds-retro-theme);

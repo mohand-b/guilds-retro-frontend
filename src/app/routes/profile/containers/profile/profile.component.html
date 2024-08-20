@@ -13,15 +13,6 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="p-4 bg-gray-50 rounded-lg">
-        <h2 class="text-xl font-semibold text-gray-700 mb-2">Métiers</h2>
-        <ul>
-          <li *ngFor="let job of user.jobs" class="flex justify-between items-center">
-            <span class="text-gray-800">{{ job.name }}</span>
-            <span class="text-gray-500">{{ job.isForgemaging ? 'Forgemaging' : 'Niveau ' + job.level }}</span>
-          </li>
-        </ul>
-      </div>
 
       <div class="p-4 bg-gray-50 rounded-lg">
         <h2 class="text-xl font-semibold text-gray-700 mb-2">Informations Générales</h2>
@@ -54,6 +45,83 @@
         </ul>
       </div>
     }
+
+
+    <h2 class="text-xl font-semibold text-gray-700 mb-2">Métiers</h2>
+
+    <div class="flex flex-wrap md:flex-nowrap gap-4">
+      @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
+        <div class="flex flex-col items-center justify-center min-h-[7.5rem]">
+          <div class="relative flex items-center justify-center h-[4.5rem]">
+            @if (job) {
+              <mat-progress-spinner
+                [value]="job.level"
+                mode="determinate"
+                diameter="76"
+                strokeWidth="8"
+                color="primary">
+              </mat-progress-spinner>
+            } @else {
+              <div class="w-[4.5rem] h-[4.5rem]"></div>
+            }
+
+            <div
+              class="absolute w-[4rem] h-[4rem] rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+              @if (job) {
+                <img [src]="job.name | jobImage" alt="{{ job.name }}"
+                     class="object-cover w-full h-full">
+              } @else {
+                <mat-icon class="text-gray-400">lock</mat-icon>
+              }
+            </div>
+          </div>
+
+          <div class="mt-2 text-center text-sm text-gray-700">
+            @if (job) {
+              {{ job.name }}
+            } @else {
+              Néant
+            }
+          </div>
+        </div>
+      }
+
+      @for (job of forgemagingJobs(); let idx = $index; track idx) {
+        <div class="flex flex-col items-center justify-center min-h-[7.5rem]">
+          <div class="relative flex items-center justify-center h-[4.5rem]">
+            @if (job) {
+              <mat-progress-spinner
+                [value]="job.level"
+                mode="determinate"
+                diameter="76"
+                strokeWidth="8"
+                color="tertiary">
+              </mat-progress-spinner>
+            } @else {
+              <div class="w-[4.5rem] h-[4.5rem]"></div>
+            }
+
+            <div
+              class="absolute w-[4rem] h-[4rem] rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+              @if (job) {
+                <img [src]="job.name | jobImage" alt="{{ job.name }}"
+                     class="object-cover w-full h-full">
+              } @else {
+                <mat-icon class="text-gray-400">lock</mat-icon>
+              }
+            </div>
+          </div>
+
+          <div class="mt-2 text-center text-sm text-gray-700">
+            @if (job) {
+              {{ job.name }}
+            } @else {
+              Néant
+            }
+          </div>
+        </div>
+      }
+    </div>
 
     <div *ngIf="!isCurrentUser" class="mt-6 flex justify-end">
       <button class="px-4 py-2 bg-primary text-white rounded-lg shadow hover:bg-primary-dark">

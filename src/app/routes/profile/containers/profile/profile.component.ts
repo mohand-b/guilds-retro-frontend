@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
 import {ProfileFacade} from "../../profile.facade";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -6,6 +6,11 @@ import {switchMap, tap} from "rxjs";
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {NgForOf, NgIf} from "@angular/common";
+import {JobImagePipe} from "../../../../shared/pipes/job-image.pipe";
+import {MatProgressBar} from "@angular/material/progress-bar";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {JobDto} from "../../state/jobs/job.model";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +18,11 @@ import {NgForOf, NgIf} from "@angular/common";
   imports: [
     CharacterIconPipe,
     NgIf,
-    NgForOf
+    NgForOf,
+    JobImagePipe,
+    MatProgressBar,
+    MatProgressSpinner,
+    MatIcon
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -21,6 +30,14 @@ import {NgForOf, NgIf} from "@angular/common";
 export class ProfileComponent implements OnInit {
 
   public user: WritableSignal<UserDto | undefined> = signal(undefined);
+  nonForgemagingJobs: Signal<(JobDto | null)[]> = computed(() => {
+    const jobs = this.user()!.jobs.filter((job: JobDto) => !job.isForgemaging);
+    return [...jobs, ...Array(3 - jobs.length).fill(null)].slice(0, 3);
+  })
+  forgemagingJobs: Signal<(JobDto | null)[]> = computed(() => {
+    const jobs = this.user()!.jobs.filter((job: JobDto) => job.isForgemaging);
+    return [...jobs, ...Array(3 - jobs.length).fill(null)].slice(0, 3);
+  })
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
   private readonly profileFacade = inject(ProfileFacade);
   private route = inject(ActivatedRoute)
