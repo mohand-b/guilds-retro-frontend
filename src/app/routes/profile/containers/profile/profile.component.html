@@ -1,4 +1,4 @@
-@if (user(); as user) {
+@if (profileToUse(); as user) {
   <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
     <div class="flex items-center mb-6">
       <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
@@ -51,82 +51,22 @@
 
     <div class="flex flex-wrap md:flex-nowrap gap-4">
       @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
-        <div class="flex flex-col items-center justify-center min-h-[7.5rem]">
-          <div class="relative flex items-center justify-center h-[4.5rem]">
-            @if (job) {
-              <mat-progress-spinner
-                [value]="job.level"
-                mode="determinate"
-                diameter="76"
-                strokeWidth="8"
-                color="primary">
-              </mat-progress-spinner>
-            } @else {
-              <div class="w-[4.5rem] h-[4.5rem]"></div>
-            }
-
-            <div
-              class="absolute w-[4rem] h-[4rem] rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-              @if (job) {
-                <img [src]="job.name | jobImage" alt="{{ job.name }}"
-                     class="object-cover w-full h-full">
-              } @else {
-                <mat-icon class="text-gray-400">lock</mat-icon>
-              }
-            </div>
-          </div>
-
-          <div class="mt-2 text-center text-sm text-gray-700">
-            @if (job) {
-              {{ job.name }}
-            } @else {
-              Néant
-            }
-          </div>
-        </div>
+        <app-job-display
+          [job]="job" [color]="'primary'" [isCurrentUser]="isCurrentUser"
+          (removeJob)="onRemoveJob(job!.id)"
+          (addJob)="onAddJob(false)"
+          (editJobLevel)="onEditJobLevel(job!.id, $event)"
+        />
       }
 
       @for (job of forgemagingJobs(); let idx = $index; track idx) {
-        <div class="flex flex-col items-center justify-center min-h-[7.5rem]">
-          <div class="relative flex items-center justify-center h-[4.5rem]">
-            @if (job) {
-              <mat-progress-spinner
-                [value]="job.level"
-                mode="determinate"
-                diameter="76"
-                strokeWidth="8"
-                color="tertiary">
-              </mat-progress-spinner>
-            } @else {
-              <div class="w-[4.5rem] h-[4.5rem]"></div>
-            }
-
-            <div
-              class="absolute w-[4rem] h-[4rem] rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-              @if (job) {
-                <img [src]="job.name | jobImage" alt="{{ job.name }}"
-                     class="object-cover w-full h-full">
-              } @else {
-                <mat-icon class="text-gray-400">lock</mat-icon>
-              }
-            </div>
-          </div>
-
-          <div class="mt-2 text-center text-sm text-gray-700">
-            @if (job) {
-              {{ job.name }}
-            } @else {
-              Néant
-            }
-          </div>
-        </div>
+        <app-job-display
+          [job]="job" [color]="'tertiary'" [isCurrentUser]="isCurrentUser"
+          (removeJob)="onRemoveJob(job!.id)"
+          (addJob)="onAddJob(true)"
+          (editJobLevel)="onEditJobLevel(job!.id, $event)"
+        />
       }
-    </div>
-
-    <div *ngIf="!isCurrentUser" class="mt-6 flex justify-end">
-      <button class="px-4 py-2 bg-primary text-white rounded-lg shadow hover:bg-primary-dark">
-        Envoyer un message
-      </button>
     </div>
   </div>
 

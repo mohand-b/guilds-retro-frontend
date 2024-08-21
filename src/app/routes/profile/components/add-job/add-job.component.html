@@ -1,0 +1,22 @@
+<form [formGroup]="addJobForm">
+
+  <mat-form-field appearance="outline" class="w-full">
+    <input [matAutocomplete]="auto" formControlName="name" matInput placeholder="Nom du métier"/>
+    <mat-autocomplete #auto="matAutocomplete">
+      @for (job of (isForgemaging ? magusJobs : jobs); track job) {
+        <mat-option [value]="job">{{ job }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <div class="w-full flex gap-3">
+    <label>Niveau du métier</label>
+    <label class="font-bold">{{ jobLevel.value }}</label>
+  </div>
+
+  <div class="pr-5">
+    <mat-slider color="accent" max="100" min="0" showTickMark step="1">
+      <input #jobLevel class="w-full" formControlName="level" matSliderThumb>
+    </mat-slider>
+  </div>
+</form>

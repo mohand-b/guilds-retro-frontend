@@ -11,6 +11,9 @@ import {MatProgressBar} from "@angular/material/progress-bar";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {JobDto} from "../../state/jobs/job.model";
 import {MatIcon} from "@angular/material/icon";
+import {JobDisplayComponent} from "../../components/job-display/job-display.component";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
+import {AddJobComponent} from "../../components/add-job/add-job.component";
 
 @Component({
   selector: 'app-profile',
@@ -22,30 +25,34 @@ import {MatIcon} from "@angular/material/icon";
     JobImagePipe,
     MatProgressBar,
     MatProgressSpinner,
-    MatIcon
+    MatIcon,
+    JobDisplayComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
 
-  public user: WritableSignal<UserDto | undefined> = signal(undefined);
+  public profile: WritableSignal<UserDto | undefined> = signal(undefined);
+  public currentUser: Signal<UserDto | undefined> | null = null;
+  public profileToUse = computed(() => this.currentUser ? this.currentUser() : this.profile());
   nonForgemagingJobs: Signal<(JobDto | null)[]> = computed(() => {
-    const jobs = this.user()!.jobs.filter((job: JobDto) => !job.isForgemaging);
+    if (!this.profileToUse()) return [];
+    const jobs = this.profileToUse()!.jobs.filter((job: JobDto) => !job.isForgemaging);
     return [...jobs, ...Array(3 - jobs.length).fill(null)].slice(0, 3);
   })
   forgemagingJobs: Signal<(JobDto | null)[]> = computed(() => {
-    const jobs = this.user()!.jobs.filter((job: JobDto) => job.isForgemaging);
+    if (!this.profileToUse()) return [];
+    const jobs = this.profileToUse()!.jobs.filter((job: JobDto) => job.isForgemaging);
     return [...jobs, ...Array(3 - jobs.length).fill(null)].slice(0, 3);
   })
+
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
   private readonly profileFacade = inject(ProfileFacade);
   private route = inject(ActivatedRoute)
+  isCurrentUser: boolean = !this.route.snapshot.paramMap.get('username');
   private router = inject(Router)
-
-  get isCurrentUser(): boolean {
-    return this.authenticatedFacade.currentUser()?.id === this.user()?.id;
-  }
+  private genericModalService = inject(GenericModalService);
 
   ngOnInit(): void {
 
@@ -53,25 +60,53 @@ export class ProfileComponent implements OnInit {
       switchMap((params) => {
         const username = params.get('username');
         if (username) {
-          return this.profileFacade.getUserByUsername(username).pipe(
-            tap({
-                next: (user) => {
-                  console.log(user);
-                  this.user.set(user);
-                },
-                error: (error) => {
-                  this.router.navigate(['profile']);
+          if (username.toLowerCase() !== this.authenticatedFacade.currentUser()!.username.toLowerCase()) {
+            return this.profileFacade.getUserByUsername(username).pipe(
+              tap({
+                  next: (user) => {
+                    this.profile.set(user);
+                  },
+                  error: () => {
+                    this.navigateToCurrentUsersProfile();
+                  }
                 }
-              }
-            ));
+              ));
+          } else {
+            this.navigateToCurrentUsersProfile();
+          }
         } else {
-          console.log('No username');
-          console.log(this.authenticatedFacade.currentUser());
-          this.user.set(this.authenticatedFacade.currentUser());
+          this.currentUser = this.authenticatedFacade.currentUser;
         }
         return [];
       })
     ).subscribe();
   }
 
+  onRemoveJob(jobId: number) {
+    this.profileFacade.removeJobFromUser(jobId).subscribe();
+  }
+
+  navigateToCurrentUsersProfile() {
+    this.router.navigate(['profile']);
+  }
+
+  onAddJob(isForgemaging: boolean) {
+    this.genericModalService.open(
+      'Ajouter un métier',
+      {primary: 'Ajouter'},
+      'sm',
+      {isForgemaging},
+      AddJobComponent,
+      undefined,
+      true
+    ).subscribe((job) => {
+      if (job) {
+        this.profileFacade.addJobToUser(job).subscribe();
+      }
+    });
+  }
+
+  onEditJobLevel(id: number, level: number) {
+
+  }
 }

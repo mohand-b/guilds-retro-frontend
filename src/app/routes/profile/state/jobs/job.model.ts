@@ -1,5 +1,14 @@
+import {UserDto} from "../../../authenticated/state/authed/authed.model";
+
 export interface JobDto {
   id: number;
+  name: JobNameType;
+  level: number;
+  isForgemaging: boolean;
+  user: UserDto;
+}
+
+export interface AddJobDto {
   name: JobNameType;
   level: number;
   isForgemaging: boolean;

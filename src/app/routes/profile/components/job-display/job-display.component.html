@@ -1,0 +1,41 @@
+<div class="flex flex-col items-center justify-center min-h-[7.5rem]">
+  <div class="relative flex items-center justify-center h-[4.5rem]">
+    @if (job) {
+      <mat-progress-spinner
+        [value]="job.level"
+        mode="determinate"
+        diameter="76"
+        strokeWidth="8"
+        [color]="color">
+      </mat-progress-spinner>
+    } @else {
+      <div class="w-[4.5rem] h-[4.5rem]"></div>
+    }
+
+    <div (click)="isCurrentUser ? onAddJob() : null"
+         [ngClass]="{'cursor-pointer': isCurrentUser}"
+         class="absolute w-[4rem] h-[4rem] rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+      @if (job) {
+        <img [src]="job.name | jobImage" alt="{{ job.name }}" class="object-cover w-full h-full">
+      } @else if (!job && isCurrentUser) {
+        <mat-icon class="text-gray-400">add</mat-icon>
+      } @else {
+        <mat-icon class="text-gray-400">lock</mat-icon>
+      }
+    </div>
+
+    @if (job && isCurrentUser) {
+      <button (click)="onRemoveJob()" class="text-gray-400 absolute bottom-0 right-0">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
+  </div>
+
+  <div class="mt-2 text-center text-sm text-gray-700">
+    @if (job) {
+      {{ job.name }}
+    } @else {
+      Néant
+    }
+  </div>
+</div>
