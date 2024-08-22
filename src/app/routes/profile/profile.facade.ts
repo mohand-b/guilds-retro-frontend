@@ -83,5 +83,22 @@ export class ProfileFacade {
     )
   }
 
+  updateShowInRegistry(showInRegistry: boolean): Observable<void> {
+    return this.usersService.updateShowInRegistry(showInRegistry).pipe(
+      tap({
+        next: (user) => {
+          authenticatedStore.update(
+            (state) => (
+              {...state, user: {...state.user, showInRegistry} as UserDto}
+            ),
+            updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
+          );
+        },
+        error: (error) => console.log(error),
+      }),
+      trackAuthedRequestsStatus(AUTHENTICATED_STORE_NAME),
+    )
+  }
+
 
 }

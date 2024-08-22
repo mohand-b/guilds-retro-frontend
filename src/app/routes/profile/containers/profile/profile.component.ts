@@ -1,11 +1,10 @@
 import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EMPTY, switchMap, tap} from 'rxjs';
-import {NgForOf, NgIf} from '@angular/common';
 
-import {MatProgressBar} from '@angular/material/progress-bar';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatIcon} from '@angular/material/icon';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatIconModule} from '@angular/material/icon';
 
 import {ProfileFacade} from "../../profile.facade";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
@@ -17,18 +16,19 @@ import {JobDisplayComponent} from "../../components/job-display/job-display.comp
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {AddJobComponent} from "../../components/add-job/add-job.component";
 import {EditJobLevelComponent} from "../../components/edit-job-level/edit-job-level.component";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
     CharacterIconPipe,
-    NgIf,
-    NgForOf,
     JobImagePipe,
-    MatProgressBar,
-    MatProgressSpinner,
-    MatIcon,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    MatIconModule,
     JobDisplayComponent
   ],
   templateUrl: './profile.component.html',
@@ -60,6 +60,8 @@ export class ProfileComponent implements OnInit {
   isCurrentUser: boolean = !this.route.snapshot.paramMap.get('username');
   private readonly router = inject(Router);
   private readonly genericModalService = inject(GenericModalService);
+  private readonly location = inject(Location);
+
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
@@ -128,5 +130,13 @@ export class ProfileComponent implements OnInit {
 
   navigateToCurrentUsersProfile() {
     this.router.navigate(['profile']);
+  }
+
+  onUpdateShowInRegistry(showInRegistry: boolean) {
+    this.profileFacade.updateShowInRegistry(showInRegistry).subscribe();
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

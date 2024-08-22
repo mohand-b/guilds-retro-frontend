@@ -5,7 +5,10 @@
            class="w-10 h-10 rounded-full object-cover no-select no-copy">
     </div>
     <div class="ml-4">
-      <div class="text-sm font-semibold">{{ post.user.username }}</div>
+      <div class="text-sm font-semibold">
+        <a [routerLink]="['/profile', post.user.username]">
+          {{ post.user.username }}</a>
+      </div>
       <div class="text-xs text-gray-500">
         @if ((post.user | guildMembership:currentUser) === 'currentUser') {
           Moi

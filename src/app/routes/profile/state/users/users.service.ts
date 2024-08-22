@@ -14,4 +14,8 @@ export class UsersService {
     return this.httpClient.get<UserDto>(`${this.usersBaseUrl}/${username}`);
   }
 
+  updateShowInRegistry(showInRegistry: boolean): Observable<void> {
+    return this.httpClient.patch<void>(`${this.usersBaseUrl}/show-in-registry`, {showInRegistry});
+  }
+
 }

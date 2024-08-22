@@ -1,39 +1,48 @@
+@if (!isCurrentUser) {
+  <button (click)="goBack()" class="text-gray-600 hover:text-gray-800">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+}
 @if (profileToUse(); as user) {
-  <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-    <div class="flex items-center mb-6">
-      <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-        <img [src]="user | characterIcon" alt="Avatar" class="object-contain no-select no-copy">
-      </div>
-      <div class="ml-6">
-        <h1 class="text-2xl font-bold text-gray-800">{{ user.username }}</h1>
-        <div class="text-lg text-gray-600">{{ user.characterClass }} - Niveau {{ user.characterLevel }}</div>
-        <div *ngIf="user.guild" class="text-md text-gray-500 mt-2">Membre de <span
-          class="font-semibold">{{ user.guild.name }}</span></div>
-      </div>
-    </div>
+  <div class="flex flex-col gap-4 p-4">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="bg-white p-6 rounded-lg shadow-md relative overflow-hidden">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+          <div class="w-24 h-24 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
+            <img [src]="user | characterIcon" alt="Avatar"
+                 class="w-20 h-20 rounded-full object-cover no-select no-copy"/>
+          </div>
+          <div class="ml-6">
+            <h1 class="text-2xl font-bold text-gray-800">{{ user.username }}</h1>
+            <div class="text-lg text-gray-600">{{ user.characterClass }} - Niveau {{ user.characterLevel }}</div>
+            @if (user.guild) {
+              <div class="text-md text-gray-500 mt-2">Membre de <span
+                class="font-semibold">{{ user.guild.name }}</span></div>
+            }
+          </div>
+        </div>
 
-      <div class="p-4 bg-gray-50 rounded-lg">
-        <h2 class="text-xl font-semibold text-gray-700 mb-2">Informations Générales</h2>
-        <ul>
-          <li class="flex justify-between items-center">
-            <span class="text-gray-800">Genre</span>
-            <span class="text-gray-500">{{ user.gender }}</span>
-          </li>
-          <li class="flex justify-between items-center">
-            <span class="text-gray-800">Affichage dans le registre</span>
-            <span class="text-gray-500">{{ user.showInRegistry ? 'Oui' : 'Non' }}</span>
-          </li>
-        </ul>
+        @if (isCurrentUser) {
+          <mat-slide-toggle
+            [checked]="user.showInRegistry"
+            (change)="onUpdateShowInRegistry($event.checked)">
+            Apparaître dans le registre
+          </mat-slide-toggle>
+        }
       </div>
+
+      @if (user.guild?.logo) {
+        <div class="absolute inset-0 right-0 flex justify-end items-center pointer-events-none">
+          <img [src]="user.guild.logo" alt="Logo de la guilde"
+               class="opacity-20 w-48 h-48 object-contain"/>
+        </div>
+      }
     </div>
 
     @if (user.linkedAccounts && user.linkedAccounts.length > 0) {
-
-      <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+      <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-xl font-semibold text-gray-700 mb-2">Comptes Liés</h2>
-
         <ul>
           @for (linkedUser of user.linkedAccounts; track linkedUser.id) {
             <li class="flex justify-between items-center">
@@ -46,28 +55,28 @@
       </div>
     }
 
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">Métiers</h2>
+      <div class="flex flex-wrap md:flex-nowrap gap-4">
+        @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
+          <app-job-display
+            [job]="job" [color]="'primary'" [isCurrentUser]="isCurrentUser"
+            (removeJob)="onRemoveJob(job!)"
+            (addJob)="onAddJob(false, user)"
+            (editJobLevel)="onEditJobLevel(job!)"
+          />
+        }
 
-    <h2 class="text-xl font-semibold text-gray-700 mb-2">Métiers</h2>
-
-    <div class="flex flex-wrap md:flex-nowrap gap-4">
-      @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
-        <app-job-display
-          [job]="job" [color]="'primary'" [isCurrentUser]="isCurrentUser"
-          (removeJob)="onRemoveJob(job!)"
-          (addJob)="onAddJob(false, user)"
-          (editJobLevel)="onEditJobLevel(job!)"
-        />
-      }
-
-      @for (job of forgemagingJobs(); let idx = $index; track idx) {
-        <app-job-display
-          [job]="job" [color]="'tertiary'" [isCurrentUser]="isCurrentUser"
-          (removeJob)="onRemoveJob(job!)"
-          (addJob)="onAddJob(true, user)"
-          (editJobLevel)="onEditJobLevel(job!)"
-        />
-      }
+        @for (job of forgemagingJobs(); let idx = $index; track idx) {
+          <app-job-display
+            [job]="job" [color]="'tertiary'" [isCurrentUser]="isCurrentUser"
+            (removeJob)="onRemoveJob(job!)"
+            (addJob)="onAddJob(true, user)"
+            (editJobLevel)="onEditJobLevel(job!)"
+          />
+        }
+      </div>
     </div>
-  </div>
 
+  </div>
 }
