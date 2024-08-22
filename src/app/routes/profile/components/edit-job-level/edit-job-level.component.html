@@ -1,0 +1,12 @@
+<div class="flex">
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="w-full flex gap-3">
+      <label>Niveau du métier</label>
+      <label class="font-bold">{{ jobLevel.value }}</label>
+    </div>
+
+    <mat-slider color="accent" max="100" min="0" showTickMark step="1">
+      <input #jobLevel [formControl]="jobLevelControl" class="w-full" matSliderThumb>
+    </mat-slider>
+  </div>
+</div>

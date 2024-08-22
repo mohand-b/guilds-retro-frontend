@@ -72,7 +72,7 @@ export class ProfileFacade {
         next: (job) => {
           authenticatedStore.update(
             (state) => (
-              {...state, user: {...state.user, jobs: [...state.user!.jobs, job]} as UserDto}
+              {...state, user: {...state.user, jobs: state.user!.jobs.map(j => j.id === jobId ? job : j)} as UserDto}
             ),
             updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
           );

@@ -6,6 +6,9 @@ import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/mater
 import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {UserDto} from "../../../authenticated/state/authed/authed.model";
+import {valueInArrayValidator} from "../../../../shared/validators/value-in-array.validator";
+import {SortAlphabeticallyPipe} from "../../../../shared/pipes/sort-alphabetically.pipe";
 
 @Component({
   selector: 'app-add-job',
@@ -18,21 +21,26 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
     MatAutocompleteTrigger,
     MatFormField,
     MatInput,
-    MatOption
+    MatOption,
+    SortAlphabeticallyPipe
   ],
   templateUrl: './add-job.component.html',
   styleUrl: './add-job.component.scss'
 })
 export class AddJobComponent implements OnInit {
 
-  jobs = Object.values(JobNameEnum);
-  magusJobs = Object.values(MagusJobNameEnum);
   conditionMet: WritableSignal<boolean> = signal<boolean>(false);
-  public data: { isForgemaging: boolean } = inject(MAT_DIALOG_DATA);
+  public data: { isForgemaging: boolean, user: UserDto } = inject(MAT_DIALOG_DATA);
+  magusJobs = Object.values(MagusJobNameEnum).filter(job =>
+    this.data.user.jobs.every(userJob => userJob.name !== job));
+  jobs = Object.values(JobNameEnum).filter(job =>
+    this.data.user.jobs.every(userJob => userJob.name !== job));
   isForgemaging = this.data.isForgemaging;
   private fb = inject(NonNullableFormBuilder);
   public addJobForm = this.fb.group({
-    name: this.fb.control(undefined, Validators.required),
+    name: this.fb.control('',
+      [Validators.required, valueInArrayValidator(this.isForgemaging ? this.magusJobs : this.jobs)]
+    ),
     level: [0, [Validators.required, Validators.min(1), Validators.max(100)]],
   });
 

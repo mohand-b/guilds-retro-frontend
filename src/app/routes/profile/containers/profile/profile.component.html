@@ -53,18 +53,18 @@
       @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
         <app-job-display
           [job]="job" [color]="'primary'" [isCurrentUser]="isCurrentUser"
-          (removeJob)="onRemoveJob(job!.id)"
-          (addJob)="onAddJob(false)"
-          (editJobLevel)="onEditJobLevel(job!.id, $event)"
+          (removeJob)="onRemoveJob(job!)"
+          (addJob)="onAddJob(false, user)"
+          (editJobLevel)="onEditJobLevel(job!)"
         />
       }
 
       @for (job of forgemagingJobs(); let idx = $index; track idx) {
         <app-job-display
           [job]="job" [color]="'tertiary'" [isCurrentUser]="isCurrentUser"
-          (removeJob)="onRemoveJob(job!.id)"
-          (addJob)="onAddJob(true)"
-          (editJobLevel)="onEditJobLevel(job!.id, $event)"
+          (removeJob)="onRemoveJob(job!)"
+          (addJob)="onAddJob(true, user)"
+          (editJobLevel)="onEditJobLevel(job!)"
         />
       }
     </div>

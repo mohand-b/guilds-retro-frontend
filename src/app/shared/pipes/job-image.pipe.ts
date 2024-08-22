@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {JobNameEnum, JobNameType, MagusJobNameEnum} from "../../routes/profile/state/jobs/job.model"; // Assurez-vous que le chemin est correct
+import {JobNameEnum, JobNameType, MagusJobNameEnum} from "../../routes/profile/state/jobs/job.model";
 
 @Pipe({
   name: 'jobImage',
