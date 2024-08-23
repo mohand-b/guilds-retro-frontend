@@ -78,5 +78,19 @@
       </div>
     </div>
 
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">Derniers posts</h2>
+      @if (posts().length > 0) {
+        <div class="flex flex-col gap-2">
+          @for (post of posts(); track post.id) {
+            <app-post-summary [post]="post"/>
+          }
+        </div>
+      } @else {
+        <div class="text-gray-500">Aucun post</div>
+      }
+    </div>
+
+
   </div>
 }

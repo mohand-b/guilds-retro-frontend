@@ -18,6 +18,8 @@ import {AddJobComponent} from "../../components/add-job/add-job.component";
 import {EditJobLevelComponent} from "../../components/edit-job-level/edit-job-level.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {Location} from "@angular/common";
+import {PostDto} from "../../../feed/state/posts/post.model";
+import {PostSummaryComponent} from "../../components/post-summary/post-summary.component";
 
 @Component({
   selector: 'app-profile',
@@ -29,7 +31,8 @@ import {Location} from "@angular/common";
     MatProgressSpinnerModule,
     MatSlideToggleModule,
     MatIconModule,
-    JobDisplayComponent
+    JobDisplayComponent,
+    PostSummaryComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -39,6 +42,7 @@ export class ProfileComponent implements OnInit {
   public profile: WritableSignal<UserDto | undefined> = signal(undefined);
   public currentUser: Signal<UserDto | undefined> | null = null;
   public profileToUse = computed(() => this.currentUser ? this.currentUser() : this.profile());
+  public posts: WritableSignal<PostDto[]> = signal<PostDto[]>([]);
 
   nonForgemagingJobs: Signal<(JobDto | null)[]> = computed(() => {
     const profile = this.profileToUse();
@@ -73,6 +77,12 @@ export class ProfileComponent implements OnInit {
               tap({
                 next: user => this.profile.set(user),
                 error: () => this.navigateToCurrentUsersProfile()
+              }),
+              switchMap((user) => {
+                return this.profileFacade.getLastPosts(user.id);
+              }),
+              tap({
+                next: posts => this.posts.set(posts),
               })
             );
           } else {
@@ -81,7 +91,11 @@ export class ProfileComponent implements OnInit {
           }
         } else {
           this.currentUser = this.authenticatedFacade.currentUser;
-          return EMPTY;
+          return this.profileFacade.getLastPosts(this.authenticatedFacade.currentUser()!.id).pipe(
+            tap({
+              next: posts => this.posts.set(posts),
+            })
+          );
         }
       })
     ).subscribe();

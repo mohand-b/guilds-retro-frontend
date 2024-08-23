@@ -19,5 +19,9 @@ export class PostsService {
     return this.http.delete<void>(`${this.postsBaseUrl}/${id}`);
   }
 
+  getLastPosts(userId: number): Observable<PostDto[]> {
+    return this.http.get<PostDto[]>(`${this.postsBaseUrl}/user/${userId}/last-posts`);
+  }
+
 
 }

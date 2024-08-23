@@ -1,0 +1,15 @@
+<div class="flex items-center gap-4 p-2 border-b border-gray-300">
+  @if (post.image) {
+    <div class="w-12 h-12">
+      <img [src]="post.image" alt="Post image" class="object-cover w-full h-full rounded-md">
+    </div>
+  }
+
+  <div class="flex-1 text-gray-800 truncate">
+    {{ post.text }}
+  </div>
+
+  <div class="text-gray-500 text-sm whitespace-nowrap">
+    {{ post.createdAt | dateFormat }}
+  </div>
+</div>

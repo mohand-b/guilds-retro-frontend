@@ -10,12 +10,15 @@ import {
   trackAuthedRequestsStatus
 } from "../authenticated/authenticated.facade";
 import {updateRequestStatus} from "@ngneat/elf-requests";
+import {PostsService} from "../feed/state/posts/posts.service";
+import {PostDto} from "../feed/state/posts/post.model";
 
 @Injectable({providedIn: 'root'})
 export class ProfileFacade {
 
   private usersService = inject(UsersService);
   private jobsService = inject(JobsService);
+  private postsService = inject(PostsService);
 
   getUserByUsername(username: string): Observable<UserDto> {
     return this.usersService.getUserByUsername(username);
@@ -98,6 +101,10 @@ export class ProfileFacade {
       }),
       trackAuthedRequestsStatus(AUTHENTICATED_STORE_NAME),
     )
+  }
+
+  getLastPosts(userId: number): Observable<PostDto[]> {
+    return this.postsService.getLastPosts(userId);
   }
 
 
