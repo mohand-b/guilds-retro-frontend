@@ -5,7 +5,6 @@
 }
 @if (profileToUse(); as user) {
   <div class="flex flex-col gap-4 p-4">
-
     <div class="bg-white p-6 rounded-lg shadow-md relative overflow-hidden">
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center">
@@ -40,52 +39,57 @@
       }
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-semibold text-gray-700 mb-2">Autres personnages</h2>
-        @if (isCurrentUser) {
-          <button mat-icon-button (click)="onAddLinkedAccount()">
-            <mat-icon>add</mat-icon>
-          </button>
-        }
-      </div>
-      @if (user.linkedAccounts && user.linkedAccounts.length > 0) {
+    <div class="flex flex-col lg:flex-row gap-4">
+      <div class="bg-white flex flex-col gap-4 p-6 rounded-lg shadow-md flex-1 min-w-0">
+        <h2 class="text-xl font-semibold text-gray-700 mb-2">Métiers</h2>
+        <div class="flex flex-wrap gap-4">
+          <div class="flex flex-nowrap gap-4">
+            @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
+              <app-job-display
+                [job]="job" [color]="'primary'" [isCurrentUser]="isCurrentUser"
+                (removeJob)="onRemoveJob(job!)"
+                (addJob)="onAddJob(false, user)"
+                (editJobLevel)="onEditJobLevel(job!)"
+              />
+            }
+          </div>
 
-        <ul>
-          @for (linkedUser of user.linkedAccounts; track linkedUser.id) {
-            <li class="flex justify-between items-center">
-              <span class="text-gray-800">{{ linkedUser.username }}</span>
-              <span class="text-gray-500">{{ linkedUser.characterClass }}
-                - Niveau {{ linkedUser.characterLevel }}</span>
-            </li>
+          <div class="flex flex-nowrap gap-4">
+            @for (job of forgemagingJobs(); let idx = $index; track idx) {
+              <app-job-display
+                [job]="job" [color]="'tertiary'" [isCurrentUser]="isCurrentUser"
+                (removeJob)="onRemoveJob(job!)"
+                (addJob)="onAddJob(true, user)"
+                (editJobLevel)="onEditJobLevel(job!)"
+              />
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white flex flex-col gap-4 p-6 rounded-lg shadow-md w-full md:w-auto md:min-w-[25rem]">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-700 mb-2">Autres personnages</h2>
+          @if (isCurrentUser) {
+            <button mat-icon-button (click)="onAddLinkedAccount()">
+              <mat-icon>add</mat-icon>
+            </button>
           }
-        </ul>
-      }
-    </div>
-
-
-    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
-      <h2 class="text-xl font-semibold text-gray-700 mb-2">Métiers</h2>
-      <div class="flex flex-wrap md:flex-nowrap gap-4">
-        @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
-          <app-job-display
-            [job]="job" [color]="'primary'" [isCurrentUser]="isCurrentUser"
-            (removeJob)="onRemoveJob(job!)"
-            (addJob)="onAddJob(false, user)"
-            (editJobLevel)="onEditJobLevel(job!)"
-          />
-        }
-
-        @for (job of forgemagingJobs(); let idx = $index; track idx) {
-          <app-job-display
-            [job]="job" [color]="'tertiary'" [isCurrentUser]="isCurrentUser"
-            (removeJob)="onRemoveJob(job!)"
-            (addJob)="onAddJob(true, user)"
-            (editJobLevel)="onEditJobLevel(job!)"
-          />
+        </div>
+        @if (user.linkedAccounts && user.linkedAccounts.length > 0) {
+          <ul>
+            @for (linkedUser of user.linkedAccounts; track linkedUser.id) {
+              <li class="flex justify-between items-center">
+                <span class="text-gray-800">{{ linkedUser.username }}</span>
+                <span class="text-gray-500">{{ linkedUser.characterClass }}
+                  - Niveau {{ linkedUser.characterLevel }}</span>
+              </li>
+            }
+          </ul>
         }
       </div>
     </div>
+
 
     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
       <h2 class="text-xl font-semibold text-gray-700 mb-2">Derniers posts</h2>
@@ -99,7 +103,5 @@
         <div class="text-gray-500">Aucun post</div>
       }
     </div>
-
-
   </div>
 }
