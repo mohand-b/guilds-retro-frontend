@@ -83,12 +83,4 @@ export class AuthenticatedFacade {
       trackAuthedRequestsStatus(AUTHENTICATED_STORE_NAME),
     );
   }
-
-  acceptAccountlinkRequest(requestId: number): Observable<void> {
-    return this.authedService.acceptAccountlinkRequest(requestId);
-  }
-
-  rejectAccountlinkRequest(requestId: number): Observable<void> {
-    return this.authedService.rejectAccountlinkRequest(requestId);
-  }
 }

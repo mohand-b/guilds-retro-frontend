@@ -7,15 +7,36 @@ import {UserDto} from "../../../authenticated/state/authed/authed.model";
 @Injectable({providedIn: 'root'})
 export class UsersService {
 
-  private httpClient = inject(HttpClient);
+  private http = inject(HttpClient);
   private readonly usersBaseUrl = `${environment.apiUrl}/users`;
 
   getUserByUsername(username: string): Observable<UserDto> {
-    return this.httpClient.get<UserDto>(`${this.usersBaseUrl}/${username}`);
+    return this.http.get<UserDto>(`${this.usersBaseUrl}/${username}`);
+  }
+
+  findUserForAccountLinking(username: string): Observable<UserDto> {
+    return this.http.get<UserDto>(`${this.usersBaseUrl}/find-for-link/${username}`);
   }
 
   updateShowInRegistry(showInRegistry: boolean): Observable<void> {
-    return this.httpClient.patch<void>(`${this.usersBaseUrl}/show-in-registry`, {showInRegistry});
+    return this.http.patch<void>(`${this.usersBaseUrl}/show-in-registry`, {showInRegistry});
   }
+
+  reqquestLinkAccount(userId: number): Observable<void> {
+    return this.http.post<void>(`${this.usersBaseUrl}/link-account/${userId}`, {});
+  }
+
+  acceptAccountlinkRequest(requestId: number): Observable<void> {
+    return this.http.post<void>(`${this.usersBaseUrl}/link-requests/${requestId}/accept`, {});
+  }
+
+  rejectAccountlinkRequest(requestId: number): Observable<void> {
+    return this.http.post<void>(`${this.usersBaseUrl}/link-requests/${requestId}/reject`, {});
+  }
+
+  getLinkedAccounts(): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(`${this.usersBaseUrl}/linked-accounts`);
+  }
+
 
 }

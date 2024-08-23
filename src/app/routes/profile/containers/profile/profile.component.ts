@@ -1,6 +1,6 @@
 import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EMPTY, switchMap, tap} from 'rxjs';
+import {EMPTY, forkJoin, switchMap, tap} from 'rxjs';
 
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -20,6 +20,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {Location} from "@angular/common";
 import {PostDto} from "../../../feed/state/posts/post.model";
 import {PostSummaryComponent} from "../../components/post-summary/post-summary.component";
+import {AddLinkedAccountComponent} from "../../components/add-linked-account/add-linked-account.component";
 
 @Component({
   selector: 'app-profile',
@@ -78,9 +79,7 @@ export class ProfileComponent implements OnInit {
                 next: user => this.profile.set(user),
                 error: () => this.navigateToCurrentUsersProfile()
               }),
-              switchMap((user) => {
-                return this.profileFacade.getLastPosts(user.id);
-              }),
+              switchMap((user) => this.profileFacade.getLastPosts(user.id)),
               tap({
                 next: posts => this.posts.set(posts),
               })
@@ -91,14 +90,18 @@ export class ProfileComponent implements OnInit {
           }
         } else {
           this.currentUser = this.authenticatedFacade.currentUser;
-          return this.profileFacade.getLastPosts(this.authenticatedFacade.currentUser()!.id).pipe(
+          return forkJoin({
+            posts: this.profileFacade.getLastPosts(this.authenticatedFacade.currentUser()!.id),
+            linkedAccounts: this.profileFacade.getLinkedAccounts()
+          }).pipe(
             tap({
-              next: posts => this.posts.set(posts),
+              next: result => this.posts.set(result.posts)
             })
           );
         }
       })
     ).subscribe();
+
   }
 
   onRemoveJob(job: JobDto) {
@@ -138,7 +141,9 @@ export class ProfileComponent implements OnInit {
       undefined,
       true
     ).pipe(
-      switchMap(updatedJob => updatedJob ? this.profileFacade.updateJobLevel(updatedJob.id, updatedJob.level) : EMPTY)
+      switchMap(updatedJob =>
+        updatedJob ? this.profileFacade.updateJobLevel(updatedJob.id, updatedJob.level) : EMPTY
+      )
     ).subscribe();
   }
 
@@ -148,6 +153,22 @@ export class ProfileComponent implements OnInit {
 
   onUpdateShowInRegistry(showInRegistry: boolean) {
     this.profileFacade.updateShowInRegistry(showInRegistry).subscribe();
+  }
+
+  onAddLinkedAccount() {
+    this.genericModalService.open(
+      'Lier un compte à mon profil',
+      {primary: 'Envoyer la demande'},
+      'md',
+      null,
+      AddLinkedAccountComponent,
+      undefined,
+      true
+    ).pipe(
+      switchMap((user: UserDto) =>
+        user ? this.profileFacade.requestLinkAccount(user.id) : EMPTY
+      )
+    ).subscribe()
   }
 
   goBack() {

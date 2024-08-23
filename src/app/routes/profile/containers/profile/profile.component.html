@@ -40,9 +40,17 @@
       }
     </div>
 
-    @if (user.linkedAccounts && user.linkedAccounts.length > 0) {
-      <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-xl font-semibold text-gray-700 mb-2">Comptes Liés</h2>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-700 mb-2">Autres personnages</h2>
+        @if (isCurrentUser) {
+          <button mat-icon-button (click)="onAddLinkedAccount()">
+            <mat-icon>add</mat-icon>
+          </button>
+        }
+      </div>
+      @if (user.linkedAccounts && user.linkedAccounts.length > 0) {
+
         <ul>
           @for (linkedUser of user.linkedAccounts; track linkedUser.id) {
             <li class="flex justify-between items-center">
@@ -52,8 +60,9 @@
             </li>
           }
         </ul>
-      </div>
-    }
+      }
+    </div>
+
 
     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
       <h2 class="text-xl font-semibold text-gray-700 mb-2">Métiers</h2>

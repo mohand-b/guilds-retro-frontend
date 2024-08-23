@@ -107,5 +107,38 @@ export class ProfileFacade {
     return this.postsService.getLastPosts(userId);
   }
 
+  findUserForAccountLinking(username: string): Observable<UserDto> {
+    return this.usersService.findUserForAccountLinking(username);
+  }
+
+  requestLinkAccount(targetUserId: number): Observable<void> {
+    return this.usersService.reqquestLinkAccount(targetUserId);
+  }
+
+  acceptAccountlinkRequest(requestId: number): Observable<void> {
+    return this.usersService.acceptAccountlinkRequest(requestId);
+  }
+
+  rejectAccountlinkRequest(requestId: number): Observable<void> {
+    return this.usersService.rejectAccountlinkRequest(requestId);
+  }
+
+  getLinkedAccounts(): Observable<UserDto[]> {
+    return this.usersService.getLinkedAccounts().pipe(
+      tap({
+        next: (linkedAccounts) => {
+          authenticatedStore.update(
+            (state) => (
+              {...state, user: {...state.user, linkedAccounts} as UserDto}
+            ),
+            updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
+          );
+        },
+        error: (error) => console.log(error),
+      }),
+      trackAuthedRequestsStatus(AUTHENTICATED_STORE_NAME),
+    );
+  }
+
 
 }

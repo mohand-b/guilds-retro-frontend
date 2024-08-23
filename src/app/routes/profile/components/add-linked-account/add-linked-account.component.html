@@ -1,0 +1,29 @@
+<div class="flex flex-col gap-4">
+  <form (submit)="onSearchAccount($event)" class="flex gap-4">
+    <mat-form-field appearance="outline" class="flex-1">
+      <input [formControl]="searchAccountControl" matInput placeholder="Nom du compte"/>
+    </mat-form-field>
+
+    <button [disabled]="searchAccountControl.invalid" color="accent" mat-raised-button>
+      Chercher
+    </button>
+  </form>
+
+  @if (accountFound(); as account) {
+    <div class="flex gap-4 items-center mt-4 p-4 bg-white rounded-lg shadow-md">
+      <div class="flex-1 text-gray-800 truncate font-semibold">
+        {{ account.username }}
+      </div>
+      <div class="text-gray-600">
+        {{ account.characterClass }} - Niveau {{ account.characterLevel }}
+      </div>
+    </div>
+    <app-alert
+      message="Une fois la demande envoyée, connecte toi à autre ton compte pour accepter la demande."
+      type="info"
+    />
+  }
+  @if (error(); as error) {
+    <app-alert [message]="error" type="error"/>
+  }
+</div>
