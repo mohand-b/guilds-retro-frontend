@@ -1,5 +1,5 @@
 import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {EMPTY, forkJoin, switchMap, tap} from 'rxjs';
 
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -33,7 +33,8 @@ import {AddLinkedAccountComponent} from "../../components/add-linked-account/add
     MatSlideToggleModule,
     MatIconModule,
     JobDisplayComponent,
-    PostSummaryComponent
+    PostSummaryComponent,
+    RouterLink
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
