@@ -1,6 +1,7 @@
 import {GuildDto} from "../../../guild/state/guilds/guild.model";
 import {MembershipRequestDto} from "../../../guild/state/membership-requests/membership-request.model";
 import {JobDto} from "../../../profile/state/jobs/job.model";
+import {OneWordQuestionnaireDto} from "../../../profile/state/questionnaire/questionnaire.model";
 
 export interface AuthedStateDto {
   user: UserDto | undefined;
@@ -23,6 +24,7 @@ export interface UserDto {
   linkedAccounts?: UserDto[];
   showInRegistry: boolean;
   jobs: JobDto[];
+  questionnaire: OneWordQuestionnaireDto;
 }
 
 

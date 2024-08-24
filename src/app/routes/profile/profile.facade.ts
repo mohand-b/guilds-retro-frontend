@@ -12,6 +12,7 @@ import {
 import {updateRequestStatus} from "@ngneat/elf-requests";
 import {PostsService} from "../feed/state/posts/posts.service";
 import {PostDto} from "../feed/state/posts/post.model";
+import {OneWordQuestionnaireDto} from "./state/questionnaire/questionnaire.model";
 
 @Injectable({providedIn: 'root'})
 export class ProfileFacade {
@@ -130,6 +131,23 @@ export class ProfileFacade {
           authenticatedStore.update(
             (state) => (
               {...state, user: {...state.user, linkedAccounts} as UserDto}
+            ),
+            updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
+          );
+        },
+        error: (error) => console.log(error),
+      }),
+      trackAuthedRequestsStatus(AUTHENTICATED_STORE_NAME),
+    );
+  }
+
+  updateQuestionnaire(updateData: Partial<OneWordQuestionnaireDto>): Observable<OneWordQuestionnaireDto> {
+    return this.usersService.updateQuestionnaire(updateData).pipe(
+      tap({
+        next: (questionnaire) => {
+          authenticatedStore.update(
+            (state) => (
+              {...state, user: {...state.user, questionnaire} as UserDto}
             ),
             updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
           );

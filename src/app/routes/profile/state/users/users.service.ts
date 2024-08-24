@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {Observable} from "rxjs";
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
+import {OneWordQuestionnaireDto} from "../questionnaire/questionnaire.model";
 
 @Injectable({providedIn: 'root'})
 export class UsersService {
@@ -36,6 +37,10 @@ export class UsersService {
 
   getLinkedAccounts(): Observable<UserDto[]> {
     return this.http.get<UserDto[]>(`${this.usersBaseUrl}/linked-accounts`);
+  }
+
+  updateQuestionnaire(updateData: Partial<OneWordQuestionnaireDto>): Observable<OneWordQuestionnaireDto> {
+    return this.http.patch<OneWordQuestionnaireDto>(`${this.usersBaseUrl}/questionnaire`, updateData);
   }
 
 

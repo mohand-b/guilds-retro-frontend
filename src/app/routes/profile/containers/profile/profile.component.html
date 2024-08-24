@@ -71,7 +71,7 @@
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-semibold text-gray-700 mb-2">Autres personnages</h2>
           @if (isCurrentUser) {
-            <button mat-icon-button (click)="onAddLinkedAccount()">
+            <button class="-mt-3" mat-icon-button (click)="onAddLinkedAccount()">
               <mat-icon>add</mat-icon>
             </button>
           }
@@ -105,5 +105,7 @@
         <div class="text-gray-500">Aucun post</div>
       }
     </div>
+
+    <app-questionnaire [questionnaire]="user.questionnaire" [isCurrentUser]="isCurrentUser"/>
   </div>
 }

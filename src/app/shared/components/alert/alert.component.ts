@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {NgClass} from "@angular/common";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-alert',
@@ -11,7 +12,20 @@ import {NgClass} from "@angular/common";
     NgClass
   ],
   templateUrl: './alert.component.html',
-  styleUrl: './alert.component.scss'
+  styleUrl: './alert.component.scss',
+  animations: [
+    trigger('fadeInOut', [
+      state('visible', style({opacity: 1})),
+      state('hidden', style({opacity: 0})),
+      transition('visible => hidden', [
+        animate('600ms ease-out')
+      ]),
+      transition('hidden => visible', [
+        style({opacity: 0}),
+        animate('600ms ease-in')
+      ])
+    ])
+  ]
 })
 export class AlertComponent {
   @Input() type: 'info' | 'error' | 'warning' = 'info';

@@ -21,6 +21,8 @@ import {Location} from "@angular/common";
 import {PostDto} from "../../../feed/state/posts/post.model";
 import {PostSummaryComponent} from "../../components/post-summary/post-summary.component";
 import {AddLinkedAccountComponent} from "../../components/add-linked-account/add-linked-account.component";
+import {QuestionnaireComponent} from "../questionnaire/questionnaire.component";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-profile',
@@ -34,7 +36,9 @@ import {AddLinkedAccountComponent} from "../../components/add-linked-account/add
     MatIconModule,
     JobDisplayComponent,
     PostSummaryComponent,
-    RouterLink
+    RouterLink,
+    QuestionnaireComponent,
+    MatButtonModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
