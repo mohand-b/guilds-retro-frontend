@@ -22,7 +22,7 @@ export interface UserDto {
   guildId?: number;
   guildAlliesIds?: number[];
   linkedAccounts?: UserDto[];
-  showInRegistry: boolean;
+  hideProfile: boolean;
   jobs: JobDto[];
   questionnaire: OneWordQuestionnaireDto;
 }

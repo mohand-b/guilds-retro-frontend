@@ -19,8 +19,8 @@ export class UsersService {
     return this.http.get<UserDto>(`${this.usersBaseUrl}/find-for-link/${username}`);
   }
 
-  updateShowInRegistry(showInRegistry: boolean): Observable<void> {
-    return this.http.patch<void>(`${this.usersBaseUrl}/show-in-registry`, {showInRegistry});
+  updateHideProfile(hideProfile: boolean): Observable<void> {
+    return this.http.patch<void>(`${this.usersBaseUrl}/hide-profile`, {hideProfile});
   }
 
   reqquestLinkAccount(userId: number): Observable<void> {

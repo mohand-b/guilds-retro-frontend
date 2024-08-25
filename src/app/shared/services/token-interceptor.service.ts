@@ -1,7 +1,6 @@
 import {inject, Injectable, Signal} from '@angular/core';
 import {
   HTTP_INTERCEPTORS,
-  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpHeaders,
@@ -31,16 +30,7 @@ export class TokenInterceptorService implements HttpInterceptor {
     }
 
     return next.handle(request).pipe(
-      catchError((error) => {
-        if (
-          error instanceof HttpErrorResponse &&
-          error.status === 401 &&
-          !request.url.endsWith('/login')
-        ) {
-          this.authenticatedFacade.logout();
-        }
-        return throwError(error);
-      }),
+      catchError((error) => throwError(error)),
     );
   }
 }

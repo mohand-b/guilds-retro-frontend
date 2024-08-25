@@ -87,8 +87,8 @@ export class ProfileFacade {
     )
   }
 
-  updateShowInRegistry(showInRegistry: boolean): Observable<void> {
-    return this.usersService.updateShowInRegistry(showInRegistry).pipe(
+  updateHideProfile(showInRegistry: boolean): Observable<void> {
+    return this.usersService.updateHideProfile(showInRegistry).pipe(
       tap({
         next: (user) => {
           authenticatedStore.update(

@@ -23,6 +23,7 @@ import {PostSummaryComponent} from "../../components/post-summary/post-summary.c
 import {AddLinkedAccountComponent} from "../../components/add-linked-account/add-linked-account.component";
 import {QuestionnaireComponent} from "../questionnaire/questionnaire.component";
 import {MatButtonModule} from "@angular/material/button";
+import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 
 @Component({
   selector: 'app-profile',
@@ -38,7 +39,8 @@ import {MatButtonModule} from "@angular/material/button";
     PostSummaryComponent,
     RouterLink,
     QuestionnaireComponent,
-    MatButtonModule
+    MatButtonModule,
+    AlertComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -82,9 +84,11 @@ export class ProfileComponent implements OnInit {
             return this.profileFacade.getUserByUsername(username).pipe(
               tap({
                 next: user => this.profile.set(user),
-                error: () => this.navigateToCurrentUsersProfile()
+                error: error => this.navigateToCurrentUsersProfile()
               }),
-              switchMap((user) => this.profileFacade.getLastPosts(user.id)),
+              switchMap((user) =>
+                !user.hideProfile ? this.profileFacade.getLastPosts(user.id) : EMPTY
+              ),
               tap({
                 next: posts => this.posts.set(posts),
               })
@@ -156,8 +160,8 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['profile']);
   }
 
-  onUpdateShowInRegistry(showInRegistry: boolean) {
-    this.profileFacade.updateShowInRegistry(showInRegistry).subscribe();
+  onHideProfile(hideProfile: boolean) {
+    this.profileFacade.updateHideProfile(hideProfile).subscribe();
   }
 
   onAddLinkedAccount() {
