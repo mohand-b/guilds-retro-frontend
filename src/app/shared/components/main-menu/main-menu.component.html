@@ -13,6 +13,10 @@
         <app-menu-item text="Événements" [selected]="events.isActive"/>
       </a>
 
+      <a #feed="routerLinkActive" routerLink="/registry" routerLinkActive>
+        <app-menu-item text="Registre" [selected]="feed.isActive"/>
+      </a>
+
       <a #eternalHarvest="routerLinkActive" routerLink="/eternal-harvest" routerLinkActive>
         <app-menu-item text="Éternelle Moisson" [selected]="eternalHarvest.isActive"/>
       </a>

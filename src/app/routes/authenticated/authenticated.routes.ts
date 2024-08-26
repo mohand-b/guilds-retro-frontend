@@ -31,6 +31,12 @@ export const authenticatedRoutes: Routes = [
         loadChildren: () => import('../guild/guild.routes').then(c => c.GuildRoutes)
       },
       {
+        path: 'registry',
+        canActivate: [roleGuard],
+        data: {role: UserRoleEnum.MEMBER},
+        loadChildren: () => import('../registry/registry.routes').then(c => c.RegistryRoutes)
+      },
+      {
         path: 'profile',
         canActivate: [roleGuard],
         data: {role: UserRoleEnum.CANDIDATE},

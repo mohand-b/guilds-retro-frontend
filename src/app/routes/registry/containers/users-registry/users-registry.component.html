@@ -1,0 +1,45 @@
+<div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md"
+     style="background-image: url('/assets/425815.jpg');">
+  <form (submit)="searchUsers()" [formGroup]="searchForm" class="w-full">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
+        <input formControlName="username" matInput placeholder="Nom d'utilisateur"/>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
+        <input [matAutocomplete]="classesAuto" formControlName="characterClass" matInput
+               placeholder="Classe du personnage"/>
+        <mat-autocomplete #classesAuto="matAutocomplete">
+          @for (characterClass of characterClasses | sortAlphabetically; track characterClass; let i = $index) {
+            <mat-option [value]="characterClass">{{ characterClass }}</mat-option>
+            @if (i < characterClasses.length - 1) {
+              <hr class="my-1 mx-auto w-1/2 border-t border-gray-300"/>
+            }
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
+        <input formControlName="characterLevel" matInput placeholder="Niveau du personnage" type="number"/>
+      </mat-form-field>
+      <mat-form-field *ngIf="searchForm.get('jobName')" appearance="fill" class="flex-1 bg-white rounded">
+        <input formControlName="jobLevel" matInput placeholder="Niveau du métier" type="number"/>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
+        <input [matAutocomplete]="jobsAuto" formControlName="jobName" matInput placeholder="Nom du métier"/>
+        <mat-autocomplete #jobsAuto="matAutocomplete">
+          @for (job of jobs | sortAlphabetically; track job; let i = $index) {
+            <mat-option [value]="job">{{ job }}</mat-option>
+            @if (i < jobs.length - 1) {
+              <hr class="my-1 mx-auto w-1/2 border-t border-gray-300"/>
+            }
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button [disabled]="searchForm.invalid" color="primary" mat-raised-button type="submit">
+        Rechercher
+      </button>
+    </div>
+  </form>
+</div>

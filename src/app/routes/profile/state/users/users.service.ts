@@ -1,9 +1,10 @@
 import {inject, Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {Observable} from "rxjs";
 import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {OneWordQuestionnaireDto} from "../questionnaire/questionnaire.model";
+import {UserSearchDto, UserSearchResponse} from "./user.model";
 
 @Injectable({providedIn: 'root'})
 export class UsersService {
@@ -41,6 +42,34 @@ export class UsersService {
 
   updateQuestionnaire(updateData: Partial<OneWordQuestionnaireDto>): Observable<OneWordQuestionnaireDto> {
     return this.http.patch<OneWordQuestionnaireDto>(`${this.usersBaseUrl}/questionnaire`, updateData);
+  }
+
+  searchUsers(userSearchDto: UserSearchDto): Observable<UserSearchResponse> {
+    let params = new HttpParams();
+
+    if (userSearchDto.username) {
+      params = params.set('username', userSearchDto.username);
+    }
+    if (userSearchDto.characterClass) {
+      params = params.set('characterClass', userSearchDto.characterClass);
+    }
+    if (userSearchDto.characterLevel) {
+      params = params.set('characterLevel', userSearchDto.characterLevel.toString());
+    }
+    if (userSearchDto.jobName) {
+      params = params.set('jobName', userSearchDto.jobName);
+    }
+    if (userSearchDto.jobLevel) {
+      params = params.set('jobLevel', userSearchDto.jobLevel.toString());
+    }
+    if (userSearchDto.page) {
+      params = params.set('page', userSearchDto.page.toString());
+    }
+    if (userSearchDto.limit) {
+      params = params.set('limit', userSearchDto.limit.toString());
+    }
+
+    return this.http.get<UserSearchResponse>(`${this.usersBaseUrl}/search`, {params});
   }
 
 
