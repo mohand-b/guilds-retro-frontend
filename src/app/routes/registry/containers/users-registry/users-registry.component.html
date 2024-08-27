@@ -1,6 +1,6 @@
 <div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md"
      style="background-image: url('/assets/425815.jpg');">
-  <form (submit)="searchUsers()" [formGroup]="searchForm" class="w-full">
+  <form (ngSubmit)="onSearchUsers()" [formGroup]="searchForm" class="w-full">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
         <input formControlName="username" matInput placeholder="Nom d'utilisateur"/>
@@ -42,4 +42,24 @@
       </button>
     </div>
   </form>
+</div>
+
+
+<div *ngIf="users.length > 0" class="mt-6">
+  <div *ngFor="let user of users" [routerLink]="['/profile', user.username]"
+       class="p-4 mb-2 bg-gray-100 rounded-lg cursor-pointer">
+    <h3>{{ user.username }} ({{ user.characterClass }})</h3>
+    <p>Niveau : {{ user.characterLevel }}</p>
+  </div>
+
+  <mat-paginator
+    (page)="onPageChange($event)"
+    [length]="totalResults"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    [pageSize]="pageSize">
+  </mat-paginator>
+</div>
+
+<div *ngIf="users.length === 0 && !searchForm.invalid" class="mt-6 text-gray-500">
+  Aucun résultat trouvé.
 </div>

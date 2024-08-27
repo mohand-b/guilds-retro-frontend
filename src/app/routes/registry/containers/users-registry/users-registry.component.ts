@@ -74,12 +74,14 @@ export class UsersRegistryComponent implements OnInit {
   }
 
 
-  searchUsers() {
+  onSearchUsers() {
+    console.log(this.searchForm.value)
     const searchCriteria: UserSearchDto = this.searchForm.value;
     searchCriteria.page = this.currentPage;
     searchCriteria.limit = this.pageSize;
 
     this.usersService.searchUsers(searchCriteria).subscribe((response: UserSearchResponse) => {
+      console.log(response)
       this.users = response.data;
       this.totalResults = response.total;
     });
@@ -88,6 +90,6 @@ export class UsersRegistryComponent implements OnInit {
   onPageChange(event: PageEvent) {
     this.currentPage = event.pageIndex + 1;
     this.pageSize = event.pageSize;
-    this.searchUsers();
+    this.onSearchUsers();
   }
 }
