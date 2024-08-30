@@ -1,5 +1,4 @@
 import {Component, inject, Input} from '@angular/core';
-import {CharacterClassEnum, UserDto} from "../../../authenticated/state/authed/authed.model";
 import {RouterLink} from "@angular/router";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
@@ -10,6 +9,7 @@ import {EventsFacade} from "../../../events/events.facade";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {EventImagePipe} from "../../../../shared/pipes/event-image.pipe";
 import {EventDto} from "../../../events/state/events/event.model";
+import {CharacterClassEnum, UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-feed-event',

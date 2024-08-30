@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {DatePipe, NgOptimizedImage} from "@angular/common";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {MatIcon} from "@angular/material/icon";
 import {FeedFacade} from "../../feed.facade";
 import {RouterLink} from "@angular/router";
@@ -12,6 +11,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import {EMPTY, switchMap} from "rxjs";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {PostDto} from "../../state/posts/post.model";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-feed-post',

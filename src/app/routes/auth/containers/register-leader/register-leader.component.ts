@@ -12,11 +12,11 @@ import {MatSlider, MatSliderThumb} from "@angular/material/slider";
 import {CommonModule, Location, NgForOf, NgIf} from "@angular/common";
 import {AuthFacade} from "../../auth.facade";
 import {GuildFacade} from "../../../guild/guild.facade";
-import {CharacterClassEnum, GenderEnum} from "../../../authenticated/state/authed/authed.model";
 import {toFormData} from "../../../../shared/extensions/object.extension";
 import {Router} from "@angular/router";
 import {distinctUntilChanged} from "rxjs";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-register-leader',

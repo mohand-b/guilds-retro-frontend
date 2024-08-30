@@ -8,7 +8,6 @@ import {MatIconModule} from '@angular/material/icon';
 
 import {ProfileFacade} from "../../profile.facade";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {JobImagePipe} from "../../../../shared/pipes/job-image.pipe";
 import {JobDto} from "../../state/jobs/job.model";
@@ -24,6 +23,7 @@ import {AddLinkedAccountComponent} from "../../components/add-linked-account/add
 import {QuestionnaireComponent} from "../questionnaire/questionnaire.component";
 import {MatButtonModule} from "@angular/material/button";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {UserDto} from "../../state/users/user.model";
 
 @Component({
   selector: 'app-profile',

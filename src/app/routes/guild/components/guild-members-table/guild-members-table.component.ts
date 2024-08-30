@@ -3,7 +3,7 @@ import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {CommonModule} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
-import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {MatCardModule} from "@angular/material/card";
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {SortMembersPipe} from "../../../../shared/pipes/sort-members.pipe";
@@ -11,6 +11,7 @@ import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {CustomPaginatorComponent} from "../../../../shared/components/custom-paginator/custom-paginator.component";
 import {GuildDto} from "../../state/guilds/guild.model";
 import {RouterLink} from "@angular/router";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-guild-members-table',

@@ -8,9 +8,10 @@ import {toSignal} from "@angular/core/rxjs-interop";
 import {MembershipRequestsService} from "./state/membership-requests/membership-requests.service";
 import {MembershipRequestDto} from "./state/membership-requests/membership-request.model";
 import {authenticatedStore} from "../authenticated/authenticated.facade";
-import {UserDto, UserRoleEnum} from "../authenticated/state/authed/authed.model";
+import {UserRoleEnum} from "../authenticated/state/authed/authed.model";
 import {AllianceDto, AllianceRequestDto, AllianceStatusEnum} from "./state/alliances/alliance.model";
 import {AlliancesService} from "./state/alliances/alliances.service";
+import {UserDto} from "../profile/state/users/user.model";
 
 export const GUILD_STORE_NAME = 'guild';
 

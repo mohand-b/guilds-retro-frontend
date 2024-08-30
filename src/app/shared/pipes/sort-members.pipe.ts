@@ -1,5 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {UserDto, UserRoleEnum} from "../../routes/authenticated/state/authed/authed.model";
+import {UserDto} from '../../routes/profile/state/users/user.model';
+import {UserRoleEnum} from "../../routes/authenticated/state/authed/authed.model";
 
 @Pipe({
   name: 'sortMembers',

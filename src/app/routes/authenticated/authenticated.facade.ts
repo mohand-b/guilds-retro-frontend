@@ -1,6 +1,6 @@
 import {inject, Injectable, Signal} from '@angular/core';
 import {createStore, getRegistry, select, withProps} from '@ngneat/elf';
-import {AuthedStateDto, UserDto} from './state/authed/authed.model';
+import {AuthedStateDto} from './state/authed/authed.model';
 import {createRequestsStatusOperator, updateRequestStatus, withRequestsStatus,} from '@ngneat/elf-requests';
 import {localStorageStrategy, persistState} from '@ngneat/elf-persist-state';
 import {Router} from "@angular/router";
@@ -8,6 +8,7 @@ import {MembershipRequestDto} from "../guild/state/membership-requests/membershi
 import {toSignal} from "@angular/core/rxjs-interop";
 import {AuthedService} from "./state/authed/authed.service";
 import {Observable, tap} from "rxjs";
+import {UserDto} from "../profile/state/users/user.model";
 
 export const AUTHENTICATED_STORE_NAME = 'authenticated';
 

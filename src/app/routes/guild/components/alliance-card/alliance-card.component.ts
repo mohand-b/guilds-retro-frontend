@@ -5,7 +5,7 @@ import {GuildFacade} from "../../guild.facade";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
-import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {NgIf} from "@angular/common";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {ActivatedRoute, RouterLink} from "@angular/router";
@@ -13,6 +13,7 @@ import {MatRipple} from "@angular/material/core";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {EMPTY, switchMap} from "rxjs";
 import {PermissionsService} from "../../../../shared/services/permissions.service";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-alliance-card',

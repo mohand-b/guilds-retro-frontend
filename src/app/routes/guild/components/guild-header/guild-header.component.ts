@@ -1,7 +1,7 @@
 import {Component, computed, EventEmitter, inject, input, Input, Output, Signal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
 import {GuildDto, GuildSummaryDto} from "../../state/guilds/guild.model";
-import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {CommonModule} from "@angular/common";
 import {MatCardModule} from "@angular/material/card";
@@ -9,6 +9,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatBadge} from "@angular/material/badge";
 import {ClassCountComponent} from "../class-count/class-count.component";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-guild-header',

@@ -1,5 +1,4 @@
 import {Component, computed, DestroyRef, effect, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {
   MembershipRequestDto,
   RequestStatusEnum
@@ -19,6 +18,7 @@ import {
   UserMembershipRequestComponent
 } from "../../components/user-membership-request/user-membership-request.component";
 import {MatProgressBar} from "@angular/material/progress-bar";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-user-membership-requests',

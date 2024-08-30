@@ -1,10 +1,11 @@
 import {Component, inject, Signal} from '@angular/core';
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
-import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {FeedComponent} from "../../../feed/containers/feed/feed.component";
 import {NgIf} from "@angular/common";
 import {UserMembershipRequestsComponent} from "../user-membership-requests/user-membership-requests.component";
 import {NotificationsComponent} from "../notifications/notifications.component";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-dashboard',

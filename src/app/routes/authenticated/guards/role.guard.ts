@@ -1,7 +1,8 @@
 import {ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
 import {inject, Signal} from "@angular/core";
-import {roleHierarchy, UserDto, UserRoleEnum} from "../state/authed/authed.model";
+import {roleHierarchy, UserRoleEnum} from "../state/authed/authed.model";
 import {AuthenticatedFacade} from "../authenticated.facade";
+import {UserDto} from "../../profile/state/users/user.model";
 
 export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
   const authenticatedFacade: AuthenticatedFacade = inject(AuthenticatedFacade);

@@ -1,5 +1,5 @@
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {PostDto} from "../posts/post.model";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 export interface LikeDto {
   id: number;

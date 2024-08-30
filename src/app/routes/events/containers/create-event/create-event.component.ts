@@ -10,7 +10,6 @@ import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {CreateEventDto, EventTypesEnum} from "../../state/events/event.model";
 import dayjs from "dayjs";
-import {CharacterClassEnum, GenderEnum} from "../../../authenticated/state/authed/authed.model";
 import {NgClass, NgForOf} from "@angular/common";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatButton} from "@angular/material/button";
@@ -20,6 +19,7 @@ import {DUNGEONS} from "../../state/dungeons/dungeons.data";
 import {dungeonNameValidator} from "../../../../shared/validators/dungeon-name.validator";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {MatDialogRef} from "@angular/material/dialog";
+import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-create-event',

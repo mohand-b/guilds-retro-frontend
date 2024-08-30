@@ -6,9 +6,9 @@ import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/mater
 import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {valueInArrayValidator} from "../../../../shared/validators/value-in-array.validator";
 import {SortAlphabeticallyPipe} from "../../../../shared/pipes/sort-alphabetically.pipe";
+import {UserDto} from "../../state/users/user.model";
 
 @Component({
   selector: 'app-add-job',

@@ -4,7 +4,6 @@ import {FeedPostComponent} from "../../components/feed-post/feed-post.component"
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {NgForOf} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {FeedFacade} from "../../feed.facade";
 import {CreatePostModalComponent} from "../../components/create-post-modal/create-post-modal.component";
 import {FeedEventComponent} from "../../components/feed-event/feed-event.component";
@@ -15,6 +14,7 @@ import {toFormData} from "../../../../shared/extensions/object.extension";
 import {FeedDto} from "../../state/feed/feed.model";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-feed',

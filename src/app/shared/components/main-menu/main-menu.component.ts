@@ -2,13 +2,14 @@ import {Component, inject, input, Input, InputSignal, Signal} from '@angular/cor
 import {MatToolbar, MatToolbarRow} from "@angular/material/toolbar";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {AuthenticatedFacade} from "../../../routes/authenticated/authenticated.facade";
-import {UserDto, UserRoleEnum} from "../../../routes/authenticated/state/authed/authed.model";
+import {UserRoleEnum} from "../../../routes/authenticated/state/authed/authed.model";
 import {hasRequiredRole} from "../../../routes/authenticated/guards/role.guard";
 import {NgIf} from "@angular/common";
 import {MatBadge} from "@angular/material/badge";
 import {MatDrawer} from "@angular/material/sidenav";
 import {MatIcon} from "@angular/material/icon";
 import {MenuItemComponent} from "../menu-item/menu-item.component";
+import {UserDto} from "../../../routes/profile/state/users/user.model";
 
 @Component({
   selector: 'app-main-menu',

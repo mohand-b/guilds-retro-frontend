@@ -1,7 +1,6 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {Router, RouterOutlet} from "@angular/router";
 import {FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CharacterClassEnum, GenderEnum} from "../../../authenticated/state/authed/authed.model";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatSliderModule} from "@angular/material/slider";
@@ -21,6 +20,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {GuildSelectedCardComponent} from "../../components/guild-selected-card/guild-selected-card.component";
 import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-register-member',

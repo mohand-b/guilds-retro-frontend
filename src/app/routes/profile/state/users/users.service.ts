@@ -2,9 +2,9 @@ import {inject, Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {Observable} from "rxjs";
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {OneWordQuestionnaireDto} from "../questionnaire/questionnaire.model";
-import {UserSearchDto, UserSearchResponse} from "./user.model";
+import {PaginatedUserSearchResponseDto, UserSearchDto} from "../../../registry/state/user-search/user-search.model";
+import {UserDto} from "./user.model";
 
 @Injectable({providedIn: 'root'})
 export class UsersService {
@@ -44,7 +44,7 @@ export class UsersService {
     return this.http.patch<OneWordQuestionnaireDto>(`${this.usersBaseUrl}/questionnaire`, updateData);
   }
 
-  searchUsers(userSearchDto: UserSearchDto): Observable<UserSearchResponse> {
+  searchUsers(userSearchDto: UserSearchDto): Observable<PaginatedUserSearchResponseDto> {
     let params = new HttpParams();
 
     if (userSearchDto.username) {
@@ -69,7 +69,7 @@ export class UsersService {
       params = params.set('limit', userSearchDto.limit.toString());
     }
 
-    return this.http.get<UserSearchResponse>(`${this.usersBaseUrl}/search`, {params});
+    return this.http.get<PaginatedUserSearchResponseDto>(`${this.usersBaseUrl}/search`, {params});
   }
 
 

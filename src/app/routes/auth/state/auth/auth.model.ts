@@ -1,4 +1,4 @@
-import {CharacterClassEnum, GenderEnum} from "../../../authenticated/state/authed/authed.model";
+import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
 
 export interface LoginDto {
   username: string;

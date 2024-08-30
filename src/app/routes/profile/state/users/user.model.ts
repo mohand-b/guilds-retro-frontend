@@ -1,19 +1,42 @@
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
+import {GuildDto} from "../../../guild/state/guilds/guild.model";
+import {JobDto} from "../jobs/job.model";
+import {OneWordQuestionnaireDto} from "../questionnaire/questionnaire.model";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 
-export interface UserSearchDto {
-  username?: string;
-  characterClass?: string;
-  characterLevel?: number;
-  jobName?: string;
-  jobLevel?: number;
-  page?: number;
-  limit?: number;
+export interface UserDto {
+  id: number;
+  username: string;
+  characterClass: CharacterClassEnum;
+  role: UserRoleEnum;
+  guild: GuildDto;
+  gender: GenderEnum;
+  characterLevel: number;
+  level: number;
+  feedClosingToGuildAndAllies: boolean;
+  guildId?: number;
+  guildAlliesIds?: number[];
+  linkedAccounts?: UserDto[];
+  hideProfile: boolean;
+  jobs: JobDto[];
+  questionnaire: OneWordQuestionnaireDto;
 }
 
+export enum GenderEnum {
+  MALE = "M",
+  FEMALE = "F",
+}
 
-export interface UserSearchResponse {
-  data: UserDto[];
-  total: number;
-  page: number;
-  limit: number;
+export enum CharacterClassEnum {
+  CRA = "Cra",
+  ECAFLIP = "Ecaflip",
+  ENIRIPSA = "Eniripsa",
+  ENUTROF = "Enutrof",
+  FECA = "Feca",
+  IOP = "Iop",
+  OSAMODAS = "Osamodas",
+  PANDAWA = "Pandawa",
+  SACRIEUR = "Sacrieur",
+  SADIDA = "Sadida",
+  SRAM = "Sram",
+  XELOR = "Xelor",
 }

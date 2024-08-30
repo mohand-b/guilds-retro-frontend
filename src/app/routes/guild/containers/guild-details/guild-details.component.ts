@@ -12,7 +12,7 @@ import {GuildMembersTableComponent} from "../../components/guild-members-table/g
 import {AllianceCardComponent} from "../../components/alliance-card/alliance-card.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-guild-details',

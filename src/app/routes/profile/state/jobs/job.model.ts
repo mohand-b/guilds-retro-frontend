@@ -1,4 +1,4 @@
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
+import {UserDto} from "../users/user.model";
 
 export interface JobDto {
   id: number;

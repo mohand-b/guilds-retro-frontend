@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {UsersService} from "../../../profile/state/users/users.service";
-import {UserSearchDto, UserSearchResponse} from "../../../profile/state/users/user.model";
+import {CharacterClassEnum} from "../../../profile/state/users/user.model";
 import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatPaginatorModule, PageEvent} from "@angular/material/paginator";
@@ -10,8 +10,8 @@ import {RouterLink} from "@angular/router";
 import {JobNameEnum, MagusJobNameEnum} from "../../../profile/state/jobs/job.model";
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/material/autocomplete";
 import {SortAlphabeticallyPipe} from "../../../../shared/pipes/sort-alphabetically.pipe";
-import {CharacterClassEnum} from "../../../authenticated/state/authed/authed.model";
 import {MatButton} from "@angular/material/button";
+import {PaginatedUserSearchResponseDto, UserSearchDto} from "../../state/user-search/user-search.model";
 
 @Component({
   selector: 'app-users-registry',
@@ -80,9 +80,9 @@ export class UsersRegistryComponent implements OnInit {
     searchCriteria.page = this.currentPage;
     searchCriteria.limit = this.pageSize;
 
-    this.usersService.searchUsers(searchCriteria).subscribe((response: UserSearchResponse) => {
+    this.usersService.searchUsers(searchCriteria).subscribe((response: PaginatedUserSearchResponseDto) => {
       console.log(response)
-      this.users = response.data;
+      this.users = response.results;
       this.totalResults = response.total;
     });
   }

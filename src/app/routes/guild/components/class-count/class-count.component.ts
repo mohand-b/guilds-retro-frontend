@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
-import {CharacterClassEnum} from "../../../authenticated/state/authed/authed.model";
 import {KeyValuePipe, NgForOf, NgOptimizedImage} from "@angular/common";
 import {MatTooltip} from "@angular/material/tooltip";
+import {CharacterClassEnum} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-class-count',

@@ -1,4 +1,4 @@
-import {CharacterClassEnum, UserDto} from "../../../authenticated/state/authed/authed.model";
+import {CharacterClassEnum, UserDto} from "../../../profile/state/users/user.model";
 
 export interface EventDto {
   id: number;

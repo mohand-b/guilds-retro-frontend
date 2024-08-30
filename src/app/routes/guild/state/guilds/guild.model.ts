@@ -1,6 +1,6 @@
-import {CharacterClassEnum, UserDto} from "../../../authenticated/state/authed/authed.model";
 import {MembershipRequestDto} from "../membership-requests/membership-request.model";
 import {AllianceRequestDto} from "../alliances/alliance.model";
+import {CharacterClassEnum, UserDto} from "../../../profile/state/users/user.model";
 
 export interface GuildDto {
   id?: number;

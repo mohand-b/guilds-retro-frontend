@@ -1,8 +1,8 @@
 import {Component, inject, Signal} from '@angular/core';
 import {AuthenticatedFacade} from "../../../routes/authenticated/authenticated.facade";
 import {NgIf} from "@angular/common";
-import {UserDto} from "../../../routes/authenticated/state/authed/authed.model";
 import {MatIcon} from "@angular/material/icon";
+import {UserDto} from "../../../routes/profile/state/users/user.model";
 
 @Component({
   selector: 'app-header',

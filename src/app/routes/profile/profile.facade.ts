@@ -1,7 +1,6 @@
 import {inject, Injectable} from "@angular/core";
 import {UsersService} from "./state/users/users.service";
 import {Observable, tap} from "rxjs";
-import {UserDto} from "../authenticated/state/authed/authed.model";
 import {AddJobDto, JobDto} from "./state/jobs/job.model";
 import {JobsService} from "./state/jobs/jobs.service";
 import {
@@ -13,6 +12,7 @@ import {updateRequestStatus} from "@ngneat/elf-requests";
 import {PostsService} from "../feed/state/posts/posts.service";
 import {PostDto} from "../feed/state/posts/post.model";
 import {OneWordQuestionnaireDto} from "./state/questionnaire/questionnaire.model";
+import {UserDto} from "./state/users/user.model";
 
 @Injectable({providedIn: 'root'})
 export class ProfileFacade {

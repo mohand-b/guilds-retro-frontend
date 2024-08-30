@@ -1,11 +1,11 @@
 import {Component, effect, inject, signal, WritableSignal} from '@angular/core';
 import {ProfileFacade} from "../../profile.facade";
 import {tap} from "rxjs";
-import {UserDto} from "../../../authenticated/state/authed/authed.model";
 import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {UserDto} from "../../state/users/user.model";
 
 @Component({
   selector: 'app-add-linked-account',

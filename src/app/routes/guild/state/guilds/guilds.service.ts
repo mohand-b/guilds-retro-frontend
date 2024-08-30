@@ -1,9 +1,11 @@
 import {inject, Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {GuildDto, GuildSummaryDto} from "./guild.model";
 import {Observable} from "rxjs";
-import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {GuildSearchDto, PaginatedUserGuildResponseDto} from "../../../registry/state/guild-search/guild-search.model";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Injectable({providedIn: 'root'})
 export class GuildsService {
@@ -45,6 +47,31 @@ export class GuildsService {
     return this.http.patch<UserDto>(
       `${environment.apiUrl}/users/${userId}/role`,
       {role},
+    );
+  }
+
+  searchGuilds(guildSearchDto: GuildSearchDto): Observable<PaginatedUserGuildResponseDto> {
+    let params = new HttpParams();
+
+    if (guildSearchDto.name) {
+      params = params.set('name', guildSearchDto.name);
+    }
+
+    if (guildSearchDto.minAverageLevel) {
+      params = params.set('minAverageLevel', guildSearchDto.minAverageLevel.toString());
+    }
+
+    if (guildSearchDto.page) {
+      params = params.set('page', guildSearchDto.page.toString());
+    }
+
+    if (guildSearchDto.limit) {
+      params = params.set('limit', guildSearchDto.limit.toString());
+    }
+
+    return this.http.get<PaginatedUserGuildResponseDto>(
+      `${this.guildsBaseUrl}/search`,
+      {params},
     );
   }
 }

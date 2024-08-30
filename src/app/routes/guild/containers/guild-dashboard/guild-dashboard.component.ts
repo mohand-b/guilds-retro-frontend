@@ -2,7 +2,7 @@ import {Component, effect, inject, OnInit, Signal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
 import {GuildDto, GuildSummaryDto} from "../../state/guilds/guild.model";
 import {EMPTY, forkJoin, switchMap, tap} from "rxjs";
-import {UserDto, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {CommonModule} from "@angular/common";
@@ -18,6 +18,7 @@ import {AllianceRequestsListComponent} from "../alliance-requests-list/alliance-
 import {MembershipRequestsTabComponent} from "../membership-requests-tab/membership-requests-tab.component";
 import {MatIconModule} from "@angular/material/icon";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
+import {UserDto} from "../../../profile/state/users/user.model";
 
 @Component({
   selector: 'app-guild-dashboard',

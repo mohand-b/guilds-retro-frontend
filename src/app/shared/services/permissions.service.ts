@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
-import {roleHierarchy, UserDto, UserRoleEnum} from "../../routes/authenticated/state/authed/authed.model";
+import {roleHierarchy, UserRoleEnum} from "../../routes/authenticated/state/authed/authed.model";
+import {UserDto} from "../../routes/profile/state/users/user.model";
 
 @Injectable({providedIn: 'root'})
 export class PermissionsService {

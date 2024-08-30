@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {UserDto} from "../../routes/authenticated/state/authed/authed.model";
+import {UserDto} from "../../routes/profile/state/users/user.model";
 
 @Pipe({
   name: 'characterIcon',
