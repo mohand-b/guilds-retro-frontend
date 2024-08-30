@@ -44,22 +44,30 @@
   </form>
 </div>
 
+@if (usersResults()!.length > 0 && usersResults(); as users) {
+  <div class="mt-6">
+    @for (user of users; track user.id) {
+      <div [routerLink]="['/profile', user.username]"
+           class="p-4 mb-2 bg-gray-100 rounded-lg cursor-pointer">
+        <h3>{{ user.username }} ({{ user.characterClass }})</h3>
+        <p>Niveau : {{ user.characterLevel }}</p>
+      </div>
+    }
 
-<div *ngIf="users.length > 0" class="mt-6">
-  <div *ngFor="let user of users" [routerLink]="['/profile', user.username]"
-       class="p-4 mb-2 bg-gray-100 rounded-lg cursor-pointer">
-    <h3>{{ user.username }} ({{ user.characterClass }})</h3>
-    <p>Niveau : {{ user.characterLevel }}</p>
+    @if (paginationData(); as paginationData) {
+      <mat-paginator
+        (page)="onPageChange($event)"
+        [length]="paginationData.total"
+        [pageIndex]="paginationData.currentPage - 1"
+        hidePageSize
+        [pageSize]="paginationData.perPage"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    }
   </div>
-
-  <mat-paginator
-    (page)="onPageChange($event)"
-    [length]="totalResults"
-    [pageSizeOptions]="[5, 10, 25, 50]"
-    [pageSize]="pageSize">
-  </mat-paginator>
-</div>
-
-<div *ngIf="users.length === 0 && !searchForm.invalid" class="mt-6 text-gray-500">
-  Aucun résultat trouvé.
-</div>
+} @else if (!searchForm.invalid) {
+  <div class="mt-6 text-gray-500">
+    Aucun résultat trouvé.
+  </div>
+}

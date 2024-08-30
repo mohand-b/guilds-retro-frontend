@@ -4,7 +4,7 @@ import {environment} from "../../../../../environments/environment";
 import {GuildDto, GuildSummaryDto} from "./guild.model";
 import {Observable} from "rxjs";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
-import {GuildSearchDto, PaginatedUserGuildResponseDto} from "../../../registry/state/guild-search/guild-search.model";
+import {GuildSearchDto, PaginatedGuildSearchResponseDto} from "../../../registry/state/guild-search/guild-search.model";
 import {UserDto} from "../../../profile/state/users/user.model";
 
 @Injectable({providedIn: 'root'})
@@ -50,7 +50,7 @@ export class GuildsService {
     );
   }
 
-  searchGuilds(guildSearchDto: GuildSearchDto): Observable<PaginatedUserGuildResponseDto> {
+  searchGuilds(guildSearchDto: GuildSearchDto): Observable<PaginatedGuildSearchResponseDto> {
     let params = new HttpParams();
 
     if (guildSearchDto.name) {
@@ -69,7 +69,7 @@ export class GuildsService {
       params = params.set('limit', guildSearchDto.limit.toString());
     }
 
-    return this.http.get<PaginatedUserGuildResponseDto>(
+    return this.http.get<PaginatedGuildSearchResponseDto>(
       `${this.guildsBaseUrl}/search`,
       {params},
     );

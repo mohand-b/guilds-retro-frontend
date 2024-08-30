@@ -5,7 +5,7 @@ export interface GuildSearchDto {
   limit?: number;
 }
 
-export interface GuildResponseDto {
+export interface GuildSearchResponseDto {
   id: number;
   name: string;
   logo: Buffer | null;
@@ -13,9 +13,9 @@ export interface GuildResponseDto {
   averageLevel: number;
 }
 
-export interface PaginatedUserGuildResponseDto {
+export interface PaginatedGuildSearchResponseDto {
   total: number;
   page: number;
   limit: number;
-  results: GuildResponseDto[];
+  results: GuildSearchResponseDto[];
 }
