@@ -47,7 +47,7 @@
 @if (usersResults()!.length > 0 && usersResults(); as users) {
   <div class="mt-6">
     @for (user of users; track user.id) {
-      <div [routerLink]="['/profile', user.username]"
+      <div [routerLink]="['/registry/user', user.username]"
            class="p-4 mb-2 bg-gray-100 rounded-lg cursor-pointer">
         <h3>{{ user.username }} ({{ user.characterClass }})</h3>
         <p>Niveau : {{ user.characterLevel }}</p>

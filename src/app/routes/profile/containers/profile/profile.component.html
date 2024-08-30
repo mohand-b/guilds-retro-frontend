@@ -105,7 +105,7 @@
             <ul>
               @for (linkedUser of user.linkedAccounts; track linkedUser.id) {
                 <li class="flex justify-between items-center">
-                  <a [routerLink]="['/profile', linkedUser.username]"
+                  <a [routerLink]="['/registry/user', linkedUser.username]"
                      class="text-gray-800">{{ linkedUser.username }}</a>
                   <span class="text-gray-500">{{ linkedUser.characterClass }}
                     - Niveau {{ linkedUser.characterLevel }}</span>

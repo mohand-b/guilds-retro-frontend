@@ -6,7 +6,7 @@
           [ngClass]="{'bg-yellow-100': member.id === currentUser.id, 'font-bold': member.role === UserRoleEnum.LEADER}"
           class="p-3 text-sm text-gray-700 whitespace-nowrap"
           mat-cell>
-        <a [routerLink]="['/profile', member.username]"> {{ member.username }}</a>
+        <a [routerLink]="['/registry/user', member.username]"> {{ member.username }}</a>
       </td>
     </ng-container>
 
