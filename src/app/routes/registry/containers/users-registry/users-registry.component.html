@@ -1,39 +1,49 @@
-<div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md"
-     style="background-image: url('/assets/425815.jpg');">
-  <form (ngSubmit)="onSearchUsers()" [formGroup]="searchForm" class="w-full">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
-        <input formControlName="username" matInput placeholder="Nom d'utilisateur"/>
+<div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md filter-container">
+  <form (ngSubmit)="onSearchUsers()" [formGroup]="searchForm" class="flex flex-col gap-4 w-full h-full">
+    <div class="grid gap-4 grid-cols-3">
+      <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+        <mat-label>Pseudo</mat-label>
+        <input formControlName="username" matInput placeholder="Pseudo"/>
       </mat-form-field>
-      <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
+      <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+        <mat-label>Classe</mat-label>
         <input [matAutocomplete]="classesAuto" formControlName="characterClass" matInput
-               placeholder="Classe du personnage"/>
+               placeholder="Classe"/>
         <mat-autocomplete #classesAuto="matAutocomplete">
-          @for (characterClass of characterClasses | sortAlphabetically; track characterClass; let i = $index) {
-            <mat-option [value]="characterClass">{{ characterClass }}</mat-option>
-            @if (i < characterClasses.length - 1) {
-              <hr class="my-1 mx-auto w-1/2 border-t border-gray-300"/>
-            }
+          @for (characterClass of characterClasses | sortAlphabetically; track characterClass) {
+            <mat-option [value]="characterClass">
+              {{ characterClass }}
+            </mat-option>
           }
         </mat-autocomplete>
       </mat-form-field>
-      <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
-        <input formControlName="characterLevel" matInput placeholder="Niveau du personnage" type="number"/>
+      <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+        <mat-label>Niveau</mat-label>
+        <input formControlName="characterLevel" matInput max="200" min="0" placeholder="Niveau" type="number"/>
       </mat-form-field>
-      <mat-form-field *ngIf="searchForm.get('jobName')" appearance="fill" class="flex-1 bg-white rounded">
-        <input formControlName="jobLevel" matInput placeholder="Niveau du métier" type="number"/>
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="flex-1 bg-white rounded">
-        <input [matAutocomplete]="jobsAuto" formControlName="jobName" matInput placeholder="Nom du métier"/>
+    </div>
+
+    <div class="grid gap-4 grid-cols-2">
+      <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+        <mat-label>Métier</mat-label>
+        <input [matAutocomplete]="jobsAuto" formControlName="jobName" matInput placeholder="Métier"/>
         <mat-autocomplete #jobsAuto="matAutocomplete">
-          @for (job of jobs | sortAlphabetically; track job; let i = $index) {
-            <mat-option [value]="job">{{ job }}</mat-option>
-            @if (i < jobs.length - 1) {
-              <hr class="my-1 mx-auto w-1/2 border-t border-gray-300"/>
-            }
+          @for (job of jobs | sortAlphabetically; track job) {
+            <mat-option [value]="job">
+              {{ job }}
+            </mat-option>
           }
         </mat-autocomplete>
       </mat-form-field>
+      @if (searchForm.get('jobName')?.value; as jobName) {
+        @if (isValidJobName(jobName)) {
+          <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+            <mat-label>Niveau du métier</mat-label>
+            <input formControlName="jobLevel" matInput placeholder="Niveau du métier" type="number" min="0" max="100"/>
+          </mat-form-field>
+        }
+      }
+
     </div>
 
     <div class="flex justify-end mt-4">
@@ -43,6 +53,7 @@
     </div>
   </form>
 </div>
+
 
 @if (usersResults()!.length > 0 && usersResults(); as users) {
   <div class="mt-6">

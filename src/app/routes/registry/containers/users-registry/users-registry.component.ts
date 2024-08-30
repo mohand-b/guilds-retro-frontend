@@ -2,14 +2,13 @@ import {Component, effect, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {CharacterClassEnum} from "../../../profile/state/users/user.model";
 import {MatFormField} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
+import {MatInputModule} from "@angular/material/input";
 import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
-import {NgForOf, NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {JobNameEnum, MagusJobNameEnum} from "../../../profile/state/jobs/job.model";
-import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/material/autocomplete";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {SortAlphabeticallyPipe} from "../../../../shared/pipes/sort-alphabetically.pipe";
-import {MatButton} from "@angular/material/button";
+import {MatButtonModule} from "@angular/material/button";
 import {RegistryFacade} from "../../registry.facade";
 import {CustomPaginatorComponent} from "../../../../shared/components/custom-paginator/custom-paginator.component";
 
@@ -19,16 +18,12 @@ import {CustomPaginatorComponent} from "../../../../shared/components/custom-pag
   imports: [
     ReactiveFormsModule,
     MatFormField,
-    MatInput,
+    MatInputModule,
+    MatButtonModule,
     MatPaginatorModule,
-    NgIf,
-    NgForOf,
     RouterLink,
-    MatAutocomplete,
-    MatAutocompleteTrigger,
-    MatOption,
+    MatAutocompleteModule,
     SortAlphabeticallyPipe,
-    MatButton,
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: CustomPaginatorComponent},
@@ -83,5 +78,9 @@ export class UsersRegistryComponent implements OnInit {
   onPageChange(event: PageEvent) {
     const nextPage = event.pageIndex + 1;
     this.onSearchUsers(nextPage);
+  }
+
+  isValidJobName(jobName: string): boolean {
+    return this.allJobs.includes(jobName);
   }
 }
