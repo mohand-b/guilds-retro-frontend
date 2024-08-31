@@ -48,10 +48,11 @@ export class UsersRegistryComponent implements OnInit {
   });
   private registryFacade = inject(RegistryFacade);
   usersResults = this.registryFacade.usersResults;
-  paginationData = this.registryFacade.paginationData;
+  paginationData = this.registryFacade.usersRegistryPaginationData;
   usersFilter = this.registryFacade.usersFilter;
   usersFilterUpdated = effect(() => {
     if (this.usersFilter()) {
+      console.log(this.usersFilter());
       this.searchForm.patchValue(this.usersFilter());
     }
   })
@@ -71,7 +72,7 @@ export class UsersRegistryComponent implements OnInit {
 
   onSearchUsers(pageEvent?: number) {
     this.registryFacade.searchUsers(
-      {...this.searchForm.value, page: pageEvent ? pageEvent : 1}
+      {...this.searchForm.value, page: pageEvent ?? 1}
     ).subscribe();
   }
 

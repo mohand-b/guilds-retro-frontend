@@ -1,0 +1,68 @@
+<div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md filter-container">
+  <form (ngSubmit)="onSearchGuilds()" [formGroup]="searchForm" class="flex flex-col gap-4 w-full h-full">
+    <div class="flex flex-wrap gap-4 justify-start">
+      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
+        <mat-label>Nom de la guilde</mat-label>
+        <input formControlName="name" matInput placeholder="Nom de la guilde"/>
+      </mat-form-field>
+
+
+      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
+        <mat-label>Niveau moyen minimum</mat-label>
+        <input formControlName="minAverageLevel" matInput max="200" min="0" placeholder="Niveau moyen minimum"
+               type="number"/>
+      </mat-form-field>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button [disabled]="searchForm.invalid" color="primary" mat-raised-button type="submit">
+        Rechercher
+      </button>
+    </div>
+  </form>
+</div>
+
+@if (guildsResults()!.length > 0 && guildsResults(); as guilds) {
+  <div class="mt-6">
+    @for (guild of guilds; track guild.id) {
+      <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-md">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-full overflow-hidden">
+            <img [src]="guild.logo" alt="Guild Icon" class="object-cover no-select no-copy">
+          </div>
+          <div class="text-lg font-bold">{{ guild.name }}</div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <div>{{ guild.averageLevel }}</div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div>{{ guild.membersCount }}</div>
+          </div>
+          <button [routerLink]="['/registry/guild', guild.id]" color="primary" mat-raised-button>
+            Détails
+          </button>
+        </div>
+      </div>
+
+    }
+
+    @if (paginationData(); as paginationData) {
+      <mat-paginator
+        (page)="onPageChange($event)"
+        [length]="paginationData.total"
+        [pageIndex]="paginationData.currentPage - 1"
+        hidePageSize
+        [pageSize]="paginationData.perPage"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    }
+
+  </div>
+} @else if (!searchForm.invalid) {
+  <div class="mt-6 text-center text-gray-400">
+    Aucune guilde trouvée
+  </div>
+}
+

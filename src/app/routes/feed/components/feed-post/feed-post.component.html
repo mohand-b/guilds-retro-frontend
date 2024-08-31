@@ -16,11 +16,11 @@
           {{ post.user.role }} de ma guilde
         } @else if ((post.user | guildMembership:currentUser) === 'alliedGuild') {
           {{ post.user.role }} de la guilde <span class="text-pink-600">alliée </span><span
-            [routerLink]="['/guild', post.user.guild.id]"
+            [routerLink]="['/registry/guild', post.user.guild.id]"
             class="cursor-pointer underline">{{ post.user.guild.name }}</span>
         } @else if ((post.user | guildMembership:currentUser) === 'externalGuild') {
           {{ post.user.role }} de la guilde
-          <span [routerLink]="['/guild', post.user.guild.id]"
+          <span [routerLink]="['/registry/guild', post.user.guild.id]"
                 class="cursor-pointer underline">{{ post.user.guild.name }}</span>
         }
       </div>

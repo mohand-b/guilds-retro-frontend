@@ -1,14 +1,14 @@
 <div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md filter-container">
   <form (ngSubmit)="onSearchUsers()" [formGroup]="searchForm" class="flex flex-col gap-4 w-full h-full">
-    <div class="grid gap-4 grid-cols-3">
-      <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+    <!-- Première rangée : Pseudo, Classe, Niveau -->
+    <div class="flex flex-wrap gap-4 justify-start">
+      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
         <mat-label>Pseudo</mat-label>
         <input formControlName="username" matInput placeholder="Pseudo"/>
       </mat-form-field>
-      <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
         <mat-label>Classe</mat-label>
-        <input [matAutocomplete]="classesAuto" formControlName="characterClass" matInput
-               placeholder="Classe"/>
+        <input [matAutocomplete]="classesAuto" formControlName="characterClass" matInput placeholder="Classe"/>
         <mat-autocomplete #classesAuto="matAutocomplete">
           @for (characterClass of characterClasses | sortAlphabetically; track characterClass) {
             <mat-option [value]="characterClass">
@@ -17,14 +17,15 @@
           }
         </mat-autocomplete>
       </mat-form-field>
-      <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
         <mat-label>Niveau</mat-label>
         <input formControlName="characterLevel" matInput max="200" min="0" placeholder="Niveau" type="number"/>
       </mat-form-field>
     </div>
 
-    <div class="grid gap-4 grid-cols-2">
-      <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+    <!-- Deuxième rangée : Métier, Niveau du métier -->
+    <div class="flex flex-wrap gap-4 justify-start">
+      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
         <mat-label>Métier</mat-label>
         <input [matAutocomplete]="jobsAuto" formControlName="jobName" matInput placeholder="Métier"/>
         <mat-autocomplete #jobsAuto="matAutocomplete">
@@ -37,13 +38,12 @@
       </mat-form-field>
       @if (searchForm.get('jobName')?.value; as jobName) {
         @if (isValidJobName(jobName)) {
-          <mat-form-field appearance="fill" class="col-span-1 bg-white opacity-90 rounded">
+          <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
             <mat-label>Niveau du métier</mat-label>
             <input formControlName="jobLevel" matInput placeholder="Niveau du métier" type="number" min="0" max="100"/>
           </mat-form-field>
         }
       }
-
     </div>
 
     <div class="flex justify-end mt-4">

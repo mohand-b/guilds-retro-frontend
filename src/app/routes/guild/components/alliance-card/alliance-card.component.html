@@ -1,5 +1,5 @@
 <div
-  [routerLink]="guild.id === currentUser()!.guild.id ? ['/guild'] : ['/guild', guild.id]"
+  [routerLink]="guild.id === currentUser()!.guild.id ? ['/guild'] : ['/registry/guild', guild.id]"
   class="h-full flex flex-col items-center justify-between
   bg-white p-6 shadow-lg rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105"
   matRipple

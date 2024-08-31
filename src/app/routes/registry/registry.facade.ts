@@ -9,7 +9,7 @@ import {
 import {Observable, tap} from "rxjs";
 import {createStore, select, setProps, withProps} from "@ngneat/elf";
 import {selectPaginationData, updatePaginationData, withPagination} from "@ngneat/elf-pagination";
-import {selectAllEntities, setEntities, upsertEntities, withEntities} from "@ngneat/elf-entities";
+import {selectAllEntities, setEntities, withEntities} from "@ngneat/elf-entities";
 import {
   GuildSearchDto,
   GuildSearchResponseDto,
@@ -55,8 +55,15 @@ export const guildsRegistryStore = createStore(
 export class RegistryFacade {
 
   usersResults: Signal<UserSearchResponseDto[]> =
-    toSignal(usersRegistryStore.pipe(selectAllEntities()), {initialValue: []});
-  paginationData = toSignal(usersRegistryStore.pipe(selectPaginationData()));
+    toSignal(usersRegistryStore.pipe(selectAllEntities()),
+      {initialValue: []}
+    );
+  guildsResults: Signal<GuildSearchResponseDto[]> =
+    toSignal(guildsRegistryStore.pipe(selectAllEntities()),
+      {initialValue: []}
+    );
+  usersRegistryPaginationData = toSignal(usersRegistryStore.pipe(selectPaginationData()));
+  guildsRegistryPaginationData = toSignal(guildsRegistryStore.pipe(selectPaginationData()));
   usersFilter: Signal<UserSearchDto> =
     toSignal(usersRegistryStore.pipe(select(state => state)),
       {initialValue: usersRegistryStore.value}
@@ -88,11 +95,12 @@ export class RegistryFacade {
   }
 
   searchGuilds(guildSearchDto: GuildSearchDto): Observable<PaginatedGuildSearchResponseDto> {
+    guildsRegistryStore.update(setProps(guildSearchDto));
     return this.guildsService.searchGuilds(guildSearchDto).pipe(
       tap({
         next: (response) => {
           guildsRegistryStore.update(
-            upsertEntities(response.results),
+            setEntities(response.results),
             updatePaginationData({
               currentPage: response.page,
               perPage: response.limit,

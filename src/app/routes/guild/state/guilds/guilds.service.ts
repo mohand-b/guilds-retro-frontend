@@ -54,6 +54,7 @@ export class GuildsService {
     let params = new HttpParams();
 
     if (guildSearchDto.name) {
+      console.log(guildSearchDto.name);
       params = params.set('name', guildSearchDto.name);
     }
 
