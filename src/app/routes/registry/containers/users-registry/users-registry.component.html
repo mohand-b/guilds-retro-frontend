@@ -56,10 +56,10 @@
 
 
 @if (usersResults()!.length > 0 && usersResults(); as users) {
-  <div class="mt-6">
+  <div class="mt-6 flex flex-col gap-2">
     @for (user of users; track user.id) {
       <div [routerLink]="['/registry/user', user.username]"
-           class="p-4 mb-2 bg-gray-100 rounded-lg cursor-pointer">
+           class="p-4 bg-gray-100 rounded-lg cursor-pointer shadow-md">
         <h3>{{ user.username }} ({{ user.characterClass }})</h3>
         <p>Niveau : {{ user.characterLevel }}</p>
       </div>
@@ -78,7 +78,7 @@
     }
   </div>
 } @else if (!searchForm.invalid) {
-  <div class="mt-6 text-gray-500">
+  <div class="mt-6 text-center text-gray-400">
     Aucun résultat trouvé.
   </div>
 }

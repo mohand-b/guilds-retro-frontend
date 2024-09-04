@@ -1,0 +1,22 @@
+<div class="flex justify-center space-x-4 my-4">
+  <button
+    [class.active]="isActive('/users')"
+    [routerLink]="['/registry/users']"
+    color="primary"
+    mat-button
+    routerLinkActive="active"
+  >
+    Utilisateurs
+  </button>
+  <button
+    [class.active]="isActive('/guilds')"
+    [routerLink]="['/registry/guilds']"
+    color="primary"
+    mat-button
+    routerLinkActive="active"
+  >
+    Guildes
+  </button>
+</div>
+
+<router-outlet/>
