@@ -60,21 +60,24 @@ export class FeedFacade {
     const pagination = this.pagination();
     return pagination!.currentPage !== 0 && pagination!.currentPage >= pagination!.lastPage;
   });
-  feedPrivacyUpdated = effect(() => {
-    this.feedClosingToGuildAndAllies();
-    this.loadFeed(1,
-      this.perPage !== 0
-        ? (this.perPage * this.currentPage)
-        : 10,
-      true
-    ).subscribe();
-  }, {
-    allowSignalWrites: true
-  })
 
   private feedService = inject(FeedService);
   private postsService = inject(PostsService);
   private likesService = inject(LikesService);
+
+  constructor() {
+    effect(() => {
+      this.feedClosingToGuildAndAllies();
+      this.loadFeed(1,
+        this.perPage !== 0
+          ? (this.perPage * this.currentPage)
+          : 10,
+        true
+      ).subscribe();
+    }, {
+      allowSignalWrites: true
+    })
+  }
 
   get perPage(): number {
     return feedStore.query(getPaginationData()).perPage
@@ -180,43 +183,71 @@ export class FeedFacade {
   }
 
   likePost(postId: number): Observable<LikeDto> {
+    const feedItem = feedStore.query(getAllEntities()).find(entity => entity.post && entity.post.id === postId);
+    const previousLikes = feedItem ? [...feedItem.post!.likes] : [];
+
+    const optimisticLike: LikeDto = {
+      id: -1,
+      user: authenticatedStore.value.user!,
+      post: feedItem?.post!
+    };
+
+    if (feedItem) {
+      feedStore.update(updateEntities(feedItem.id, (entity) => ({
+        ...entity,
+        post: {
+          ...entity.post!,
+          likes: [...entity.post!.likes, optimisticLike]
+        }
+      })));
+    }
+
     return this.likesService.likePost(postId).pipe(
       tap({
-        next: (like: LikeDto) => {
-          const feedItem = feedStore.query(getAllEntities())
-            .find(entity => entity.post && entity.post.id === postId);
+        error: (error) => {
+          console.error(error);
           if (feedItem) {
             feedStore.update(updateEntities(feedItem.id, (entity) => ({
               ...entity,
               post: {
                 ...entity.post!,
-                likes: [...entity.post!.likes, like]
+                likes: previousLikes
               }
             })));
           }
         },
-        error: (error) => console.error(error),
       }),
     );
   }
 
   unlikePost(postId: number): Observable<void> {
+    const feedItem = feedStore.query(getAllEntities()).find(entity => entity.post && entity.post.id === postId);
+    const previousLikes = feedItem ? [...feedItem.post!.likes] : [];
+
+    if (feedItem) {
+      feedStore.update(updateEntities(feedItem.id, (entity) => ({
+        ...entity,
+        post: {
+          ...entity.post!,
+          likes: entity.post!.likes.filter(like => like.user.id !== authenticatedStore.value.user!.id)
+        }
+      })));
+    }
+
     return this.likesService.unlikePost(postId).pipe(
       tap({
-        next: () => {
-          const feedItem = feedStore.query(getAllEntities())
-            .find(entity => entity.post && entity.post.id === postId);
+        error: (error) => {
+          console.error(error);
           if (feedItem) {
             feedStore.update(updateEntities(feedItem.id, (entity) => ({
               ...entity,
               post: {
                 ...entity.post!,
-                likes: entity.post!.likes.filter(like => like.user.id !== authenticatedStore.value.user!.id)
+                likes: previousLikes
               }
             })));
           }
         },
-        error: (error) => console.error(error),
       }),
     );
   }
