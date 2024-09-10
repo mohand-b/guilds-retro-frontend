@@ -58,7 +58,9 @@ export class GuildDashboardComponent implements OnInit {
   private readonly genericModalService = inject(GenericModalService);
 
   ngOnInit(): void {
-    this.loading = true;
+    if (!this.guild()?.id) {
+      this.loading = true;
+    }
 
     this.guildFacade.getCurrentGuild().pipe(
       tap(() => {
@@ -66,6 +68,7 @@ export class GuildDashboardComponent implements OnInit {
       }),
       switchMap((guild) =>
         forkJoin([
+          this.guildFacade.getPaginatedMembers(guild.id!, 1, 1000),
           this.guildFacade.getPendingMembershipRequests(guild.id!),
           this.guildFacade.getGuildsForAlliance()
         ])

@@ -1,7 +1,7 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
-import {GuildDto, GuildSummaryDto} from "./guild.model";
+import {GuildDto, GuildSummaryDto, GuildWithPaginatedMembersDto, PaginatedMemberResponseDto} from "./guild.model";
 import {Observable} from "rxjs";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {GuildSearchDto, PaginatedGuildSearchResponseDto} from "../../../registry/state/guild-search/guild-search.model";
@@ -19,9 +19,26 @@ export class GuildsService {
     );
   }
 
-  getGuildById(guildId: number): Observable<GuildDto> {
-    return this.http.get<GuildDto>(
+  getGuildById(guildId: number): Observable<GuildWithPaginatedMembersDto> {
+    return this.http.get<GuildWithPaginatedMembersDto>(
       `${this.guildsBaseUrl}/${guildId}`,
+    );
+  }
+
+  getPaginatedMembers(guildId: number, page?: number, limit?: number): Observable<PaginatedMemberResponseDto> {
+    let params = new HttpParams();
+
+    if (page) {
+      params = params.set('page', page.toString());
+    }
+
+    if (limit) {
+      params = params.set('limit', limit.toString());
+    }
+
+    return this.http.get<PaginatedMemberResponseDto>(
+      `${this.guildsBaseUrl}/${guildId}/members`,
+      {params},
     );
   }
 

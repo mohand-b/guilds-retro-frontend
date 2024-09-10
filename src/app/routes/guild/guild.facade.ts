@@ -2,7 +2,14 @@ import {computed, inject, Injectable, signal, Signal, WritableSignal} from "@ang
 import {GuildsService} from "./state/guilds/guilds.service";
 import {createStore, select, setProps, withProps} from "@ngneat/elf";
 import {withRequestsStatus} from "@ngneat/elf-requests";
-import {GuildAllianceRequestsDto, GuildDto, GuildState, GuildSummaryDto} from "./state/guilds/guild.model";
+import {
+  GuildAllianceRequestsDto,
+  GuildDto,
+  GuildState,
+  GuildSummaryDto,
+  GuildWithPaginatedMembersDto,
+  PaginatedMemberResponseDto
+} from "./state/guilds/guild.model";
 import {Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {MembershipRequestsService} from "./state/membership-requests/membership-requests.service";
@@ -100,7 +107,23 @@ export class GuildFacade {
     );
   }
 
-  loadGuildById(guildId: number): Observable<GuildDto> {
+  getPaginatedMembers(guildId: number, page: number, limit: number): Observable<PaginatedMemberResponseDto> {
+    return this.guildsService.getPaginatedMembers(guildId, page, limit).pipe(
+      tap({
+        next: (response) => {
+          guildStore.update(
+            (state) => ({
+              ...state,
+              members: response.results,
+            }),
+          );
+        },
+        error: (error) => console.error(error),
+      }),
+    );
+  }
+
+  loadGuildById(guildId: number): Observable<GuildWithPaginatedMembersDto> {
     return this.guildsService.getGuildById(guildId);
   }
 

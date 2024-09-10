@@ -9,7 +9,7 @@ import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {SortMembersPipe} from "../../../../shared/pipes/sort-members.pipe";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {CustomPaginatorComponent} from "../../../../shared/components/custom-paginator/custom-paginator.component";
-import {GuildDto} from "../../state/guilds/guild.model";
+import {GuildDto, MemberDto} from "../../state/guilds/guild.model";
 import {RouterLink} from "@angular/router";
 import {UserDto} from "../../../profile/state/users/user.model";
 
@@ -39,7 +39,7 @@ export class GuildMembersTableComponent {
 
   displayedColumns: string[] = ['username', 'characterClass', 'characterLevel', 'role', 'actions'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  dataSource: MatTableDataSource<UserDto> = new MatTableDataSource<UserDto>();
+  dataSource: MatTableDataSource<MemberDto> = new MatTableDataSource<MemberDto>();
   public readonly UserRoleEnum = UserRoleEnum;
   @Output() roleUpdated = new EventEmitter<{ user: UserDto, role: UserRoleEnum }>();
   @Output() memberRemoved = new EventEmitter<UserDto>();
@@ -47,7 +47,7 @@ export class GuildMembersTableComponent {
     const hasOfficerRole = hasRequiredRole(this.currentUser.role, UserRoleEnum.OFFICER);
     const isGuildIdMatching = this.guild()!.id === this.currentUser.guild.id;
 
-    const sortedMembers: UserDto[] = new SortMembersPipe().transform(this.guild()!.members);
+    const sortedMembers: MemberDto[] = new SortMembersPipe().transform(this.guild()!.members);
     this.dataSource.data = sortedMembers;
     this.dataSource.paginator = this.paginator;
 

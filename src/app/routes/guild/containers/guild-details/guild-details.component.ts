@@ -49,7 +49,7 @@ export class GuildDetailsComponent implements OnInit {
         if (guildId) {
           return this.guildFacade.loadGuildById(guildId).pipe(
             tap((guild) => {
-              this.guild.set(guild);
+              this.guild.set({...guild, members: guild.members.results});
               this.loading = false;
             })
           );

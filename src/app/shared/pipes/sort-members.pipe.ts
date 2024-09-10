@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {UserDto} from '../../routes/profile/state/users/user.model';
 import {UserRoleEnum} from "../../routes/authenticated/state/authed/authed.model";
+import {MemberDto} from "../../routes/guild/state/guilds/guild.model";
 
 @Pipe({
   name: 'sortMembers',
@@ -8,7 +8,7 @@ import {UserRoleEnum} from "../../routes/authenticated/state/authed/authed.model
 })
 export class SortMembersPipe implements PipeTransform {
 
-  transform(members: UserDto[]): UserDto[] {
+  transform(members: MemberDto[]): MemberDto[] {
     const rolePriority: { [key in UserRoleEnum]: number } = {
       [UserRoleEnum.LEADER]: 1,
       [UserRoleEnum.OFFICER]: 2,
@@ -16,7 +16,7 @@ export class SortMembersPipe implements PipeTransform {
       [UserRoleEnum.CANDIDATE]: 4
     };
 
-    return members.sort((a: UserDto, b: UserDto) => {
+    return members.sort((a: MemberDto, b: MemberDto) => {
       return rolePriority[a.role] - rolePriority[b.role];
     });
   }

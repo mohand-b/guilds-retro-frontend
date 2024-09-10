@@ -1,16 +1,28 @@
 import {MembershipRequestDto} from "../membership-requests/membership-request.model";
 import {AllianceRequestDto} from "../alliances/alliance.model";
-import {CharacterClassEnum, UserDto} from "../../../profile/state/users/user.model";
+import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 
 export interface GuildDto {
   id?: number;
   name?: string;
   description?: string;
-  members: UserDto[];
+  members: MemberDto[];
   allies: GuildSummaryDto[];
   memberClassesCount?: Record<CharacterClassEnum, number>;
   level: number;
   logo?: string;
+}
+
+export interface GuildWithPaginatedMembersDto extends Omit<GuildDto, 'members'> {
+  members: PaginatedMemberResponseDto;
+}
+
+export interface PaginatedMemberResponseDto {
+  results: MemberDto[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface GuildAllianceRequestsDto {
@@ -34,4 +46,20 @@ export interface GuildSummaryDto {
   nbOfMembers: number;
   nbOfAllies: number;
   leaderUsername: string;
+}
+
+export interface PaginatedMemberResponseDto {
+  results: MemberDto[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface MemberDto {
+  id: number;
+  username: string;
+  characterClass: CharacterClassEnum;
+  gender: GenderEnum;
+  characterLevel: number;
+  role: UserRoleEnum;
 }
