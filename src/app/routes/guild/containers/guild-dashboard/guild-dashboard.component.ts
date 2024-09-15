@@ -68,7 +68,7 @@ export class GuildDashboardComponent implements OnInit {
       }),
       switchMap((guild) =>
         forkJoin([
-          this.guildFacade.getPaginatedMembers(guild.id!, 1, 1000),
+          this.guildFacade.getPaginatedMembers(guild.id!, 1, 200),
           this.guildFacade.getPendingMembershipRequests(guild.id!),
           this.guildFacade.getGuildsForAlliance()
         ])

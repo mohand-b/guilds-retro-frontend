@@ -7,6 +7,7 @@ export interface GuildDto {
   id?: number;
   name?: string;
   description?: string;
+  nbOfMembers?: number;
   members: MemberDto[];
   allies: GuildSummaryDto[];
   memberClassesCount?: Record<CharacterClassEnum, number>;

@@ -49,14 +49,25 @@ export class GuildDetailsComponent implements OnInit {
         if (guildId) {
           return this.guildFacade.loadGuildById(guildId).pipe(
             tap((guild) => {
-              this.guild.set({...guild, members: guild.members.results});
+              this.guild.set({...guild, members: []});
               this.loading = false;
-            })
+            }),
+            switchMap((guild) =>
+              this.guildFacade.getPaginatedMembers(guildId, 1, 200).pipe(
+                tap((paginatedMembers) => {
+                  this.guild.set({
+                    ...guild,
+                    members: paginatedMembers.results,
+                  });
+                })
+              )
+            )
           );
         }
         return [];
       })
     ).subscribe();
+
   }
 
   goBack() {
