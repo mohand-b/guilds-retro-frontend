@@ -30,31 +30,18 @@
         <div class="flex justify-between">
           <div class="text-2xl font-bold">Alliances <span>{{ guild.allies.length }}/3</span></div>
 
-          <div class="flex items-center gap-3">
-            @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
-              <button
-                (click)="onOpenPendingAllianceRequests()"
-                [matBadgeHidden]="pendingAllianceRequestsCount() === 0"
-                [matBadge]="pendingAllianceRequestsCount()"
-                color="accent"
-                mat-raised-button
-                matBadgeColor="warn">
-                Demandes d'alliance
-              </button>
-            }
+          @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
+            <button
+              (click)="onOpenPendingAllianceRequests()"
+              [matBadgeHidden]="pendingAllianceRequestsCount() === 0"
+              [matBadge]="pendingAllianceRequestsCount()"
+              color="accent"
+              mat-raised-button
+              matBadgeColor="warn">
+              Demandes d'alliance
+            </button>
+          }
 
-            @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.LEADER)) {
-              <button
-                (click)="onOpenGuildSelection()"
-                [disabled]="guild.allies.length > 2"
-                [matBadge]="guildsForAlliance().length"
-                color="primary"
-                mat-raised-button
-                matBadgeColor="primary">
-                Trouver une alliance
-              </button>
-            }
-          </div>
         </div>
 
         @if (!loading) {

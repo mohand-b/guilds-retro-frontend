@@ -1,6 +1,6 @@
 import {Component, effect, inject, OnInit, Signal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
-import {GuildDto, GuildSummaryDto} from "../../state/guilds/guild.model";
+import {GuildDto} from "../../state/guilds/guild.model";
 import {EMPTY, forkJoin, switchMap, tap} from "rxjs";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
@@ -13,7 +13,6 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {GuildHeaderComponent} from "../../components/guild-header/guild-header.component";
 import {GuildMembersTableComponent} from "../../components/guild-members-table/guild-members-table.component";
 import {AllianceCardComponent} from "../../components/alliance-card/alliance-card.component";
-import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
 import {AllianceRequestsListComponent} from "../alliance-requests-list/alliance-requests-list.component";
 import {MembershipRequestsTabComponent} from "../membership-requests-tab/membership-requests-tab.component";
 import {MatIconModule} from "@angular/material/icon";
@@ -49,7 +48,6 @@ export class GuildDashboardComponent implements OnInit {
   public guild: Signal<GuildDto | undefined> = this.guildFacade.currentGuild
   public readonly pendingAllianceRequestsCount: Signal<number> = this.guildFacade.pendingAllianceRequestsCount;
   public readonly pendingMembershipRequestsCount: Signal<number> = this.guildFacade.pendingMembershipRequestsCount;
-  public readonly guildsForAlliance: Signal<GuildSummaryDto[]> = this.guildFacade.possiblesGuildsForAlliance;
   loadAllianceRequests = effect(() => {
     if (this.authenticatedFacade.currentUser()!.guild.id!)
       this.guildFacade.getAllianceRequests(this.authenticatedFacade.currentUser()!.guild.id!).subscribe();
@@ -70,26 +68,9 @@ export class GuildDashboardComponent implements OnInit {
         forkJoin([
           this.guildFacade.getPaginatedMembers(guild.id!, 1, 200),
           this.guildFacade.getPendingMembershipRequests(guild.id!),
-          this.guildFacade.getGuildsForAlliance()
         ])
       )
     ).subscribe();
-  }
-
-  public onOpenGuildSelection(): void {
-    this.genericModalService.open(
-      "Choisir une guilde à laquelle s'allier",
-      {primary: 'Proposer une alliance'},
-      'xl',
-      {guilds: this.guildsForAlliance()},
-      GuildSelectionComponent,
-      undefined,
-      true
-    ).subscribe(selectedGuild => {
-      if (selectedGuild) {
-        this.guildFacade.createAllianceRequest(selectedGuild.id).subscribe();
-      }
-    });
   }
 
   public onOpenPendingAllianceRequests(): void {

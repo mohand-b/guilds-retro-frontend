@@ -1,4 +1,4 @@
-import {computed, inject, Injectable, signal, Signal, WritableSignal} from "@angular/core";
+import {computed, inject, Injectable, Signal} from "@angular/core";
 import {GuildsService} from "./state/guilds/guilds.service";
 import {createStore, select, setProps, withProps} from "@ngneat/elf";
 import {withRequestsStatus} from "@ngneat/elf-requests";
@@ -72,27 +72,6 @@ export class GuildFacade {
 
   pendingAllianceRequestsCount: Signal<number> = computed(() => this.receivedPendingAllianceRequests().length)
 
-
-  guildsForAlliance: WritableSignal<GuildSummaryDto[]> = signal([]);
-
-  possiblesGuildsForAlliance: Signal<GuildSummaryDto[]> = computed(() => {
-    const currentAlliesId: number[] = this.currentGuild().allies.map(ally => ally.id);
-
-    const sentRequestedGuildsId: number[] = guildStore.value.sentAllianceRequests
-      .filter(request => request.status === AllianceStatusEnum.PENDING)
-      .map(request => request.targetGuild?.id ?? -1);
-
-    const receivedRequestedGuildsId: number[] = this.receivedPendingAllianceRequests()
-      .map(request => request.requesterGuild?.id ?? -1);
-
-    const allRequestedGuildsId = [...sentRequestedGuildsId, ...receivedRequestedGuildsId];
-
-    return this.guildsForAlliance().filter(guild =>
-      !currentAlliesId.includes(guild.id) && !allRequestedGuildsId.includes(guild.id) && guild.id !== this.currentGuild().id
-    );
-  });
-
-
   private guildsService = inject(GuildsService);
   private alliancesService = inject(AlliancesService);
   private membershipsRequestService = inject(MembershipRequestsService);
@@ -129,15 +108,6 @@ export class GuildFacade {
 
   getGuildsRecruiting(): Observable<GuildSummaryDto[]> {
     return this.guildsService.getGuildsRecruiting();
-  }
-
-  getGuildsForAlliance(): Observable<GuildSummaryDto[]> {
-    return this.guildsService.getGuildsForAlliance().pipe(
-      tap({
-        next: (guilds) => this.guildsForAlliance.set(guilds),
-        error: (error) => console.log(error),
-      })
-    );
   }
 
   validateGuildCode(code: string): Observable<{ guildName: string }> {

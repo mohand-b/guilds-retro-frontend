@@ -41,16 +41,10 @@ export class GuildsService {
       {params},
     );
   }
-  
+
   getGuildsRecruiting(): Observable<GuildSummaryDto[]> {
     return this.http.get<GuildSummaryDto[]>(
       `${this.guildsBaseUrl}/recruiting`,
-    );
-  }
-
-  getGuildsForAlliance(): Observable<GuildSummaryDto[]> {
-    return this.http.get<GuildSummaryDto[]>(
-      `${this.guildsBaseUrl}/to-alliance`
     );
   }
 
