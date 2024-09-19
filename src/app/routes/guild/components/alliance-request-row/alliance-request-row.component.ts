@@ -1,16 +1,19 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, input, Input, Output} from '@angular/core';
 import {AllianceRequestDto} from "../../state/alliances/alliance.model";
-import {MatCard} from "@angular/material/card";
+import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
+import {MatIconModule} from "@angular/material/icon";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {GuildDto} from "../../state/guilds/guild.model";
 
 @Component({
   selector: 'app-alliance-request-row',
   standalone: true,
   imports: [
-    MatCard,
+    MatCardModule,
     MatButtonModule,
-    MatIcon
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './alliance-request-row.component.html',
   styleUrl: './alliance-request-row.component.scss'
@@ -18,8 +21,8 @@ import {MatIcon} from "@angular/material/icon";
 export class AllianceRequestRowComponent {
 
   @Input() allianceRequest!: AllianceRequestDto;
-  @Input() limitAllianceRequests: boolean = false
-  
+  currentGuild = input<GuildDto>();
+
   @Output() acceptRequest = new EventEmitter<AllianceRequestDto>();
   @Output() declineRequest = new EventEmitter<AllianceRequestDto>();
 

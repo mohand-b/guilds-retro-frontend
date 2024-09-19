@@ -283,7 +283,6 @@ export class GuildFacade {
     return this.alliancesService.createAllianceRequest(this.currentGuild().id!, targetGuildId).pipe(
       tap({
         next: (alliance: AllianceRequestDto) => {
-          console.log(alliance)
           guildStore.update(
             (state) => ({
               ...state,

@@ -8,7 +8,7 @@
     (declineRequest)="onDeclineRequest($event)"
     *ngFor="let request of receivedPendingAllianceRequests()"
     [allianceRequest]="request"
-    [limitAllianceRequests]="currentGuild().allies.length > 2"
+    [currentGuild]="currentGuild()"
   />
 </div>
 

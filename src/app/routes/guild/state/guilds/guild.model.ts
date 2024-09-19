@@ -7,7 +7,8 @@ export interface GuildDto {
   id?: number;
   name?: string;
   description?: string;
-  nbOfMembers?: number;
+  memberCount?: number;
+  allyCount?: number;
   members: MemberDto[];
   allies: GuildSummaryDto[];
   leaderUsername?: string;
@@ -46,8 +47,8 @@ export interface GuildSummaryDto {
   averageLevelOfMembers: number;
   memberClassesCount: Record<CharacterClassEnum, number>;
   description: string;
-  nbOfMembers: number;
-  nbOfAllies: number;
+  memberCount: number;
+  allyCount: number;
   leaderUsername: string;
 }
 

@@ -33,12 +33,6 @@ import {GuildSearchDto} from "../../state/guild-search/guild-search.model";
 })
 export class GuildsRegistryComponent {
 
-  guildsFilterUpdated = effect(() => {
-    if (this.guildsFilter()) {
-      console.log(this.guildsFilter());
-      this.searchForm.patchValue(this.guildsFilter());
-    }
-  })
   private fb = inject(FormBuilder);
   searchForm: FormGroup = this.fb.group({
     name: [undefined],
@@ -48,6 +42,11 @@ export class GuildsRegistryComponent {
   guildsResults = this.registryFacade.guildsResults;
   paginationData = this.registryFacade.guildsRegistryPaginationData;
   guildsFilter = this.registryFacade.guildsFilter;
+  guildsFilterUpdated = effect(() => {
+    if (this.guildsFilter()) {
+      this.searchForm.patchValue(this.guildsFilter());
+    }
+  })
 
   onSearchGuilds(pageEvent?: number) {
     this.registryFacade.searchGuilds(

@@ -38,6 +38,11 @@ export class UsersRegistryComponent implements OnInit {
   allJobs = this.jobNames.concat(this.magusJobNames);
   jobs = [...this.allJobs];
   characterClasses = Object.values(CharacterClassEnum);
+  usersFilterUpdated = effect(() => {
+    if (this.usersFilter()) {
+      this.searchForm.patchValue(this.usersFilter());
+    }
+  })
   private fb = inject(FormBuilder);
   searchForm: FormGroup = this.fb.group({
     username: [undefined],
@@ -50,12 +55,6 @@ export class UsersRegistryComponent implements OnInit {
   usersResults = this.registryFacade.usersResults;
   paginationData = this.registryFacade.usersRegistryPaginationData;
   usersFilter = this.registryFacade.usersFilter;
-  usersFilterUpdated = effect(() => {
-    if (this.usersFilter()) {
-      console.log(this.usersFilter());
-      this.searchForm.patchValue(this.usersFilter());
-    }
-  })
 
   ngOnInit(): void {
     this.searchForm.get('jobName')?.valueChanges.subscribe((jobName: string) => {

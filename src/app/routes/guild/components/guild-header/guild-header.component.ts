@@ -1,4 +1,4 @@
-import {Component, computed, effect, EventEmitter, inject, input, Input, Output, Signal} from '@angular/core';
+import {Component, computed, EventEmitter, inject, input, Input, Output, Signal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
 import {GuildDto} from "../../state/guilds/guild.model";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
@@ -37,27 +37,20 @@ export class GuildHeaderComponent {
   @Output() sendAllianceRequest = new EventEmitter<number>();
   @Output() acceptAllianceRequest = new EventEmitter<number>();
   @Output() declineAllianceRequest = new EventEmitter<number>();
-  protected readonly UserRoleEnum = UserRoleEnum;
-  protected readonly hasRequiredRole = hasRequiredRole;
-  private guildFacade = inject(GuildFacade);
-  receivedRequests = this.guildFacade.receivedPendingAllianceRequests;
   hasReceivedRequest: Signal<boolean | undefined> = computed(() =>
     this.receivedRequests()?.some(request => request.requesterGuild?.id === this.guild.id)
   );
   receivedRequestFromGuild: Signal<AllianceRequestDto | undefined> = computed(() =>
     this.receivedRequests()?.find(request => request.requesterGuild?.id === this.guild.id)
   );
+  protected readonly UserRoleEnum = UserRoleEnum;
+  protected readonly hasRequiredRole = hasRequiredRole;
+  private guildFacade = inject(GuildFacade);
+  receivedRequests = this.guildFacade.receivedPendingAllianceRequests;
   private sentRequests = this.guildFacade.sentPendingAllianceRequests;
   hasSentRequest: Signal<boolean | undefined> = computed(() =>
     this.sentRequests()?.some(request => request.targetGuild?.id === this.guild.id)
   );
-  effect = effect(() => {
-    // logs
-    console.log('sentRequests', this.sentRequests());
-    console.log('receivedRequests', this.receivedRequests());
-    console.log('hasSentRequest', this.hasSentRequest());
-    console.log('hasReceivedRequest', this.hasReceivedRequest());
-  })
 
   get isCurrentGuild() {
     return this.currentUser()?.guild.id === this.guild.id;
