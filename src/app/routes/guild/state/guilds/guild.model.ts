@@ -10,9 +10,11 @@ export interface GuildDto {
   nbOfMembers?: number;
   members: MemberDto[];
   allies: GuildSummaryDto[];
+  leaderUsername?: string;
   memberClassesCount?: Record<CharacterClassEnum, number>;
   level: number;
   logo?: string;
+  isAlly?: boolean;
 }
 
 export interface GuildWithPaginatedMembersDto extends Omit<GuildDto, 'members'> {
@@ -27,8 +29,8 @@ export interface PaginatedMemberResponseDto {
 }
 
 export interface GuildAllianceRequestsDto {
-  receivedAllianceRequests: AllianceRequestDto[];
-  sentAllianceRequests: AllianceRequestDto[];
+  receivedAllianceRequests: AllianceRequestDto[] | undefined;
+  sentAllianceRequests: AllianceRequestDto[] | undefined;
 }
 
 export interface GuildState extends GuildDto, GuildAllianceRequestsDto {

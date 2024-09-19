@@ -8,6 +8,11 @@
       } @else {
         <div class="text-sm mt-2 text-gray-500">Aucune description disponible pour cette guilde.</div>
       }
+      @if (guild.leaderUsername) {
+        <div class="flex items-center mt-2">
+          <div class="text-md font-medium">Meneur: {{ guild.leaderUsername }}</div>
+        </div>
+      }
       <div class="flex items-center mt-2">
         <div class="text-md font-medium">
           {{ guild.nbOfMembers }} membres inscrits
@@ -21,36 +26,60 @@
           <img [src]="guild.logo" alt="Guild Logo" class="w-full h-full object-cover">
         </div>
       }
-      @if (hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER) && currentUser.guild.id === guild.id) {
-        <button (click)="onShowMembershipRequests()"
-                [matBadge]="pendingMembershipRequestsCount()"
-                [matBadgeHidden]="pendingMembershipRequestsCount() === 0"
-                matBadgeColor="warn"
-                mat-raised-button
-                color="accent">
-          Demandes d'adhésion
-        </button>
-      }
 
-      @if (alreadySentAllianceRequest()
-      && hasRequiredRole(currentUser.role!, UserRoleEnum.LEADER)
-      && currentUser.guild!.id !== guild.id) {
-        <button (click)="onSendAllianceRequest()"
-                mat-raised-button
-                color="primary">
-          Proposer une alliance
-        </button>
-      }
+      @if (hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER)) {
 
-      @if (alreadySentAllianceRequest()
-      && hasRequiredRole(currentUser.role!, UserRoleEnum.LEADER)
-      && currentUser.guild!.id !== guild.id) {
-        <button
-          mat-raised-button
-          color="warn"
-          disabled>
-          Demande envoyée
-        </button>
+        @if (isCurrentGuild) {
+
+          <button (click)="onShowMembershipRequests()"
+                  [matBadge]="pendingMembershipRequestsCount()"
+                  [matBadgeHidden]="pendingMembershipRequestsCount() === 0"
+                  matBadgeColor="warn"
+                  mat-raised-button
+                  color="accent">
+            Demandes d'adhésion
+          </button>
+
+        } @else {
+
+          @if (!guild.isAlly && hasSentRequest() === false && !hasReceivedRequest() && currentUser.guildAlliesIds!.length < 3) {
+            <button (click)="onSendAllianceRequest()"
+                    mat-raised-button
+                    color="primary">
+              Proposer une alliance
+            </button>
+          }
+
+          @if (!guild.isAlly && hasSentRequest() === true) {
+            <button
+              mat-raised-button
+              color="warn"
+              disabled>
+              Demande d'alliance envoyée
+            </button>
+          }
+
+          @if (!guild.isAlly && hasReceivedRequest() === true) {
+            <div class="flex items-center">
+              <span class="mr-2">Demande d'alliance reçue :</span>
+              <div matTooltip="Ta guilde compte déjà 3 guildes alliées."
+                   [matTooltipDisabled]="currentUser.guildAlliesIds!.length < 3"
+                   matTooltipPosition="above">
+                <button [disabled]="currentUser.guildAlliesIds!.length >= 3"
+                        mat-icon-button
+                        color="primary"
+                        (click)="onAcceptAllianceRequest()">
+                  <mat-icon>check</mat-icon>
+                </button>
+              </div>
+              <button mat-icon-button color="warn" (click)="onDeclineAllianceRequest()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          }
+
+        }
+
       }
 
     </div>

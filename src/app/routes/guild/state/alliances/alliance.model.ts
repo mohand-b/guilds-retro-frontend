@@ -3,7 +3,7 @@ import {GuildSummaryDto} from "../guilds/guild.model";
 export interface AllianceDto {
   id: number;
   requesterGuild: GuildSummaryDto;
-  targetGuildDto: GuildSummaryDto;
+  targetGuild: GuildSummaryDto;
   status: AllianceStatusEnum;
 }
 

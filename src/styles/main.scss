@@ -60,6 +60,18 @@ $guilds-retro-theme: mat.define-light-theme(
   color: mat.get-color-from-palette($guilds-retro-gold, 500);
 }
 
+.mat-mdc-button-base {
+  border-radius: 10rem !important;
+  box-shadow: none !important;
+}
+
+.mat-mdc-button-base:hover,
+.mat-mdc-button-base:focus,
+.mat-mdc-button-base:active {
+  box-shadow: none !important;
+}
+
+
 .body-background {
   background-color: #f0e4d3;
 }

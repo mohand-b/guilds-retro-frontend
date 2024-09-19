@@ -53,7 +53,7 @@ export class GuildDashboardComponent implements OnInit {
       this.guildFacade.getAllianceRequests(this.authenticatedFacade.currentUser()!.guild.id!).subscribe();
   })
 
-  private readonly genericModalService = inject(GenericModalService);
+  private genericModalService = inject(GenericModalService);
 
   ngOnInit(): void {
     if (!this.guild()?.id) {

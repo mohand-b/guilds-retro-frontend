@@ -34,8 +34,8 @@ export const guildStore = createStore(
     members: [],
     allies: [],
     membershipRequests: [],
-    receivedAllianceRequests: [],
-    sentAllianceRequests: []
+    receivedAllianceRequests: undefined,
+    sentAllianceRequests: undefined
   }),
   withRequestsStatus(),
 );
@@ -54,23 +54,15 @@ export class GuildFacade {
   });
   pendingMembershipRequestsCount: Signal<number> = computed(() => this.pendingMembershipRequests().length);
 
-  sentPendingAllianceRequests: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
-    (state) => state.sentAllianceRequests
-      .filter(request => request.status === AllianceStatusEnum.PENDING && request.targetGuild?.nbOfAllies! < 3)
-  )), {
-    initialValue: guildStore.value.sentAllianceRequests
-      .filter(request => request.status === AllianceStatusEnum.PENDING && request.targetGuild?.nbOfAllies! < 3)
-  })
+  sentPendingAllianceRequests: Signal<AllianceRequestDto[] | undefined> = toSignal(guildStore.pipe(select(
+    (state) => state.sentAllianceRequests?.filter(request => request.status === AllianceStatusEnum.PENDING)
+  )))
 
-  receivedPendingAllianceRequests: Signal<AllianceRequestDto[]> = toSignal(guildStore.pipe(select(
-    (state) => state.receivedAllianceRequests
-      .filter(request => request.status === AllianceStatusEnum.PENDING && request.requesterGuild?.nbOfAllies! < 3)
-  )), {
-    initialValue: guildStore.value.receivedAllianceRequests
-      .filter(request => request.status === AllianceStatusEnum.PENDING && request.requesterGuild?.nbOfAllies! < 3)
-  })
+  receivedPendingAllianceRequests: Signal<AllianceRequestDto[] | undefined> = toSignal(guildStore.pipe(select(
+    (state) => state.receivedAllianceRequests?.filter(request => request.status === AllianceStatusEnum.PENDING)
+  )));
 
-  pendingAllianceRequestsCount: Signal<number> = computed(() => this.receivedPendingAllianceRequests().length)
+  pendingAllianceRequestsCount: Signal<number> = computed(() => this.receivedPendingAllianceRequests()!.length)
 
   private guildsService = inject(GuildsService);
   private alliancesService = inject(AlliancesService);
@@ -255,7 +247,7 @@ export class GuildFacade {
               (state) => ({
                 ...state,
                 allies: [...state.allies, alliance.requesterGuild],
-                receivedAllianceRequests: state.receivedAllianceRequests.filter(
+                receivedAllianceRequests: state.receivedAllianceRequests?.filter(
                   (r) => r.id !== requestId,
                 ),
               }),
@@ -275,7 +267,7 @@ export class GuildFacade {
             guildStore.update(
               (state) => ({
                 ...state,
-                receivedAllianceRequests: state.receivedAllianceRequests.filter(
+                receivedAllianceRequests: state.receivedAllianceRequests?.filter(
                   (r) => r.id !== requestId,
                 ),
               }),
@@ -287,14 +279,15 @@ export class GuildFacade {
     );
   }
 
-  createAllianceRequest(targetGuildId: number): Observable<AllianceDto> {
+  createAllianceRequest(targetGuildId: number): Observable<AllianceRequestDto> {
     return this.alliancesService.createAllianceRequest(this.currentGuild().id!, targetGuildId).pipe(
       tap({
-        next: (alliance: AllianceDto) => {
+        next: (alliance: AllianceRequestDto) => {
+          console.log(alliance)
           guildStore.update(
             (state) => ({
               ...state,
-              sentAllianceRequests: [...state.sentAllianceRequests, alliance],
+              sentAllianceRequests: state.sentAllianceRequests ? [...state.sentAllianceRequests, alliance] : [alliance],
             }),
           );
         },
@@ -307,6 +300,17 @@ export class GuildFacade {
     return this.alliancesService.dissolveAlliance(guildId1, guildId2).pipe(
       tap({
         next: (alliance: AllianceDto) => {
+          authenticatedStore.update(
+            (state) => ({
+              ...state,
+              user: {
+                ...state.user!,
+                guildAlliesIds: state.user?.guildAlliesIds?.filter(
+                  (id) => id !== alliance.requesterGuild.id,
+                ),
+              },
+            }),
+          );
           guildStore.update(
             (state) => ({
               ...state,

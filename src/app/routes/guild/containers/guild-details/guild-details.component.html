@@ -9,6 +9,9 @@
         [guild]="guild"
         [hidden]="loading"
         [currentUser]="currentUser()!"
+        (acceptAllianceRequest)="onAcceptAllianceRequest($event)"
+        (declineAllianceRequest)="onDeclineAllianceRequest($event)"
+        (sendAllianceRequest)="onSendAllianceRequest($event)"
       />
 
       @if (guild.members && guild.members.length > 0) {
