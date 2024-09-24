@@ -27,6 +27,10 @@
       }
     </mat-card>
 
+    @if (classCount(); as classCount) {
+      <app-class-count [classCount]="classCount"/>
+    }
+
     @if (!loading && guild.allies && guild.allies.length > 0) {
       <div class="flex flex-col gap-3">
         <div class="text-2xl font-bold">Alliances <span>{{ guild.allies.length }}/3</span></div>

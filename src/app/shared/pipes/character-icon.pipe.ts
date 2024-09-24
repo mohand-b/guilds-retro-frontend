@@ -42,12 +42,9 @@ export class CharacterUnisexIconPipe implements PipeTransform {
 })
 export class CharacterColorPipe implements PipeTransform {
 
-  transform(user: UserDto): string {
-    if (!user || !user.characterClass) {
-      return '';
-    }
+  transform(characterClass: CharacterClassEnum): string {
 
-    switch (user.characterClass) {
+    switch (characterClass) {
       case CharacterClassEnum.CRA:
         return '#D91616';
       case CharacterClassEnum.ECAFLIP:

@@ -85,4 +85,10 @@ export class GuildsService {
       {params},
     );
   }
+
+  getMemberClassesCount(guildId: number): Observable<{ [key: string]: number }> {
+    return this.http.get<{ [key: string]: number }>(
+      `${this.guildsBaseUrl}/${guildId}/member-classes-count`,
+    );
+  }
 }

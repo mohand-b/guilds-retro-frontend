@@ -14,6 +14,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
+import {ClassCountComponent} from "../../components/class-count/class-count.component";
 
 @Component({
   selector: 'app-guild-details',
@@ -26,7 +27,8 @@ import {GenericModalService} from "../../../../shared/services/generic-modal.ser
     MatProgressSpinnerModule,
     GuildHeaderComponent,
     GuildMembersTableComponent,
-    AllianceCardComponent
+    AllianceCardComponent,
+    ClassCountComponent
   ],
   templateUrl: './guild-details.component.html',
   styleUrls: ['./guild-details.component.scss']
@@ -34,6 +36,7 @@ import {GenericModalService} from "../../../../shared/services/generic-modal.ser
 export class GuildDetailsComponent implements OnInit {
 
   public guild: WritableSignal<GuildDto | undefined> = signal(undefined);
+  public classCount: WritableSignal<Record<string, number> | undefined> = signal(undefined);
   public loading: boolean = false;
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
   public readonly currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser;
@@ -63,11 +66,18 @@ export class GuildDetailsComponent implements OnInit {
               return forkJoin({
                 allianceRequests: allianceRequests$,
                 paginatedMembers: paginatedMembers$,
+                classCount: this.guildFacade.getMemberClassesCount(guildId)
               }).pipe(
-                tap(({allianceRequests, paginatedMembers}) => {
-
+                tap(({
+                       allianceRequests,
+                       paginatedMembers,
+                       classCount
+                     }) => {
                   if (paginatedMembers && paginatedMembers.results) {
                     this.guild.set({...this.guild()!, members: paginatedMembers.results});
+                  }
+                  if (classCount) {
+                    this.classCount.set(classCount);
                   }
                 })
               );

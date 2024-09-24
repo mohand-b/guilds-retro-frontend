@@ -324,4 +324,8 @@ export class GuildFacade {
     );
   }
 
+  getMemberClassesCount(guildId: number): Observable<{ [key: string]: number }> {
+    return this.guildsService.getMemberClassesCount(guildId);
+  }
+
 }

@@ -1,16 +1,18 @@
-@if (memberClassesCount) {
-  <div class="flex flex-wrap items-center gap-3">
+@if (classCount(); as classCount) {
+  <div class="flex flex-wrap items-baseline gap-6">
     @for (classKey of getCharacterClassKeys(); track classKey) {
-      <div class="flex items-center gap-1" [matTooltip]="classKey + ' : '+ memberClassesCount[classKey]">
-        <img [ngSrc]="'assets/characters/' + classKey.toLowerCase() + '-m-icon.svg'"
-             [alt]="classKey + ' icon'"
-             width="16"
-             height="16"
-             class="object-contain"
+      <div [matTooltip]="classKey" class="flex flex-col items-center">
+        <img
+          [src]="'assets/characters/' + classKey.toLowerCase() + '_icon.svg'"
+          [alt]="classKey + ' icon'"
+          class="h-10"
         />
-        <span class="font-bold text-gray-500 text-xs">{{ memberClassesCount[classKey] }},</span>
+        <span
+          class="font-bold text-2xl drop-shadow-lg"
+          [ngStyle]="{ 'color': classKey | characterColor }">
+          {{ classCount[classKey] }}
+        </span>
       </div>
     }
   </div>
-
 }
