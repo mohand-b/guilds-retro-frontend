@@ -21,8 +21,7 @@ export class GuildStatsComponent {
   public averageMemberLevel: WritableSignal<number | undefined> = signal(undefined);
   public classCount: WritableSignal<Record<string, number> | undefined> = signal(undefined);
   public eventStats: WritableSignal<GuildEventStatsDto | undefined> = signal(undefined);
-  public readonly guildId = input<number>()
-  protected readonly Object = Object;
+  public readonly guildId = input<number>();
   private guildFacade = inject(GuildFacade);
 
   constructor() {
@@ -53,4 +52,5 @@ export class GuildStatsComponent {
   getEventTypesKeys(): EventTypesEnum[] {
     return Object.keys(EventTypesEnum).filter(key => isNaN(Number(key))) as EventTypesEnum[];
   }
+
 }

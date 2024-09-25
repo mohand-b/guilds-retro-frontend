@@ -27,7 +27,14 @@
       }
     </mat-card>
 
-    <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-6">
+      <h2 class="text-2xl font-semibold text-gray-700">Statistiques de Guilde</h2>
+      @if (guild.hideStats) {
+        <app-alert type="warning" message="Les statistiques de guilde sont masquées aux non membres de la guilde."/>
+      } @else {
+        <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
+      }
+    </div>
 
     @if (!loading && guild.allies && guild.allies.length > 0) {
       <div class="flex flex-col gap-3">

@@ -17,6 +17,7 @@ export interface GuildDto {
   level: number;
   logo?: string;
   isAlly?: boolean;
+  hideStats?: boolean;
 }
 
 export interface GuildWithPaginatedMembersDto extends Omit<GuildDto, 'members'> {

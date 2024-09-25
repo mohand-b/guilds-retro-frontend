@@ -109,4 +109,18 @@ export class GuildsService {
       `${this.guildsBaseUrl}/${guildId}/average-member-level`,
     );
   }
+
+  updateGuildLevel(guildId: number, level: number): Observable<GuildDto> {
+    return this.http.patch<GuildDto>(
+      `${this.guildsBaseUrl}/${guildId}/level`,
+      {level},
+    );
+  }
+
+  updateGuildHideStats(guildId: number, hideStats: boolean): Observable<GuildDto> {
+    return this.http.patch<GuildDto>(
+      `${this.guildsBaseUrl}/${guildId}/hide-stats`,
+      {hideStats},
+    );
+  }
 }

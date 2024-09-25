@@ -16,6 +16,10 @@ import {UserDto} from "../../../profile/state/users/user.model";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {ClassCountComponent} from "../../components/class-count/class-count.component";
 import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
+import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
+import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {MatSlideToggle} from "@angular/material/slide-toggle";
+import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 
 @Component({
   selector: 'app-guild-details',
@@ -30,7 +34,9 @@ import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
     GuildMembersTableComponent,
     AllianceCardComponent,
     ClassCountComponent,
-    GuildStatsComponent
+    GuildStatsComponent,
+    MatSlideToggle,
+    AlertComponent
   ],
   templateUrl: './guild-details.component.html',
   styleUrls: ['./guild-details.component.scss']
@@ -39,6 +45,8 @@ export class GuildDetailsComponent implements OnInit {
 
   public guild: WritableSignal<GuildDto | undefined> = signal(undefined);
   public loading: boolean = false;
+  protected readonly hasRequiredRole = hasRequiredRole;
+  protected readonly UserRoleEnum = UserRoleEnum;
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
   public readonly currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser;
   private readonly guildFacade = inject(GuildFacade);
@@ -111,7 +119,6 @@ export class GuildDetailsComponent implements OnInit {
       })
     ).subscribe();
   }
-
 
   onDeclineAllianceRequest(requestId: number) {
     this.genericModalService.open(

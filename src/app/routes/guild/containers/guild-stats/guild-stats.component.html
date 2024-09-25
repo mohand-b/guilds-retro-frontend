@@ -1,6 +1,4 @@
-<div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-6">
-  <h2 class="text-2xl font-semibold text-gray-700 mb-4">Statistiques de Guilde</h2>
-
+<div class="flex flex-col gap-6">
   @if (averageMemberLevel(); as averageMemberLevel) {
     <div class="text-lg text-gray-800">
       Niveau moyen des membres : <span class="font-bold">{{ averageMemberLevel }}</span>
@@ -48,4 +46,5 @@
     </div>
   }
 </div>
+
 

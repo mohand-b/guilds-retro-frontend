@@ -4,10 +4,12 @@
     <mat-card class="shadow-lg rounded-lg">
       <app-guild-header
         (showMembershipRequests)="onOpenPendingMembershipRequests()"
+        (updateGuildLevel)="updateGuildLevel($event)"
         [currentUser]="currentUser()"
         [guild]="guild"
         [hidden]="loading"
         [pendingMembershipRequestsCount]="pendingMembershipRequestsCount()"
+        [editMode]="editMode"
       />
 
       @if (guild.members) {
@@ -25,7 +27,21 @@
       }
     </mat-card>
 
-    <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-semibold text-gray-700">Statistiques de Guilde</h2>
+
+        @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.LEADER)) {
+          <mat-slide-toggle
+            [checked]="guild.hideStats"
+            (change)="toggleUpdateGuildHideStats($event.checked)">
+            Masquer les stats aux non membres de ma guilde
+          </mat-slide-toggle>
+        }
+
+      </div>
+      <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
+    </div>
 
     @if (!loading && guild.allies) {
       <div class="flex flex-col gap-3">

@@ -1,4 +1,4 @@
-import {Component, effect, inject, OnInit, Signal} from '@angular/core';
+import {Component, effect, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
 import {GuildDto} from "../../state/guilds/guild.model";
 import {EMPTY, forkJoin, switchMap, tap} from "rxjs";
@@ -19,6 +19,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @Component({
   selector: 'app-guild-dashboard',
@@ -35,6 +36,7 @@ import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
     MatIconModule,
     GuildMembersTableComponent,
     GuildStatsComponent,
+    MatSlideToggleModule
   ],
   templateUrl: './guild-dashboard.component.html',
   styleUrls: ['./guild-dashboard.component.scss']
@@ -42,6 +44,7 @@ import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
 export class GuildDashboardComponent implements OnInit {
 
   public loading: boolean = false;
+  public editMode: WritableSignal<boolean> = signal(false);
   protected readonly UserRoleEnum = UserRoleEnum;
   protected readonly hasRequiredRole = hasRequiredRole;
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
@@ -54,7 +57,6 @@ export class GuildDashboardComponent implements OnInit {
     if (this.authenticatedFacade.currentUser()!.guild.id!)
       this.guildFacade.getAllianceRequests(this.authenticatedFacade.currentUser()!.guild.id!).subscribe();
   })
-
   private genericModalService = inject(GenericModalService);
 
   ngOnInit(): void {
@@ -129,5 +131,25 @@ export class GuildDashboardComponent implements OnInit {
         else return EMPTY;
       })
     ).subscribe();
+  }
+
+  public updateGuildLevel(level: number): void {
+    this.genericModalService.open(
+      'Confirmation',
+      {primary: 'Oui'},
+      'sm',
+      null,
+      null,
+      `Confirmes-tu que la guilde est passée au niveau ${level} ?`,
+    ).pipe(
+      switchMap((result) => {
+        if (result) return this.guildFacade.updateGuildLevel(this.guild()!.id!, level);
+        else return EMPTY;
+      })
+    ).subscribe(() => this.editMode.set(false));
+  }
+
+  public toggleUpdateGuildHideStats(hideStats: boolean): void {
+    this.guildFacade.updateGuildHideStats(this.guild()!.id!, hideStats).subscribe();
   }
 }
