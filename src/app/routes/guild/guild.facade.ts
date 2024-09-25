@@ -5,6 +5,7 @@ import {withRequestsStatus} from "@ngneat/elf-requests";
 import {
   GuildAllianceRequestsDto,
   GuildDto,
+  GuildEventStatsDto,
   GuildState,
   GuildSummaryDto,
   GuildWithPaginatedMembersDto,
@@ -326,6 +327,14 @@ export class GuildFacade {
 
   getMemberClassesCount(guildId: number): Observable<{ [key: string]: number }> {
     return this.guildsService.getMemberClassesCount(guildId);
+  }
+
+  getEventStats(guildId: number): Observable<GuildEventStatsDto> {
+    return this.guildsService.getEventStats(guildId);
+  }
+
+  getAverageMemberLevel(guildId: number): Observable<number> {
+    return this.guildsService.getAverageMemberLevel(guildId);
   }
 
 }

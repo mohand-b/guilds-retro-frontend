@@ -1,7 +1,13 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
-import {GuildDto, GuildSummaryDto, GuildWithPaginatedMembersDto, PaginatedMemberResponseDto} from "./guild.model";
+import {
+  GuildDto,
+  GuildEventStatsDto,
+  GuildSummaryDto,
+  GuildWithPaginatedMembersDto,
+  PaginatedMemberResponseDto
+} from "./guild.model";
 import {Observable} from "rxjs";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {GuildSearchDto, PaginatedGuildSearchResponseDto} from "../../../registry/state/guild-search/guild-search.model";
@@ -89,6 +95,18 @@ export class GuildsService {
   getMemberClassesCount(guildId: number): Observable<{ [key: string]: number }> {
     return this.http.get<{ [key: string]: number }>(
       `${this.guildsBaseUrl}/${guildId}/member-classes-count`,
+    );
+  }
+
+  getEventStats(guildId: number): Observable<GuildEventStatsDto> {
+    return this.http.get<GuildEventStatsDto>(
+      `${this.guildsBaseUrl}/${guildId}/event-stats`,
+    );
+  }
+
+  getAverageMemberLevel(guildId: number): Observable<number> {
+    return this.http.get<number>(
+      `${this.guildsBaseUrl}/${guildId}/average-member-level`,
     );
   }
 }

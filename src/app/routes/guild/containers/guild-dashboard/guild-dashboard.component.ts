@@ -18,6 +18,7 @@ import {MembershipRequestsTabComponent} from "../membership-requests-tab/members
 import {MatIconModule} from "@angular/material/icon";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {UserDto} from "../../../profile/state/users/user.model";
+import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
 
 @Component({
   selector: 'app-guild-dashboard',
@@ -33,6 +34,7 @@ import {UserDto} from "../../../profile/state/users/user.model";
     GuildMembersTableComponent,
     MatIconModule,
     GuildMembersTableComponent,
+    GuildStatsComponent,
   ],
   templateUrl: './guild-dashboard.component.html',
   styleUrls: ['./guild-dashboard.component.scss']

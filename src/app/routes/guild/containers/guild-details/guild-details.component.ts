@@ -15,6 +15,7 @@ import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {ClassCountComponent} from "../../components/class-count/class-count.component";
+import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
 
 @Component({
   selector: 'app-guild-details',
@@ -28,7 +29,8 @@ import {ClassCountComponent} from "../../components/class-count/class-count.comp
     GuildHeaderComponent,
     GuildMembersTableComponent,
     AllianceCardComponent,
-    ClassCountComponent
+    ClassCountComponent,
+    GuildStatsComponent
   ],
   templateUrl: './guild-details.component.html',
   styleUrls: ['./guild-details.component.scss']
@@ -36,7 +38,6 @@ import {ClassCountComponent} from "../../components/class-count/class-count.comp
 export class GuildDetailsComponent implements OnInit {
 
   public guild: WritableSignal<GuildDto | undefined> = signal(undefined);
-  public classCount: WritableSignal<Record<string, number> | undefined> = signal(undefined);
   public loading: boolean = false;
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
   public readonly currentUser: Signal<UserDto | undefined> = this.authenticatedFacade.currentUser;
@@ -66,18 +67,13 @@ export class GuildDetailsComponent implements OnInit {
               return forkJoin({
                 allianceRequests: allianceRequests$,
                 paginatedMembers: paginatedMembers$,
-                classCount: this.guildFacade.getMemberClassesCount(guildId)
               }).pipe(
                 tap(({
                        allianceRequests,
                        paginatedMembers,
-                       classCount
                      }) => {
                   if (paginatedMembers && paginatedMembers.results) {
                     this.guild.set({...this.guild()!, members: paginatedMembers.results});
-                  }
-                  if (classCount) {
-                    this.classCount.set(classCount);
                   }
                 })
               );

@@ -27,9 +27,7 @@
       }
     </mat-card>
 
-    @if (classCount(); as classCount) {
-      <app-class-count [classCount]="classCount"/>
-    }
+    <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
 
     @if (!loading && guild.allies && guild.allies.length > 0) {
       <div class="flex flex-col gap-3">

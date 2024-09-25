@@ -2,6 +2,7 @@ import {MembershipRequestDto} from "../membership-requests/membership-request.mo
 import {AllianceRequestDto} from "../alliances/alliance.model";
 import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {EventTypesEnum} from "../../../events/state/events/event.model";
 
 export interface GuildDto {
   id?: number;
@@ -67,3 +68,11 @@ export interface MemberDto {
   characterLevel: number;
   role: UserRoleEnum;
 }
+
+export interface GuildEventStatsDto {
+  totalEvents: number;
+  totalEventsByType: Record<EventTypesEnum, number>;
+  averageEventsPerWeek: number;
+  averageEventsPerMonth: number;
+}
+

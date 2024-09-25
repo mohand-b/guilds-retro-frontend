@@ -24,6 +24,23 @@ export class ClassCountComponent {
   CharacterClassEnum = CharacterClassEnum;
 
   getCharacterClassKeys(): CharacterClassEnum[] {
-    return Object.values(this.CharacterClassEnum);
+    const counts = this.classCount();
+
+    if (!counts) {
+      return [];
+    }
+
+    return Object.keys(counts)
+      .sort((a, b) => {
+        const countA = counts[a] || 0;
+        const countB = counts[b] || 0;
+
+        if (countB !== countA) {
+          return countB - countA;
+        } else {
+          return a.localeCompare(b);
+        }
+      }) as CharacterClassEnum[];
   }
+
 }
