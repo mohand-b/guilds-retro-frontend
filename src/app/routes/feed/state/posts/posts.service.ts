@@ -23,5 +23,9 @@ export class PostsService {
     return this.http.get<PostDto[]>(`${this.postsBaseUrl}/user/${userId}/last-posts`);
   }
 
+  getPost(id: number): Observable<PostDto> {
+    return this.http.get<PostDto>(`${this.postsBaseUrl}/${id}`);
+  }
+
 
 }

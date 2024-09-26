@@ -1,11 +1,13 @@
 <div class="flex flex-col h-screen justify-center items-center">
 
-  <img alt="logo" class="w-[13rem] select-none pointer-events-none mb-10" src="assets/light-logo.gif">
+  <h1 class="relative text-[4rem] text-[#ffc107] text-shadow mb-10">
+    Guilds Boune
+  </h1>
 
   <form (ngSubmit)="login()" [formGroup]="loginForm"
         class="flex flex-col gap-[1.5rem] bg-white p-12 rounded-lg shadow-lg w-full max-w-md">
 
-    <h1 class="text-2xl font-bold">Connexion</h1>
+    <h2 class="text-2xl font-bold">Connexion</h2>
 
     <app-alert *ngIf="loginForm.hasError('invalidCredentials')" message="Identifiants incorrects." type="error"/>
 
@@ -25,5 +27,5 @@
       <a [routerLink]="['/auth/register']" class="text-accent underline">S'enregistrer</a>
     </div>
   </form>
-  
+
 </div>

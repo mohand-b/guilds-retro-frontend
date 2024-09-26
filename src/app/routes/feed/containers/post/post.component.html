@@ -1,0 +1,88 @@
+@if (currentUser(); as currentUser) {
+  @if (post(); as post) {
+    <div class="w-full relative flex flex-col p-4 bg-white rounded-lg">
+      <div class="flex items-center mb-2">
+        <div class="w-12 h-12 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
+          <img [src]="post.user | characterIcon" alt="Avatar"
+               class="w-10 h-10 rounded-full object-cover no-select no-copy">
+        </div>
+        <div class="ml-4">
+          <div class="text-sm font-semibold">
+            <a [routerLink]="['/registry/user', post.user.username]">
+              {{ post.user.username }}</a>
+          </div>
+          <div class="text-xs text-gray-500">
+            @if ((post.user | guildMembership:currentUser) === 'currentUser') {
+              Moi
+            } @else if ((post.user | guildMembership:currentUser) === 'myGuild') {
+              {{ post.user.role }} de ma guilde
+            } @else if ((post.user | guildMembership:currentUser) === 'alliedGuild') {
+              {{ post.user.role }} de la guilde <span class="text-pink-600">alliée </span><span
+                [routerLink]="['/registry/guild', post.user.guild.id]"
+                class="cursor-pointer underline">{{ post.user.guild.name }}</span>
+            } @else if ((post.user | guildMembership:currentUser) === 'externalGuild') {
+              {{ post.user.role }} de la guilde
+              <span [routerLink]="['/registry/guild', post.user.guild.id]"
+                    class="cursor-pointer underline">{{ post.user.guild.name }}</span>
+            }
+          </div>
+          <div class="text-xs text-gray-400 mb-2">
+            {{ post.createdAt | dateFormat }}
+          </div>
+        </div>
+      </div>
+
+      <button [matMenuTriggerFor]="menu" class="absolute top-4 right-4" mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        @if ((post.user | guildMembership:currentUser) === 'currentUser') {
+          <button mat-menu-item (click)="deletePost()">
+            Supprimer
+          </button>
+        } @else {
+          <button disabled mat-menu-item (click)="reportPost()">
+            Signaler
+          </button>
+        }
+      </mat-menu>
+
+      <div class="flex flex-col gap-2">
+        @if (post.text) {
+          <div class="text-sm whitespace-pre-wrap" [appLineClamp]="showMore ? null : 5"
+               (contentClamped)="handleContentClamped($event)">
+            {{ post.text }}
+          </div>
+          @if (isClamped || showMore) {
+            <div>
+              <button (click)="toggleShowMore()" class="text-blue-500 text-sm">
+                {{ showMore ? 'Voir moins' : 'Voir plus' }}
+              </button>
+            </div>
+          }
+        }
+
+        @if (post.image) {
+          <img [src]="post.image" alt="post image" class="max-h-[30rem] object-contain object-left"/>
+        }
+
+      </div>
+
+
+      <div class="flex items-center mt-4 gap-2">
+        @if (isLiked) {
+          <button (click)="unlikePost()" mat-icon-button>
+            <mat-icon class="text-rose-600">favorite</mat-icon>
+          </button>
+        } @else {
+          <button (click)="likePost()" mat-icon-button>
+            <mat-icon class="text-rose-600">favorite_border</mat-icon>
+          </button>
+        }
+        <div>{{ likesCount }}</div>
+      </div>
+
+    </div>
+  }
+}

@@ -26,6 +26,7 @@ import {
   updatePaginationData,
   withPagination
 } from '@ngneat/elf-pagination';
+import {PostDto} from "./state/posts/post.model";
 
 export const FEED_STORE_NAME = 'feed';
 
@@ -250,6 +251,10 @@ export class FeedFacade {
         },
       }),
     );
+  }
+
+  getPost(postId: number): Observable<PostDto> {
+    return this.postsService.getPost(postId);
   }
 
 }

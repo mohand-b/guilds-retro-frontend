@@ -6,6 +6,7 @@ import {MatButton} from "@angular/material/button";
 import {GuildFacade} from "../../../guild/guild.facade";
 import {NotificationsFacade} from "../../../../shared/state/notifications/notifications.facade";
 import {ProfileFacade} from "../../../profile/profile.facade";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-notification-item',
@@ -14,7 +15,8 @@ import {ProfileFacade} from "../../../profile/profile.facade";
   imports: [
     DateFormatPipe,
     NgClass,
-    MatButton
+    MatButton,
+    RouterLink
   ],
   templateUrl: './notification-item.component.html',
   styleUrls: ['./notification-item.component.scss']
