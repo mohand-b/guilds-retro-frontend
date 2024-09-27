@@ -1,5 +1,9 @@
-<div class="w-full relative flex flex-col p-4 bg-white rounded-lg">
-  <div class="flex items-center mb-2">
+<div class="w-full relative flex flex-col gap-4 p-4 bg-white rounded-lg">
+  <button [matMenuTriggerFor]="menu" class="absolute top-4 right-4">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <div class="flex items-center">
     <div class="w-12 h-12 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
       <img [src]="post.user | characterIcon" alt="Avatar"
            class="w-10 h-10 rounded-full object-cover no-select no-copy">
@@ -24,27 +28,11 @@
                 class="cursor-pointer underline">{{ post.user.guild.name }}</span>
         }
       </div>
-      <div class="text-xs text-gray-400 mb-2">
+      <div class="text-xs text-gray-400">
         {{ post.createdAt | dateFormat }}
       </div>
     </div>
   </div>
-
-  <button [matMenuTriggerFor]="menu" class="absolute top-4 right-4" mat-icon-button>
-    <mat-icon>more_vert</mat-icon>
-  </button>
-
-  <mat-menu #menu="matMenu">
-    @if ((post.user | guildMembership:currentUser) === 'currentUser') {
-      <button mat-menu-item (click)="deletePost()">
-        Supprimer
-      </button>
-    } @else {
-      <button disabled mat-menu-item (click)="reportPost()">
-        Signaler
-      </button>
-    }
-  </mat-menu>
 
   <div class="flex flex-col gap-2">
     @if (post.text) {
@@ -64,21 +52,82 @@
     @if (post.image) {
       <img [src]="post.image" alt="post image" class="max-h-[30rem] object-contain object-left"/>
     }
-
   </div>
 
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        @if (isLiked) {
+          <button (click)="unlikePost()">
+            <mat-icon class="text-rose-600">favorite</mat-icon>
+          </button>
+        } @else {
+          <button (click)="likePost()">
+            <mat-icon class="text-rose-600">favorite_border</mat-icon>
+          </button>
+        }
+        <div>{{ likesCount }}</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button disabled>
+          <mat-icon>forum</mat-icon>
+        </button>
+        <div>{{ post.commentCount }}</div>
+      </div>
+    </div>
 
-  <div class="flex items-center mt-4 gap-2">
-    @if (isLiked) {
-      <button (click)="unlikePost()" mat-icon-button>
-        <mat-icon class="text-rose-600">favorite</mat-icon>
+    @if (shouldShowLoadComments() && !shouldShowSeeMore()) {
+      <div class="text-sm cursor-pointer" (click)="loadComments()">
+        Afficher les commentaires
+      </div>
+    }
+
+    <div class="flex flex-col-reverse">
+      @for (comment of filteredComments(); track comment.id) {
+        <div class="flex items-center gap-2 text-sm" [@fadeInUp]>
+          <div class="w-8 h-8 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
+            <img [src]="comment.user | characterIcon" alt="Avatar"
+                 class="w-6 h-6 rounded-full object-cover no-select no-copy">
+          </div>
+          <div class="flex gap-1 items-center">
+            <a [routerLink]="['/registry/user', comment.user.username]"
+               class="font-bold">{{ comment.user.username }}</a>
+            <span class="text-xs text-gray-500">({{ comment.createdAt | dateFormat }})</span>:
+          </div>
+          <div>{{ comment.text }}</div>
+        </div>
+      }
+    </div>
+
+    @if (shouldShowLoadComments() && shouldShowSeeMore()) {
+      <div class="text-sm cursor-pointer" (click)="loadComments()">
+        Voir plus
+      </div>
+    }
+
+
+    <form (submit)="addComment()" class="flex items-center">
+      <input
+        [formControl]="commentControl"
+        class="flex-1 border-b border-gray-300 p-2 bg-white appearance-none focus:outline-none focus:border-gray-300 focus:ring-0"
+        placeholder="Ajouter un commentaire..."
+        type="text"
+      />
+      @if (commentControl.value) {
+        <button type="submit" mat-raised-button color="primary" class="ml-2">Publier</button>
+      }
+    </form>
+  </div>
+
+  <mat-menu #menu="matMenu">
+    @if ((post.user | guildMembership:currentUser) === 'currentUser') {
+      <button mat-menu-item (click)="deletePost()">
+        Supprimer
       </button>
     } @else {
-      <button (click)="likePost()" mat-icon-button>
-        <mat-icon class="text-rose-600">favorite_border</mat-icon>
+      <button mat-menu-item disabled (click)="reportPost()">
+        Signaler
       </button>
     }
-    <div>{{ likesCount }}</div>
-  </div>
-
+  </mat-menu>
 </div>

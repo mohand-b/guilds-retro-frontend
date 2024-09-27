@@ -27,6 +27,8 @@ import {
   withPagination
 } from '@ngneat/elf-pagination';
 import {PostDto} from "./state/posts/post.model";
+import {CommentDto, CreateCommentDto, PaginatedCommentsDto} from "./state/comments/comment.model";
+import {CommentsService} from "./state/comments/comments.service";
 
 export const FEED_STORE_NAME = 'feed';
 
@@ -65,6 +67,7 @@ export class FeedFacade {
   private feedService = inject(FeedService);
   private postsService = inject(PostsService);
   private likesService = inject(LikesService);
+  private commentsService = inject(CommentsService);
 
   constructor() {
     effect(() => {
@@ -255,6 +258,32 @@ export class FeedFacade {
 
   getPost(postId: number): Observable<PostDto> {
     return this.postsService.getPost(postId);
+  }
+
+  commentPost(createComment: CreateCommentDto): Observable<CommentDto> {
+    return this.commentsService.createComment(createComment).pipe(
+      tap({
+        next: (comment: CommentDto) => {
+          const feedItem = feedStore.query(getAllEntities())
+            .find(entity => entity.post && entity.post.id === createComment.postId);
+          if (feedItem) {
+            feedStore.update(updateEntities(feedItem.id, (entity) => ({
+              ...entity,
+              post: {
+                ...entity.post!,
+                commentCount: entity.post!.commentCount + 1,
+                comments: entity.post!.comments ? [...entity.post!.comments, comment] : [comment]
+              }
+            })));
+          }
+        },
+        error: (error) => console.error(error),
+      }),
+    );
+  }
+
+  getPaginatedComments(postId: number, page?: number, limit?: number): Observable<PaginatedCommentsDto> {
+    return this.commentsService.getPaginatedComments(postId, page, limit);
   }
 
 }

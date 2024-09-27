@@ -1,5 +1,6 @@
 import {LikeDto} from "../likes/like.model";
 import {UserDto} from "../../../profile/state/users/user.model";
+import {CommentDto} from "../comments/comment.model";
 
 export interface PostDto {
   id: number;
@@ -8,15 +9,9 @@ export interface PostDto {
   updatedAt: Date;
   image: string;
   user: UserDto;
-  comments: Comment[];
+  comments: CommentDto[];
   likes: LikeDto[];
-}
-
-export interface Comment {
-  id: number;
-  text: string;
-  createdAt: Date;
-  user: UserDto;
+  commentCount: number;
 }
 
 export interface CreatePost {
