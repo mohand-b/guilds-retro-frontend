@@ -59,7 +59,7 @@
       <div class="flex items-center gap-2">
         @if (isLiked) {
           <button (click)="unlikePost()">
-            <mat-icon class="text-rose-600">favorite</mat-icon>
+            <mat-icon class="text-rose-600" [@bump]>favorite</mat-icon>
           </button>
         } @else {
           <button (click)="likePost()">

@@ -44,6 +44,13 @@ import {animate, style, transition, trigger} from "@angular/animations";
         animate('500ms ease-out', style({opacity: 1, transform: 'translateY(0)'})),
       ]),
     ]),
+    trigger('bump', [
+      transition(':enter', [
+        style({transform: 'scale(1)'}),
+        animate('0.15s ease-in', style({transform: 'scale(1.3)'})),
+        animate('0.15s ease-out', style({transform: 'scale(1)'}))
+      ])
+    ])
   ],
 })
 export class FeedPostComponent {

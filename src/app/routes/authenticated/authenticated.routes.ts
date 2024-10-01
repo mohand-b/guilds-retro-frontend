@@ -43,6 +43,12 @@ export const authenticatedRoutes: Routes = [
         loadChildren: () => import('../profile/profile.routes').then(c => c.ProfileRoutes)
       },
       {
+        path: 'feed',
+        canActivate: [roleGuard],
+        data: {role: UserRoleEnum.MEMBER},
+        loadChildren: () => import('../feed/feed.routes').then(c => c.FeedRoutes)
+      },
+      {
         path: '**',
         redirectTo: 'dashboard'
       }

@@ -1,7 +1,7 @@
 <div class="flex items-center gap-4 p-2 border-b border-gray-300">
   @if (post.image) {
     <div class="w-12 h-12">
-      <img [src]="post.image" alt="Post image" class="object-cover w-full h-full rounded-md">
+      <img [src]="post.image" alt="Image du post" class="object-cover w-full h-full rounded-md">
     </div>
   }
 
@@ -9,7 +9,8 @@
     {{ post.text }}
   </div>
 
-  <div class="text-gray-500 text-sm whitespace-nowrap">
-    {{ post.createdAt | dateFormat }}
+  <div class="flex items-center gap-2 text-gray-500 text-sm whitespace-nowrap">
+    <span>{{ post.createdAt | dateFormat }}</span>
+    <a [routerLink]="['/feed/post', post.id]" class="text-blue-500 hover:underline">Voir plus</a>
   </div>
 </div>
