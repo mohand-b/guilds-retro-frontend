@@ -1,10 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/fr';
-
-dayjs.extend(relativeTime);
-dayjs.locale('fr');
+import {DateTime} from 'luxon';
 
 @Pipe({
   name: 'dateFormat',
@@ -12,9 +7,17 @@ dayjs.locale('fr');
 })
 export class DateFormatPipe implements PipeTransform {
 
-  transform(value: Date): string {
-    const distanceToNow = dayjs().to(dayjs(value));
-    return `${distanceToNow}`;
-  }
+  transform(value: Date | string): string {
+    const date = typeof value === 'string' ? DateTime.fromISO(value) : DateTime.fromJSDate(value);
 
+    const secondsDifference = DateTime.now().diff(date, 'seconds').seconds;
+
+    if (Math.abs(secondsDifference) <= 10) {
+      return 'à l\'instant';
+    }
+
+    const distanceToNow = date.toRelative();
+
+    return distanceToNow || '';
+  }
 }

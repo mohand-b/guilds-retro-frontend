@@ -17,6 +17,7 @@ import {LineClampDirective} from "../../../../shared/directives/line-clamp.direc
 import {MatIcon} from "@angular/material/icon";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatButton} from "@angular/material/button";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-post',
@@ -92,7 +93,15 @@ export class PostComponent implements OnInit {
         const postId = Number(params.get('id'));
         return this.feedFacade.getPost(postId);
       })
-    ).subscribe(post => this.post.set(post));
+    ).subscribe(post => {
+      // Convert UTC string to the user's local timezone
+      const localDate = DateTime.fromISO(post.createdAt, {zone: 'utc'}) // Parse as UTC
+        .setZone(DateTime.local().zoneName) // Convert to the user's local timezone
+        .toLocaleString(DateTime.DATETIME_MED);
+      console.log(localDate);
+
+      this.post.set(post);
+    });
   }
 
   toggleShowMore() {

@@ -5,8 +5,8 @@ import {CommentDto} from "../comments/comment.model";
 export interface PostDto {
   id: number;
   text: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   image: string;
   user: UserDto;
   comments: CommentDto[];

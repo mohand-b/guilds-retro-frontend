@@ -9,7 +9,6 @@ import {MatTimepickerModule} from "mat-timepicker";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {CreateEventDto, EventTypesEnum} from "../../state/events/event.model";
-import dayjs from "dayjs";
 import {NgClass, NgForOf} from "@angular/common";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatButton} from "@angular/material/button";
@@ -20,6 +19,7 @@ import {dungeonNameValidator} from "../../../../shared/validators/dungeon-name.v
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {MatDialogRef} from "@angular/material/dialog";
 import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-create-event',
@@ -156,12 +156,12 @@ export class CreateEventComponent {
   }
 
   private combineDateAndTime(date: string, time: string): string {
-    const formattedDate = dayjs(date).format('YYYY-MM-DD');
-    const formattedTime = dayjs(time, 'HH:mm').format('HH:mm');
+    const formattedDate = DateTime.fromISO(date).toFormat('yyyy-MM-dd');
+    const formattedTime = DateTime.fromFormat(time, 'HH:mm').toFormat('HH:mm');
 
-    const dateTime = dayjs(`${formattedDate}T${formattedTime}`);
+    const dateTime = DateTime.fromISO(`${formattedDate}T${formattedTime}`);
 
-    return dateTime.toISOString();
+    return dateTime.toISO()!;
   }
 
   private filterFormValuesByType(formValues: any) {

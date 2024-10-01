@@ -7,14 +7,14 @@ export interface EventDto {
   dungeonName?: string;
   arenaTargets?: string;
   description: string;
-  date: Date;
+  date: string;
   maxParticipants: number;
   minLevel?: number;
   requiredClasses?: CharacterClassEnum[];
   requiresOptimization?: boolean;
   creator: UserDto;
   participants: UserDto[];
-  createdAt: Date;
+  createdAt: string;
 }
 
 export interface CreateEventDto {

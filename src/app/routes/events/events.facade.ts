@@ -13,8 +13,8 @@ import {EventsService} from "./state/events/events.service";
 import {map, Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {AuthenticatedFacade} from "../authenticated/authenticated.facade";
-import dayjs from "dayjs";
 import {feedStore} from "../feed/feed.facade";
+import {DateTime} from "luxon";
 
 export const EVENTS_STORE_NAME = 'events';
 
@@ -34,20 +34,37 @@ export class EventsFacade {
   futureEventsNotJoined$: Signal<EventDto[]> = toSignal(
     eventsStore.pipe(
       selectAllEntities(),
-      map(events => events.filter(event => !this.isUserParticipant(event) && dayjs(event.date).isAfter(dayjs())))
-    ), {initialValue: []}
+      map(events =>
+        events.filter(event =>
+          !this.isUserParticipant(event) && DateTime.fromISO(event.date).toMillis() > DateTime.now().toMillis()
+        )
+      )
+    ),
+    {initialValue: []}
   );
+
   futureEventsJoined$: Signal<EventDto[]> = toSignal(
     eventsStore.pipe(
       selectAllEntities(),
-      map(events => events.filter(event => this.isUserParticipant(event) && dayjs(event.date).isAfter(dayjs())))
-    ), {initialValue: []}
+      map(events =>
+        events.filter(event =>
+          this.isUserParticipant(event) && DateTime.fromISO(event.date).toMillis() > DateTime.now().toMillis()
+        )
+      )
+    ),
+    {initialValue: []}
   );
+
   pastEvents$: Signal<EventDto[]> = toSignal(
     eventsStore.pipe(
       selectAllEntities(),
-      map(events => events.filter(event => dayjs(event.date).isBefore(dayjs())))
-    ), {initialValue: []}
+      map(events =>
+        events.filter(event =>
+          DateTime.fromISO(event.date).toMillis() < DateTime.now().toMillis()
+        )
+      )
+    ),
+    {initialValue: []}
   );
 
 

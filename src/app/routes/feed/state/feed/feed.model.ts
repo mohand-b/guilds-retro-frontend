@@ -5,5 +5,5 @@ export interface FeedDto {
   id: number,
   post?: PostDto,
   event?: EventDto,
-  createdAt: Date
+  createdAt: string
 }
