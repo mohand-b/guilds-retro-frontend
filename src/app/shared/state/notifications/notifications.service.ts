@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from "../../../../environments/environment";
 import {io, Socket} from "socket.io-client";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {AuthenticatedFacade} from "../../../routes/authenticated/authenticated.facade";
 import {NotificationDto} from "./notification.model";
 

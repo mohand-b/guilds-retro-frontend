@@ -1,5 +1,5 @@
 import {inject, Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {MembershipRequestDto} from "./membership-request.model";
 import {Observable} from "rxjs";
