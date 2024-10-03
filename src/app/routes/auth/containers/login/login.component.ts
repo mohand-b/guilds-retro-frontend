@@ -9,6 +9,9 @@ import {LoginDto} from "../../state/auth/auth.model";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {NgIf} from "@angular/common";
+import {ButtonModule} from "primeng/button";
+import {MessagesModule} from "primeng/messages";
+import {ChipModule} from "primeng/chip";
 
 @Component({
   selector: 'app-login',
@@ -21,7 +24,10 @@ import {NgIf} from "@angular/common";
     ReactiveFormsModule,
     RouterLink,
     AlertComponent,
-    NgIf
+    NgIf,
+    ButtonModule,
+    MessagesModule,
+    ChipModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

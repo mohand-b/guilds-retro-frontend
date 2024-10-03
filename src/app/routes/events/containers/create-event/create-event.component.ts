@@ -5,7 +5,6 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {EventsFacade} from "../../events.facade";
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatTimepickerModule} from "mat-timepicker";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {CreateEventDto, EventTypesEnum} from "../../state/events/event.model";
@@ -31,7 +30,6 @@ import {DateTime} from "luxon";
     MatCheckbox,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatTimepickerModule,
     MatFormFieldModule,
     MatStepperModule,
     MatRadioModule,

@@ -31,7 +31,8 @@
               "src/assets/fonts"
             ],
             "styles": [
-              "src/styles/main.scss"
+              "src/styles/main.scss",
+              "src/styles/mytheme/theme.scss"
             ],
             "scripts": []
           },
@@ -105,7 +106,8 @@
               "src/assets/fonts"
             ],
             "styles": [
-              "src/styles/main.scss"
+              "src/styles/main.scss",
+              "src/styles/mytheme/theme.scss"
             ],
             "scripts": []
           }

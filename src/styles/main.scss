@@ -1,7 +1,3 @@
-@use '@angular/material' as mat;
-
-@include mat.core();
-
 @font-face {
   font-family: 'Nunito';
   src: url('/assets/fonts/Nunito-Regular.ttf') format('truetype');
@@ -29,38 +25,6 @@
   font-style: normal;
 }
 
-$guilds-retro-primary: mat.define-palette(mat.$green-palette, 600);
-$guilds-retro-accent: mat.define-palette(mat.$amber-palette, 500);
-$guilds-retro-warn: mat.define-palette(mat.$deep-orange-palette, 700);
-$guilds-retro-tertiary: mat.define-palette(mat.$pink-palette, 800);
-
-$guilds-retro-gold: mat.define-palette(mat.$amber-palette, 500);
-
-$guilds-retro-theme: mat.define-light-theme(
-    (
-      color: (
-        primary: $guilds-retro-primary,
-        accent: $guilds-retro-accent,
-        warn: $guilds-retro-warn,
-        tertiary: $guilds-retro-tertiary,
-      ),
-      typography: mat.define-typography-config(
-        $font-family: 'Nunito, sans-serif',
-      ),
-      foreground: (
-        base: white,
-        text: white,
-        disabled-text: mat.get-color-from-palette($guilds-retro-primary, 300),
-        hint-text: mat.get-color-from-palette($guilds-retro-accent, 300),
-        icon: mat.get-color-from-palette($guilds-retro-primary, 600),
-        icons: mat.get-color-from-palette($guilds-retro-primary, 600)
-      )
-    )
-);
-
-
-@include mat.core-theme($guilds-retro-theme);
-@include mat.all-component-themes($guilds-retro-theme);
 
 h1 {
   font-family: 'PirataOne', sans-serif;
@@ -68,10 +32,6 @@ h1 {
 
 .text-shadow {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.guilds-retro-gold {
-  color: mat.get-color-from-palette($guilds-retro-gold, 500);
 }
 
 .mat-mdc-button-base {
@@ -111,9 +71,16 @@ h1 {
 }
 
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+@layer primeng;
 
 
 @layer utilities {
