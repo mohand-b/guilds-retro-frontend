@@ -40,15 +40,15 @@ $inputPlaceholderTextColor: #6c757d;
 
 /// Background of a filled input
 /// @group form
-$inputFilledBg:#f8f9fa;
+$inputFilledBg: #f8f9fa;
 
 /// Background of a filled input in hover state
 /// @group form
-$inputFilledHoverBg:#f8f9fa;
+$inputFilledHoverBg: #f8f9fa;
 
 /// Background of a filled input in focus state
 /// @group form
-$inputFilledFocusBg:#f8f9fa;
+$inputFilledFocusBg: #f8f9fa;
 
 /// Backgroud color of an input group addon
 /// @group form
@@ -145,11 +145,11 @@ $inputListHeaderBorder: 0 none;
 
 /// Background for an overlay of an input such as autocomplete or dropdown
 /// @group form
-$inputOverlayBg:$inputListBg;
+$inputOverlayBg: $inputListBg;
 
 /// Background for an overlay header of an input such as autocomplete or dropdown
 /// @group form
-$inputOverlayHeaderBg:$inputListHeaderBg;
+$inputOverlayHeaderBg: $inputListHeaderBg;
 
 /// Border for an overlay of an input such as autocomplete or dropdown
 /// @group form
@@ -185,7 +185,7 @@ $checkboxActiveBg: $primaryColor;
 
 /// Icon color of a selected checkbox
 /// @group form
-$checkboxIconActiveColor: $primaryTextColor;
+$checkboxIconActiveColor: $textColor;
 
 /// Background of a selected checkbox in hover state
 /// @group form
@@ -193,7 +193,7 @@ $checkboxActiveHoverBg: $primaryDarkerColor;
 
 /// Icon color of a selected checkbox in hover state
 /// @group form
-$checkboxIconActiveHoverColor: $primaryTextColor;
+$checkboxIconActiveHoverColor: $textColor;
 
 /// Border color of a selected checkbox in hover state
 /// @group form
@@ -225,7 +225,7 @@ $radiobuttonActiveBg: $primaryColor;
 
 /// Icon color of a selected radiobutton
 /// @group form
-$radiobuttonIconActiveColor: $primaryTextColor;
+$radiobuttonIconActiveColor: $textColor;
 
 /// Background of a selected radiobutton in hover state
 /// @group form
@@ -233,7 +233,7 @@ $radiobuttonActiveHoverBg: $primaryDarkerColor;
 
 /// Icon color of a selected radiobutton in hover state
 /// @group form
-$radiobuttonIconActiveHoverColor: $primaryTextColor;
+$radiobuttonIconActiveHoverColor: $textColor;
 
 /// Border color of a selected radiobutton in hover state
 /// @group form
@@ -253,7 +253,7 @@ $colorPickerBg: #323232;
 
 /// Border color of a color picker
 /// @group form
-$colorPickerBorder:1px solid  #191919;
+$colorPickerBorder: 1px solid #191919;
 
 /// Handle color of a color picker
 /// @group form
@@ -341,11 +341,11 @@ $calendarPadding: .5rem;
 
 /// Background of a calendar
 /// @group form
-$calendarBg:#ffffff;
+$calendarBg: #ffffff;
 
 /// Background of an inlime calendar
 /// @group form
-$calendarInlineBg:$calendarBg;
+$calendarInlineBg: $calendarBg;
 
 /// Text color of a calendar
 /// @group form
@@ -369,7 +369,7 @@ $calendarHeaderBg: #ffffff;
 
 /// Background of an inline calendar header
 /// @group form
-$calendarInlineHeaderBg:$calendarBg;
+$calendarInlineHeaderBg: $calendarBg;
 
 /// Border of a calendar header
 /// @group form
@@ -409,7 +409,7 @@ $calendarCellDateBorderRadius: 50%;
 
 /// Border of a calendar date cell
 /// @group form
-$calendarCellDateBorder:1px solid transparent;
+$calendarCellDateBorder: 1px solid transparent;
 
 /// Background of a calendar date cell in hover state
 /// @group form
@@ -511,33 +511,33 @@ $fileUploadProgressBarHeight: .25rem;
 /// @group input
 $fileUploadContentPadding: 2rem 1rem;
 
-/// 
+///
 /// @group input
 $fileUploadContentHoverBorder: 1px dashed #e9ecef !default;
 
 /// Background of an editor toolbar
 /// @group input
-$editorToolbarBg:#f8f9fa;
+$editorToolbarBg: #f8f9fa;
 
 /// Border of an editor toolbar
 /// @group input
-$editorToolbarBorder:1px solid #dee2e6;
+$editorToolbarBorder: 1px solid #dee2e6;
 
 /// Padding of an editor toolbar
 /// @group input
-$editorToolbarPadding:1rem;
+$editorToolbarPadding: 1rem;
 
 /// Icon color of an editor toolbar
 /// @group input
-$editorToolbarIconColor:#6c757d;
+$editorToolbarIconColor: #6c757d;
 
 /// Icon color of an editor toolbar in hover state
 /// @group input
-$editorToolbarIconHoverColor:#495057;
+$editorToolbarIconHoverColor: #495057;
 
 /// Icon color of an editor toolbar in active state
 /// @group input
-$editorIconActiveColor:$primaryColor;
+$editorIconActiveColor: $primaryColor;
 
 /// Border of an editor content
 /// @group input
@@ -545,20 +545,20 @@ $editorContentBorder: 1px solid #dee2e6;
 
 /// Background of an editor content
 /// @group input
-$editorContentBg:#ffffff;
+$editorContentBg: #ffffff;
 
 /// Background of a password meter
 /// @group form
-$passwordMeterBg:#dee2e6;
+$passwordMeterBg: #dee2e6;
 
 /// Background of a week password
 /// @group form
-$passwordWeakBg:#E53935;
+$passwordWeakBg: #E53935;
 
 /// Background of a medium password
 /// @group form
-$passwordMediumBg:#FFB300;
+$passwordMediumBg: #FFB300;
 
 /// Background of a strong password
 /// @group form
-$passwordStrongBg:#43A047;
+$passwordStrongBg: #43A047;

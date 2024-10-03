@@ -1,11 +1,24 @@
-// Theme Specific Variables
 $primaryColor: #009d23;
-$primaryDarkColor: #1E88E5;
-$primaryDarkerColor: #1976D2;
-$primaryTextColor: #ffffff;
+$primaryDarkColor: darken($primaryColor, 5%);
+$primaryDarkerColor: darken($primaryColor, 10%);
+
+$secondaryColor: #ffc107;
+$secondaryTextColor: #ffffff;
+$secondaryDarkColor: darken($secondaryColor, 10%);
+$secondaryHoverColor: lighten($secondaryColor, 10%);
+
+$accentColor: #ffc107;
+$warnColor: #ff5722;
+$tertiaryColor: #e91e63;
+
+$textColor: #ffffff;
 
 $colors: (
-  "blue": #2196F3,
+  "primary": $primaryColor,
+  "accent": $accentColor,
+  "warn": $warnColor,
+  "secondary": $secondaryColor,
+  "tertiary": $tertiaryColor,
   "green": #4caf50,
   "yellow": #FBC02D,
   "cyan": #00BCD4,
@@ -16,7 +29,6 @@ $colors: (
   "bluegray": #607D8B,
   "purple": #9C27B0,
   "red": #FF4032,
-  "primary": $primaryColor
 );
 
 // Mandatory Designer Variables
