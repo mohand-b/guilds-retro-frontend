@@ -12,11 +12,11 @@ $inputTextFontSize: 1rem;
 
 /// Text color of an input field
 /// @group form
-$inputTextColor: $textColor;
+$inputTextColor: $inputTextColor;
 
 /// Color of an icon inside an input field
 /// @group form
-$inputIconColor: $textColor;
+$inputIconColor: $inputTextColor;
 
 /// Border of an input field
 /// @group form
@@ -32,11 +32,11 @@ $inputFocusBorderColor: $primaryColor;
 
 /// Color of an input field in invalid state
 /// @group form
-$inputErrorBorderColor: #ced4da #ced4da #ced4da $errorColor;
+$inputErrorBorderColor: $errorColor;
 
 /// Text color of a placeholder
 /// @group form
-$inputPlaceholderTextColor: #6c757d;
+$inputPlaceholderTextColor: lighten($inputTextColor, 40%);
 
 /// Background of a filled input
 /// @group form
@@ -68,7 +68,7 @@ $inputListBg: #ffffff;
 
 /// Text color of an input list
 /// @group form
-$inputListTextColor: $textColor;
+$inputListTextColor: $inputTextColor;
 
 /// Border of an input list
 /// @group form
@@ -88,7 +88,7 @@ $inputListItemBg: transparent;
 
 /// Text color for an individual itrem of an input list
 /// @group form
-$inputListItemTextColor: $textColor;
+$inputListItemTextColor: $inputTextColor;
 
 /// Hover state background for an individual itrem of an input list
 /// @group form
@@ -96,7 +96,7 @@ $inputListItemHoverBg: #e9ecef;
 
 /// Hover state text color for an individual itrem of an input list
 /// @group form
-$inputListItemTextHoverColor: $textColor;
+$inputListItemTextHoverColor: $inputTextColor;
 
 /// Focus state background for an individual itrem of an input list
 /// @group form
@@ -104,7 +104,7 @@ $inputListItemFocusBg: #f8f9fa;
 
 /// Focus state text color for an individual itrem of an input list
 /// @group form
-$inputListItemTextFocusColor: $textColor;
+$inputListItemTextFocusColor: $inputTextColor;
 
 /// Border for an individual itrem of an input list
 /// @group form
@@ -136,7 +136,7 @@ $inputListHeaderBg: #f8f9fa;
 
 /// Text color for a header of an input list
 /// @group form
-$inputListHeaderTextColor: $textColor;
+$inputListHeaderTextColor: $inputTextColor;
 
 /// Border for a header of an input list
 /// @group form
@@ -185,7 +185,7 @@ $checkboxActiveBg: $primaryColor;
 
 /// Icon color of a selected checkbox
 /// @group form
-$checkboxIconActiveColor: $textColor;
+$checkboxIconActiveColor: $inputTextColor;
 
 /// Background of a selected checkbox in hover state
 /// @group form
@@ -193,7 +193,7 @@ $checkboxActiveHoverBg: $primaryDarkerColor;
 
 /// Icon color of a selected checkbox in hover state
 /// @group form
-$checkboxIconActiveHoverColor: $textColor;
+$checkboxIconActiveHoverColor: $inputTextColor;
 
 /// Border color of a selected checkbox in hover state
 /// @group form
@@ -225,7 +225,7 @@ $radiobuttonActiveBg: $primaryColor;
 
 /// Icon color of a selected radiobutton
 /// @group form
-$radiobuttonIconActiveColor: $textColor;
+$radiobuttonIconActiveColor: $inputTextColor;
 
 /// Background of a selected radiobutton in hover state
 /// @group form
@@ -233,7 +233,7 @@ $radiobuttonActiveHoverBg: $primaryDarkerColor;
 
 /// Icon color of a selected radiobutton in hover state
 /// @group form
-$radiobuttonIconActiveHoverColor: $textColor;
+$radiobuttonIconActiveHoverColor: $inputTextColor;
 
 /// Border color of a selected radiobutton in hover state
 /// @group form
@@ -273,7 +273,7 @@ $ratingCancelIconHoverColor: #c0392b;
 
 /// Icon color for the star icon of a rating in unselected state
 /// @group form
-$ratingStarIconOffColor: $textColor;
+$ratingStarIconOffColor: $inputTextColor;
 
 /// Icon color for the star icon of a rating in selected state
 /// @group form
@@ -349,7 +349,7 @@ $calendarInlineBg: $calendarBg;
 
 /// Text color of a calendar
 /// @group form
-$calendarTextColor: $textColor;
+$calendarTextColor: $inputTextColor;
 
 /// Border of an inline calendar
 /// @group form
@@ -377,7 +377,7 @@ $calendarHeaderBorder: 1px solid #dee2e6;
 
 /// Text color of a calendar header
 /// @group form
-$calendarHeaderTextColor: $textColor;
+$calendarHeaderTextColor: $inputTextColor;
 
 /// Font weight of a calendar header
 /// @group form
@@ -425,7 +425,7 @@ $calendarCellDateTodayBorderColor: transparent;
 
 /// Text color of a calendar date cell indicating today
 /// @group form
-$calendarCellDateTodayTextColor: $textColor;
+$calendarCellDateTodayTextColor: $inputTextColor;
 
 /// Padding of the calendar button bar
 /// @group form

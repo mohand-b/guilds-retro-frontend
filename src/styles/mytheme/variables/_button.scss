@@ -3,7 +3,7 @@ $buttonIconOnlyWidth: 2.357rem;
 $buttonIconOnlyPadding: .5rem 0;
 
 $buttonBg: map-get($colors, "primary");
-$buttonTextColor: $textColor;
+$buttonTextColor: $buttonTextColor;
 $buttonBorder: 0;
 $buttonHoverBg: darken(map-get($colors, "primary"), 5%);
 $buttonTextHoverColor: map-get($colors, "primary-text");
@@ -11,7 +11,7 @@ $buttonHoverBorderColor: darken(map-get($colors, "primary"), 10%);
 
 
 $secondaryButtonBg: map-get($colors, "secondary");
-$buttonSecondaryTextColor: $textColor;
+$buttonSecondaryTextColor: $buttonTextColor;
 $secondaryButtonBorder: 0;
 $secondaryButtonHoverBg: darken(map-get($colors, "secondary"), 10%);
 $secondaryButtonTextHoverColor: map-get($colors, "secondary-text");
@@ -22,7 +22,7 @@ $buttonActiveBg: $primaryDarkerColor;
 
 /// Color of a button in pressed state
 /// @group button
-$buttonTextActiveColor: $textColor;
+$buttonTextActiveColor: $buttonTextColor;
 
 /// Border color of a button in pressed state
 /// @group button
@@ -162,7 +162,7 @@ $warningButtonBg: #FFC107;
 
 /// Text color of a warning button
 /// @group button
-$warningButtonTextColor: $textColor;
+$warningButtonTextColor: $buttonTextColor;
 
 /// Border of a warning button
 /// @group button
@@ -174,7 +174,7 @@ $warningButtonHoverBg: #FFB300;
 
 /// Text color of a warning button in hover state
 /// @group button
-$warningButtonTextHoverColor: $textColor;
+$warningButtonTextHoverColor: $buttonTextColor;
 
 /// Border color of a warning button in hover state
 /// @group button
@@ -186,7 +186,7 @@ $warningButtonActiveBg: #FFA000;
 
 /// Text color of a warning button in pressed state
 /// @group button
-$warningButtonTextActiveColor: $textColor;
+$warningButtonTextActiveColor: $buttonTextColor;
 
 /// Border color of a warning button in pressed state
 /// @group button
@@ -286,7 +286,7 @@ $toggleButtonBorder: 1px solid #ced4da;
 
 /// Text color of a toggle button
 /// @group button
-$toggleButtonTextColor: $textColor;
+$toggleButtonTextColor: $buttonTextColor;
 
 /// Icon color of a toggle button
 /// @group button
@@ -302,7 +302,7 @@ $toggleButtonHoverBorderColor: #ced4da;
 
 /// Text color of a toggle button in hover state
 /// @group button
-$toggleButtonTextHoverColor: $textColor;
+$toggleButtonTextHoverColor: $buttonTextColor;
 
 /// Icon color of a toggle button in hover state
 /// @group button
@@ -318,11 +318,11 @@ $toggleButtonActiveBorderColor: $primaryColor;
 
 /// Text color of a toggle button in selected state
 /// @group button
-$toggleButtonTextActiveColor: $textColor;
+$toggleButtonTextActiveColor: $buttonTextColor;
 
 /// Icon color of a toggle button in selected state
 /// @group button
-$toggleButtonIconActiveColor: $textColor;
+$toggleButtonIconActiveColor: $buttonTextColor;
 
 /// Hover background of a toggle button in selected state
 /// @group button
@@ -334,11 +334,11 @@ $toggleButtonActiveHoverBorderColor: $primaryDarkColor;
 
 /// Hover text color of a toggle button in selected state
 /// @group button
-$toggleButtonTextActiveHoverColor: $textColor;
+$toggleButtonTextActiveHoverColor: $buttonTextColor;
 
 /// Hover icon of a toggle button in selected state
 /// @group button
-$toggleButtonIconActiveHoverColor: $textColor;
+$toggleButtonIconActiveHoverColor: $buttonTextColor;
 
 /// Width of a floating action button on speed dial
 /// @group button

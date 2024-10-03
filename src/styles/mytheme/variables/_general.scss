@@ -12,7 +12,7 @@ $highlightBg: $primaryColor;
 $highlightTextColor: $textColor;
 $highlightFocusBg: rgba($primaryColor, .24) !default;
 
-$borderRadius: 10rem;
+$borderRadius: .5rem;
 
 $transitionDuration: .2s;
 
@@ -40,8 +40,6 @@ $focusOutline: 0 none;
 $focusOutlineOffset: 0;
 
 $inputFocusOutlineOffset: $focusOutlineOffset;
-
-$focusShadow: 0 0 0 0.2rem $focusOutlineColor;
 
 $actionIconWidth: 2rem;
 

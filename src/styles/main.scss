@@ -25,6 +25,10 @@
   font-style: normal;
 }
 
+body,
+body .p-component {
+  font-family: 'Nunito', sans-serif !important;
+}
 
 h1 {
   font-family: 'PirataOne', sans-serif;
@@ -79,9 +83,6 @@ h1 {
   @tailwind components;
   @tailwind utilities;
 }
-
-@layer primeng;
-
 
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {

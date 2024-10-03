@@ -11,7 +11,9 @@ $accentColor: #ffc107;
 $warnColor: #ff5722;
 $tertiaryColor: #e91e63;
 
-$textColor: #ffffff;
+$textColor: #1c1c1c;
+$buttonTextColor: #ffffff;
+$inputTextColor: #495057;
 
 $colors: (
   "primary": $primaryColor,
@@ -79,6 +81,5 @@ $colors: (
   --maskbg: #{$maskBg};
   --highlight-bg: #{$highlightBg};
   --highlight-text-color: #{$highlightTextColor};
-  --focus-ring: #{$focusShadow};
   color-scheme: light;
 }

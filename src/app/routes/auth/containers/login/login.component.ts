@@ -12,6 +12,8 @@ import {NgIf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {MessagesModule} from "primeng/messages";
 import {ChipModule} from "primeng/chip";
+import {Ripple} from "primeng/ripple";
+import {InputTextModule} from "primeng/inputtext";
 
 @Component({
   selector: 'app-login',
@@ -27,7 +29,9 @@ import {ChipModule} from "primeng/chip";
     NgIf,
     ButtonModule,
     MessagesModule,
-    ChipModule
+    ChipModule,
+    Ripple,
+    InputTextModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

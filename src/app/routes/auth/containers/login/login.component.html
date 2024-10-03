@@ -12,27 +12,11 @@
     <app-alert *ngIf="loginForm.hasError('invalidCredentials')" message="Identifiants incorrects." type="error"/>
 
     <div class="flex flex-col gap-4">
-      <mat-form-field appearance="outline" class="w-full">
-        <input formControlName="username" matInput placeholder="Nom du personnage"/>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <input formControlName="password" matInput placeholder="Mot de passe" type="password"/>
-      </mat-form-field>
+      <input formControlName="username" pInputText placeholder="Nom du personnage"/>
+      <input formControlName="password" pInputText placeholder="Mot de passe" type="password"/>
     </div>
 
-    <div class="flex flex-wrap gap-2">
-      <p-button label="Primary"/>
-      <p-button label="Secondary" severity="secondary"/>
-      <p-button label="Success" severity="success"/>
-      <p-button label="Info" severity="info"/>
-      <p-button label="Warning" severity="warning"/>
-      <p-button label="Help" severity="help"/>
-      <p-button label="Danger" severity="danger"/>
-      <p-button label="Contrast" severity="contrast"/>
-    </div>
-
-    <button [disabled]="!loginForm.valid" class="w-full" color="primary" mat-raised-button>Se connecter</button>
+    <button [disabled]="!loginForm.valid" class="w-full" pButton pRipple rounded>Se connecter</button>
     <div class="text-center mt-4">
       Pas encore inscrit ?
       <a [routerLink]="['/auth/register']" class="text-accent underline">S'enregistrer</a>

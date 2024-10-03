@@ -32,7 +32,8 @@
             ],
             "styles": [
               "src/styles/main.scss",
-              "src/styles/mytheme/theme.scss"
+              "src/styles/mytheme/theme.scss",
+              "node_modules/primeicons/primeicons.css"
             ],
             "scripts": []
           },
@@ -107,7 +108,8 @@
             ],
             "styles": [
               "src/styles/main.scss",
-              "src/styles/mytheme/theme.scss"
+              "src/styles/mytheme/theme.scss",
+              "node_modules/primeicons/primeicons.css"
             ],
             "scripts": []
           }
