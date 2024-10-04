@@ -313,7 +313,7 @@ $sliderHandleBg: #ffffff;
 
 /// Border of a slider handle
 /// @group form
-$sliderHandleBorder: 2px solid $primaryColor;
+$sliderHandleBorder: 2px solid $secondaryColor;
 
 /// Border radius of a slider handle
 /// @group form
@@ -321,15 +321,15 @@ $sliderHandleBorderRadius: 50%;
 
 /// Border of a slider handle in hover state
 /// @group form
-$sliderHandleHoverBorderColor: $primaryColor;
+$sliderHandleHoverBorderColor: $secondaryColor;
 
 /// Background of a slider handle in hover state
 /// @group form
-$sliderHandleHoverBg: $primaryColor;
+$sliderHandleHoverBg: $secondaryColor;
 
 /// Background color of a range slider
 /// @group form
-$sliderRangeBg: $primaryColor;
+$sliderRangeBg: $secondaryColor;
 
 /// Margin of a calendar table
 /// @group form

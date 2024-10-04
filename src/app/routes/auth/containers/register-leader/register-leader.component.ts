@@ -1,15 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {GuildSelectedCardComponent} from "../../components/guild-selected-card/guild-selected-card.component";
-import {MatButton} from "@angular/material/button";
-import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatIcon} from "@angular/material/icon";
-import {MatInput} from "@angular/material/input";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {MatSelect} from "@angular/material/select";
-import {MatSlider, MatSliderThumb} from "@angular/material/slider";
-import {CommonModule, Location, NgForOf, NgIf} from "@angular/common";
+import {CommonModule, Location} from "@angular/common";
 import {AuthFacade} from "../../auth.facade";
 import {GuildFacade} from "../../../guild/guild.facade";
 import {toFormData} from "../../../../shared/extensions/object.extension";
@@ -17,6 +9,13 @@ import {Router} from "@angular/router";
 import {distinctUntilChanged} from "rxjs";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
+import {InputTextModule} from "primeng/inputtext";
+import {ButtonModule} from "primeng/button";
+import {SliderModule} from "primeng/slider";
+import {DropdownModule} from "primeng/dropdown";
+import {PasswordModule} from "primeng/password";
+import {InputIconModule} from "primeng/inputicon";
+import {IconFieldModule} from "primeng/iconfield";
 
 @Component({
   selector: 'app-register-leader',
@@ -25,21 +24,15 @@ import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.
     CommonModule,
     FormsModule,
     GuildSelectedCardComponent,
-    MatButton,
-    MatError,
-    MatFormField,
-    MatIcon,
-    MatInput,
-    MatLabel,
-    MatOption,
-    MatProgressSpinner,
-    MatSelect,
-    MatSlider,
-    MatSliderThumb,
-    NgForOf,
-    NgIf,
     ReactiveFormsModule,
-    AlertComponent
+    AlertComponent,
+    InputTextModule,
+    ButtonModule,
+    SliderModule,
+    DropdownModule,
+    PasswordModule,
+    InputIconModule,
+    IconFieldModule
   ],
   templateUrl: './register-leader.component.html',
   styleUrl: './register-leader.component.scss'
@@ -49,16 +42,14 @@ export class RegisterLeaderComponent implements OnInit {
   public registerAsLeaderForm: FormGroup;
   public validateGuildCodeControl: FormControl;
   public logoPreview: string | ArrayBuffer | null = null;
-
+  isLoading = false;
   protected readonly characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
   protected readonly GenderEnum = GenderEnum;
-
   private fb: FormBuilder = inject(FormBuilder);
   private authFacade = inject(AuthFacade);
   private guildFacade = inject(GuildFacade);
   private location: Location = inject(Location);
   private router = inject(Router);
-
 
   constructor() {
     this.registerAsLeaderForm = this.fb.group({
@@ -92,6 +83,7 @@ export class RegisterLeaderComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registerAsLeaderForm.invalid) return;
+    this.isLoading = true;
     this.authFacade.registerAsLeader(toFormData(this.registerAsLeaderForm.value))
       .subscribe({
         next: () => this.router.navigate(['/']),
@@ -100,6 +92,7 @@ export class RegisterLeaderComponent implements OnInit {
             this.registerAsLeaderForm.get('username')?.setErrors({usernameAlreadyTaken: true});
           }
         },
+        complete: () => this.isLoading = false
       });
   }
 
