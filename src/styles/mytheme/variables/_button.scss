@@ -94,7 +94,7 @@ $infoButtonTextColor: #ffffff;
 
 /// Border of an info button
 /// @group button
-$infoButtonBorder: 1px solid #03A9F4;
+$infoButtonBorder: 0;
 
 /// Background of an info button in hover state
 /// @group button
@@ -130,7 +130,7 @@ $successButtonTextColor: #ffffff;
 
 /// Border of a success button
 /// @group button
-$successButtonBorder: 1px solid #4CAF50;
+$successButtonBorder: 0;
 
 /// Background of a success button in hover state
 /// @group button
@@ -166,7 +166,7 @@ $warningButtonTextColor: $buttonTextColor;
 
 /// Border of a warning button
 /// @group button
-$warningButtonBorder: 1px solid #FFC107;
+$warningButtonBorder: 0;
 
 /// Background of a warning button in hover state
 /// @group button
@@ -202,7 +202,7 @@ $helpButtonTextColor: #ffffff;
 
 /// Border of a help button
 /// @group button
-$helpButtonBorder: 1px solid #9C27B0;
+$helpButtonBorder: 0;
 
 /// Background of a help help in hover state
 /// @group button
@@ -238,7 +238,7 @@ $dangerButtonTextColor: #ffffff;
 
 /// Border of a danger button
 /// @group button
-$dangerButtonBorder: 1px solid #f44336;
+$dangerButtonBorder: 0;
 
 /// Background of a danger button in hover state
 /// @group button

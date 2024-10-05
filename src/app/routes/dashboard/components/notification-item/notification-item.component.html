@@ -1,27 +1,30 @@
 <div [ngClass]="{ 'bg-slate-200': !notification.read }" class="flex flex-col border-b border-gray-200 p-4">
-  {{ notification.message }}
-  
-  @if (notification.membershipRequest) {
-    <div class="flex gap-2">
-      <button mat-button color="primary" (click)="onAcceptMembershipRequest()">
-        Accepter
-      </button>
-      <button mat-button color="warn" (click)="onDeclineMembershipRequest()">
-        Refuser
-      </button>
-    </div>
-  }
+  <div class="flex justify-between items-center">
+    {{ notification.message }}
 
-  @if (notification.accountLinkRequest) {
-    <div class="flex gap-2">
-      <button mat-button color="primary" (click)="onAcceptRequest()">
-        Oui
-      </button>
-      <button mat-button color="warn" (click)="onDeclineRequest()">
-        Non
-      </button>
-    </div>
-  }
+    @if (notification.membershipRequest) {
+      <div class="flex gap-2">
+
+        <p-button icon="pi pi-check" rounded outlined
+                  (click)="onAcceptMembershipRequest()"/>
+
+        <p-button icon="pi pi-times" rounded outlined severity="danger"
+                  (click)="onDeclineMembershipRequest()"/>
+
+      </div>
+    }
+
+    @if (notification.accountLinkRequest) {
+      <div class="flex gap-2">
+        <p-button icon="pi pi-check" rounded outlined
+                  (click)="onAcceptRequest()"/>
+
+        <p-button icon="pi pi-check" rounded outlined severity="danger"
+                  (click)="onDeclineRequest()"/>
+      </div>
+    }
+
+  </div>
 
   <div class="text-xs text-gray-700">{{ notification.createdAt | dateFormat }}</div>
 </div>

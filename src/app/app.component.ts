@@ -16,6 +16,6 @@ export class AppComponent implements OnInit {
   private primengConfig = inject(PrimeNGConfig);
 
   ngOnInit() {
-    this.primengConfig.ripple = true;
+    this.primengConfig.ripple = false;
   }
 }

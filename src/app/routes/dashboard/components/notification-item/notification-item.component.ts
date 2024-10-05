@@ -7,6 +7,7 @@ import {GuildFacade} from "../../../guild/guild.facade";
 import {NotificationsFacade} from "../../../../shared/state/notifications/notifications.facade";
 import {ProfileFacade} from "../../../profile/profile.facade";
 import {RouterLink} from "@angular/router";
+import {Button} from "primeng/button";
 
 @Component({
   selector: 'app-notification-item',
@@ -16,7 +17,8 @@ import {RouterLink} from "@angular/router";
     DateFormatPipe,
     NgClass,
     MatButton,
-    RouterLink
+    RouterLink,
+    Button
   ],
   templateUrl: './notification-item.component.html',
   styleUrls: ['./notification-item.component.scss']

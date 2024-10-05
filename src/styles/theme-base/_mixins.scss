@@ -11,7 +11,6 @@
 
 @mixin focused-inset() {
   outline: $focusOutline;
-  outline-offset: -1 * $focusOutlineOffset;
 }
 
 @mixin focused-input() {
@@ -295,7 +294,6 @@
   border: $actionIconBorder;
   background: $actionIconBg;
   border-radius: $actionIconBorderRadius;
-  transition: $actionIconTransition;
 
   &:enabled:hover {
     color: $actionIconHoverColor;

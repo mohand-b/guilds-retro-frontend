@@ -1,5 +1,6 @@
-<mat-toolbar class="flex justify-center" color="primary">
-  <mat-toolbar-row class="w-full justify-evenly">
+<p-toolbar styleClass="flex justify-center">
+  <div class="w-full flex justify-evenly text-white">
+
     <a #dashboard="routerLinkActive" routerLink="/dashboard" routerLinkActive>
       <app-menu-item [selected]="dashboard.isActive" text="Accueil"/>
     </a>
@@ -26,18 +27,16 @@
         <app-menu-item text="Profil" [selected]="profile.isActive"/>
       </a>
 
-      <button
-        (click)="drawer.toggle()"
-        [matBadgeHidden]="notificationsCount() === 0"
-        [matBadge]="notificationsCount()"
-        mat-icon-button
-        matBadgeColor="warn"
-        class="-mb-2"
-      >
-        <mat-icon>notifications</mat-icon>
+
+      <button (click)="toggleNotifications.emit()" class="relative">
+        <i class="pi pi-bell"></i>
+        @if (notificationsCount(); as notifCount) {
+          <p-badge [value]="notifCount" [badgeDisabled]="notifCount === 0" severity="danger"
+                   class="absolute bottom-2 left-2"/>
+        }
       </button>
 
-    }
 
-  </mat-toolbar-row>
-</mat-toolbar>
+    }
+  </div>
+</p-toolbar>

@@ -15,6 +15,7 @@ import {EMPTY, switchMap} from "rxjs";
 import {CreatePostModalComponent} from "../../components/create-post-modal/create-post-modal.component";
 import {CreatePost} from "../../state/posts/post.model";
 import {toFormData} from "../../../../shared/extensions/object.extension";
+import {BadgeModule} from "primeng/badge";
 
 @Component({
   selector: 'app-feed',
@@ -25,7 +26,8 @@ import {toFormData} from "../../../../shared/extensions/object.extension";
     MatSlideToggle,
     NgForOf,
     FeedEventComponent,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    BadgeModule
   ],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss']
