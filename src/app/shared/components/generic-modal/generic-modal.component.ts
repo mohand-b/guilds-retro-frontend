@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ComponentRef,
   effect,
   inject,
   signal,
@@ -9,54 +10,62 @@ import {
   ViewContainerRef,
   WritableSignal
 } from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {CommonModule} from "@angular/common";
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
-import {CdkPortalOutlet} from "@angular/cdk/portal";
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
+import {CommonModule} from '@angular/common';
+import {ButtonModule} from 'primeng/button';
 
 @Component({
   selector: 'app-generic-modal',
-  standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, CdkPortalOutlet],
   templateUrl: './generic-modal.component.html',
-  styleUrls: ['./generic-modal.component.scss']
+  styleUrls: ['./generic-modal.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ButtonModule],
 })
 export class GenericModalComponent implements AfterViewInit {
-  @ViewChild('dynamicComponentContainer', {read: ViewContainerRef}) container!: ViewContainerRef;
-  public data: any = inject(MAT_DIALOG_DATA);
-  buttonDisabled: WritableSignal<boolean> = signal(this.data.disableButtonUntilConditionMet);
-  private childComponentRef: any;
-  conditionMetEffect = effect(() => {
-    if (this.data.disableButtonUntilConditionMet) {
-      this.buttonDisabled.set(!this.childComponentRef.conditionMet());
-    }
-  }, {allowSignalWrites: true})
-  private dialogRef: MatDialogRef<GenericModalComponent> = inject(MatDialogRef);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  @ViewChild('dynamicComponentContainer', {read: ViewContainerRef})
+  container!: ViewContainerRef;
+
+  private ref = inject(DynamicDialogRef);
+  private config = inject(DynamicDialogConfig);
+  public buttonText: string = this.config.data.buttonText;
+  public buttonColor: 'primary' | 'danger' = this.config.data.buttonColor;
+  public contentText?: string = this.config.data.contentText;
+  public payload: any = this.config.data.payload;
+  public contentComponent: any = this.config.data.contentComponent;
+  public buttonDisabled: WritableSignal<boolean> = signal(this.config.data.disableButtonUntilConditionMet);
+  private cdr = inject(ChangeDetectorRef);
+  private contentComponentRef?: ComponentRef<any>;
+
+  constructor() {
+    effect(() => {
+      if (this.config.data.disableButtonUntilConditionMet && this.contentComponentRef?.instance) {
+        this.buttonDisabled.set(!this.contentComponentRef.instance.conditionMet());
+      }
+    }, {allowSignalWrites: true});
+  }
 
   ngAfterViewInit(): void {
-    if (this.data.contentComponent) {
+    if (this.contentComponent) {
       this.container.clear();
-      const componentRef = this.container.createComponent(this.data.contentComponent, {
-        injector: this.data.injector,
-      });
-      this.childComponentRef = componentRef.instance;
+      this.contentComponentRef = this.container.createComponent(this.contentComponent);
 
+      if (this.contentComponentRef.instance) {
+        this.contentComponentRef.instance.data = this.payload;
+
+        if (this.contentComponentRef.instance.conditionMet) {
+          this.buttonDisabled.set(!this.contentComponentRef.instance.conditionMet());
+        }
+      }
       this.cdr.detectChanges();
     }
   }
 
   onCancel(): void {
-    this.dialogRef.close();
+    this.ref.close(null);
   }
 
   onAction(): void {
-    if (this.childComponentRef && typeof this.childComponentRef.getData === 'function') {
-      const returnValue = this.childComponentRef.getData();
-      this.dialogRef.close(returnValue);
-    } else {
-      this.dialogRef.close('OK');
-    }
+    const returnValue = this.contentComponentRef?.instance?.getData?.();
+    this.ref.close(returnValue ?? 'OK');
   }
 }
