@@ -1,10 +1,7 @@
 <div class="flex flex-col items-center justify-center min-h-screen p-4">
   <button (click)="goBack()" class="absolute top-4 left-4 text-gray-600 hover:text-gray-800">
-    <mat-icon>arrow_back</mat-icon>
+    <i class="pi pi-arrow-left" style="font-size: 1.5rem"></i>
   </button>
-
-  <img alt="logo" class="w-[5rem] select-none pointer-events-none mb-10 absolute top-4 right-4 "
-       src="assets/light-logo.gif">
 
   <form (ngSubmit)="onSubmit()"
         [formGroup]="registerAsMemberForm"
@@ -13,33 +10,31 @@
     <h2 class="col-span-2 text-2xl font-bold">Inscription pour rejoindre une guilde</h2>
 
     <div class="col-span-2 flex flex-col gap-2">
-      <app-alert *ngIf="registerAsMemberForm.get('username')?.hasError('usernameAlreadyTaken')"
-                 class="col-span-2"
-                 message="Ce nom de personnage est déjà pris."
-                 type="error"/>
+      @if (registerAsMemberForm.get('username')?.hasError('usernameAlreadyTaken')) {
+        <app-alert class="col-span-2"
+                   message="Ce nom de personnage est déjà pris."
+                   type="error"/>
+      }
     </div>
 
     <div class="col-span-2 md:col-span-1 flex flex-col gap-4">
 
       <h3 class="text-lg">Informations du personnage</h3>
 
-      <mat-form-field appearance="outline" class="w-full">
-        <input formControlName="username" matInput placeholder="Nom du personnage">
-      </mat-form-field>
+      <input formControlName="username" pInputText placeholder="Nom du personnage">
 
-      <mat-form-field appearance="outline" class="w-full">
-        <input formControlName="password" matInput placeholder="Choisir un mot de passe" type="password">
-      </mat-form-field>
+      <p-password [feedback]="false" [inputStyle]="{'width': '100%'}" formControlName="password"
+                  placeholder="Mot de passe" styleClass="w-full"
+                  toggleMask/>
 
       <div class="flex gap-4 items-center">
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Classe</mat-label>
-          <mat-select formControlName="characterClass">
-            <mat-option *ngFor="let charClass of characterClasses" [value]="charClass">
-              {{ charClass }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+
+        <p-dropdown
+          [options]="characterClasses"
+          class="w-full"
+          formControlName="characterClass"
+          placeholder="Classe"
+          styleClass="w-full"/>
 
         <div class="flex items-center gap-2 h-full">
           <div
@@ -48,8 +43,8 @@
               'text-accent': registerAsMemberForm.get('gender')?.value === 'M',
               'text-gray-400': registerAsMemberForm.get('gender')?.value !== 'M'
             }"
-            class="w-12 h-12 flex items-center justify-center border-gray-400 border rounded cursor-pointer transition-colors">
-            <mat-icon>male</mat-icon>
+            class="w-11 h-11 flex items-center justify-center border-gray-300 border rounded-[.5rem] cursor-pointer transition-colors">
+            <i class="pi pi-mars"></i>
           </div>
           <div
             (click)="selectGender(GenderEnum.FEMALE)"
@@ -57,23 +52,20 @@
               'text-accent': registerAsMemberForm.get('gender')?.value === 'F',
               'text-gray-400': registerAsMemberForm.get('gender')?.value !== 'F'
             }"
-            class="w-12 h-12 flex items-center justify-center border-gray-400 border rounded cursor-pointer transition-colors">
-            <mat-icon>female</mat-icon>
+            class="w-11 h-11 flex items-center justify-center border-gray-300 border rounded-[.5rem] cursor-pointer transition-colors">
+            <i class="pi pi-venus"></i>
           </div>
         </div>
       </div>
 
-      <div class="flex flex-col">
-        <div class="w-full flex gap-3">
+      <div class="flex flex-col gap-4">
+
+        <div class="w-full flex gap-4">
           <label>Niveau du personnage</label>
-          <label class="font-bold">{{ level.value }}</label>
+          <label class="font-bold">{{ characterLevel.value }}</label>
         </div>
 
-        <div class="pr-5">
-          <mat-slider color="accent" max="200" min="1" showTickMark step="1">
-            <input #level class="w-full" formControlName="characterLevel" matSliderThumb>
-          </mat-slider>
-        </div>
+        <p-slider #characterLevel animate formControlName="characterLevel" max="200" min="0"/>
       </div>
 
     </div>
@@ -82,20 +74,36 @@
 
       <h3 class="text-lg">Sélection de la guilde</h3>
 
-      <button (click)="onOpenGuildSelection()" [disabled]="loadingGuilds"
-              class="mb-4 w-full text-white flex items-center justify-center gap-2"
-              color="accent" mat-raised-button type="button">
-        <mat-spinner *ngIf="loadingGuilds" diameter="20"></mat-spinner>
-        <span *ngIf="!loadingGuilds">Choisir une guilde</span>
-      </button>
+      <div class="flex flex-col gap-2">
 
-      <app-guild-selected-card *ngIf="guildSelected" [guild]="guildSelected" class="w-full"/>
+        <button (click)="onOpenGuildSelection()" [disabled]="loadingGuilds"
+                class="mb-4 w-full text-white flex items-center justify-center gap-2"
+                pButton rounded severity="secondary" type="button">
+          @if (loadingGuilds) {
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Chargement des guildes...</span>
+          } @else {
+            <i class="pi pi-search"></i>
+            <span>Sélectionner une guilde</span>
+          }
+        </button>
+
+        @if (guildSelected) {
+          <app-guild-selected-card [guild]="guildSelected" class="w-full"/>
+        }
+
+      </div>
+
     </div>
 
-    <button [disabled]="registerAsMemberForm.invalid" class="col-span-2 w-full" color="primary"
-            mat-raised-button
-            type="submit">
-      S'inscrire
-    </button>
+    <p-button
+      [disabled]="registerAsMemberForm.invalid || isLoading"
+      [icon]="isLoading ? 'pi pi-spin pi-spinner' : ''"
+      class="col-span-2 flex"
+      label="S'inscrire"
+      rounded
+      styleClass="w-full md:w-auto min-w-[15rem] ml-auto"
+      type="submit"/>
+
   </form>
 </div>
