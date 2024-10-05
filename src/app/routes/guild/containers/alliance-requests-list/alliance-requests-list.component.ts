@@ -3,10 +3,10 @@ import {AllianceRequestRowComponent} from "../../components/alliance-request-row
 import {GuildFacade} from "../../guild.facade";
 import {NgForOf, NgIf} from "@angular/common";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
-import {EMPTY, switchMap} from "rxjs";
 import {AllianceRequestDto} from "../../state/alliances/alliance.model";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {GuildState} from "../../state/guilds/guild.model";
+import {EMPTY, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-alliance-requests-list',
@@ -28,35 +28,33 @@ export class AllianceRequestsListComponent {
   private genericModalService = inject(GenericModalService);
 
   onAcceptRequest(request: AllianceRequestDto) {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
       {primary: 'Oui, accepter'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir accepter la guilde ${request.requesterGuild?.name} en tant qu'alliée ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.guildFacade.acceptAllianceRequest(request.id);
-        else return EMPTY
-      })
-    ).subscribe()
+      `Es-tu sûr de vouloir accepter la guilde ${request.requesterGuild?.name} en tant qu'alliée ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.guildFacade.acceptAllianceRequest(request.id) : EMPTY)
+    ).subscribe();
   }
 
-
   onDeclineRequest(request: AllianceRequestDto) {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
-      {warn: 'Oui, refuser'},
+      {danger: 'Oui, refuser'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir refuser la guilde ${request.requesterGuild?.name} en tant qu'alliée ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.guildFacade.rejectAllianceRequest(request.id);
-        else return EMPTY
-      })
-    ).subscribe()
+      `Es-tu sûr de vouloir refuser la guilde ${request.requesterGuild?.name} en tant qu'alliée ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.guildFacade.rejectAllianceRequest(request.id) : EMPTY)
+    ).subscribe();
   }
+
 }

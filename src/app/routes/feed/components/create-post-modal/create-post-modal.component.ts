@@ -6,6 +6,7 @@ import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {CreatePost} from "../../state/posts/post.model";
 import {atLeastOneRequired} from "../../../../shared/validators/post.validator";
+import {ModalData} from "../../../../shared/interfaces/modal-data.interface";
 
 @Component({
   selector: 'app-create-post-modal',
@@ -22,7 +23,7 @@ import {atLeastOneRequired} from "../../../../shared/validators/post.validator";
   templateUrl: './create-post-modal.component.html',
   styleUrl: './create-post-modal.component.scss'
 })
-export class CreatePostModalComponent implements OnInit {
+export class CreatePostModalComponent implements OnInit, ModalData {
 
   public imagePreview: string | ArrayBuffer | null = null;
   conditionMet: WritableSignal<boolean> = signal<boolean>(false);

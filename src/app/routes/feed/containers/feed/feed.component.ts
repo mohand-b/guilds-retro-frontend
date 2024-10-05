@@ -5,16 +5,16 @@ import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {NgForOf} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {FeedFacade} from "../../feed.facade";
-import {CreatePostModalComponent} from "../../components/create-post-modal/create-post-modal.component";
 import {FeedEventComponent} from "../../components/feed-event/feed-event.component";
 import {GenericModalService} from '../../../../shared/services/generic-modal.service';
-import {EMPTY, switchMap} from "rxjs";
-import {CreatePost} from "../../state/posts/post.model";
-import {toFormData} from "../../../../shared/extensions/object.extension";
 import {FeedDto} from "../../state/feed/feed.model";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {UserDto} from "../../../profile/state/users/user.model";
+import {EMPTY, switchMap} from "rxjs";
+import {CreatePostModalComponent} from "../../components/create-post-modal/create-post-modal.component";
+import {CreatePost} from "../../state/posts/post.model";
+import {toFormData} from "../../../../shared/extensions/object.extension";
 
 @Component({
   selector: 'app-feed',
@@ -57,20 +57,20 @@ export class FeedComponent {
   }
 
   openCreatePostModal() {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Créer une publication',
       {primary: 'Poster'},
       'md',
       {},
       CreatePostModalComponent,
       undefined,
-      true,
-    ).pipe(
-      switchMap((post: CreatePost) => {
-        if (!post) return EMPTY;
-        return this.feedFacade.createPost(toFormData(post));
-      })
+      true
+    );
+
+    ref.onClose.pipe(
+      switchMap((post: CreatePost) => post ? this.feedFacade.createPost(toFormData(post)) : EMPTY)
     ).subscribe();
+
   }
 
   toggleFeedClosingToGuildAndAllies(checked: boolean) {

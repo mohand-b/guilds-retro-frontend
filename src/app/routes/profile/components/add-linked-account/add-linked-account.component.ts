@@ -6,6 +6,7 @@ import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {UserDto} from "../../state/users/user.model";
+import {ModalData} from "../../../../shared/interfaces/modal-data.interface";
 
 @Component({
   selector: 'app-add-linked-account',
@@ -19,7 +20,7 @@ import {UserDto} from "../../state/users/user.model";
   templateUrl: './add-linked-account.component.html',
   styleUrl: './add-linked-account.component.scss'
 })
-export class AddLinkedAccountComponent {
+export class AddLinkedAccountComponent implements ModalData {
 
   accountFound: WritableSignal<UserDto | undefined> = signal(undefined)
   error: WritableSignal<string | undefined> = signal(undefined)

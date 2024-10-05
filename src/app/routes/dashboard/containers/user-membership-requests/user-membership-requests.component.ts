@@ -13,12 +13,12 @@ import {GuildFacade} from "../../../guild/guild.facade";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {interval, Observable, switchMap, takeUntil, timer} from "rxjs";
-import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
 import {
   UserMembershipRequestComponent
 } from "../../components/user-membership-request/user-membership-request.component";
 import {MatProgressBar} from "@angular/material/progress-bar";
 import {UserDto} from "../../../profile/state/users/user.model";
+import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
 
 @Component({
   selector: 'app-user-membership-requests',
@@ -95,7 +95,7 @@ export class UserMembershipRequestsComponent implements OnInit {
   }
 
   public onOpenGuildSelection(): void {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Choisir une guilde',
       {primary: 'Confirmer'},
       'xl',
@@ -103,11 +103,14 @@ export class UserMembershipRequestsComponent implements OnInit {
       GuildSelectionComponent,
       undefined,
       true
-    ).subscribe(selectedGuild => {
+    );
+
+    ref.onClose.subscribe((selectedGuild) => {
       if (selectedGuild) {
         this.selectedGuild.set(selectedGuild);
       }
     });
   }
+
 
 }

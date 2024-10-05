@@ -98,43 +98,41 @@ export class GuildDetailsComponent implements OnInit {
   }
 
   onAcceptAllianceRequest(requestId: number) {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
       {primary: 'Oui, accepter'},
       'sm',
       null,
       null,
       `Es-tu sûr de vouloir accepter la guilde ${this.guild()!.name} en tant qu'alliée ?`
-    ).pipe(
-      switchMap((result) => {
-        if (result) {
-          return this.guildFacade.acceptAllianceRequest(requestId).pipe(
-            tap(() => {
-              window.location.reload();
-            })
-          );
-        } else {
-          return EMPTY;
-        }
-      })
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) =>
+        result
+          ? this.guildFacade.acceptAllianceRequest(requestId).pipe(
+            tap(() => window.location.reload())
+          )
+          : EMPTY
+      )
     ).subscribe();
   }
 
   onDeclineAllianceRequest(requestId: number) {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
-      {warn: 'Oui, refuser'},
+      {danger: 'Oui, refuser'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir refuser la guilde ${this.guild()!.name} en tant qu'alliée ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.guildFacade.rejectAllianceRequest(requestId);
-        else return EMPTY
-      })
-    ).subscribe()
+      `Es-tu sûr de vouloir refuser la guilde ${this.guild()!.name} en tant qu'alliée ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.guildFacade.rejectAllianceRequest(requestId) : EMPTY)
+    ).subscribe();
   }
+
 
   onSendAllianceRequest(guildId: number) {
     this.guildFacade.createAllianceRequest(guildId).subscribe();

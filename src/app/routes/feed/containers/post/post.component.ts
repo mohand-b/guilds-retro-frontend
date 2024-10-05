@@ -173,20 +173,20 @@ export class PostComponent implements OnInit {
   }
 
   deletePost() {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
-      {warn: 'Oui'},
+      {danger: 'Oui'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir supprimer ce post ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.feedFacade.deletePost(this.post()!.id);
-        else return EMPTY;
-      })
+      `Es-tu sûr de vouloir supprimer ce post ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.feedFacade.deletePost(this.post()!.id) : EMPTY)
     ).subscribe(() => this.router.navigate(['/dashboard']));
   }
+
 
   reportPost() {
   }

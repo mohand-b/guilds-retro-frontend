@@ -8,7 +8,6 @@ import {RouterLink} from "@angular/router";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {LineClampDirective} from "../../../../shared/directives/line-clamp.directive";
 import {MatMenuModule} from "@angular/material/menu";
-import {EMPTY, switchMap} from "rxjs";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {PostDto} from "../../state/posts/post.model";
 import {UserDto} from "../../../profile/state/users/user.model";
@@ -16,6 +15,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {CommentDto, CreateCommentDto} from "../../state/comments/comment.model";
 import {animate, style, transition, trigger} from "@angular/animations";
+import {EMPTY, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-feed-post',
@@ -120,20 +120,20 @@ export class FeedPostComponent {
   }
 
   deletePost() {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
-      {warn: 'Oui'},
+      {danger: 'Oui'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir supprimer ce post ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.feedFacade.deletePost(this.post.id);
-        else return EMPTY;
-      })
+      `Es-tu sûr de vouloir supprimer ce post ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.feedFacade.deletePost(this.post.id) : EMPTY)
     ).subscribe();
   }
+
 
   reportPost() {
   }

@@ -9,6 +9,7 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {valueInArrayValidator} from "../../../../shared/validators/value-in-array.validator";
 import {SortAlphabeticallyPipe} from "../../../../shared/pipes/sort-alphabetically.pipe";
 import {UserDto} from "../../state/users/user.model";
+import {ModalData} from "../../../../shared/interfaces/modal-data.interface";
 
 @Component({
   selector: 'app-add-job',
@@ -27,7 +28,7 @@ import {UserDto} from "../../state/users/user.model";
   templateUrl: './add-job.component.html',
   styleUrl: './add-job.component.scss'
 })
-export class AddJobComponent implements OnInit {
+export class AddJobComponent implements OnInit, ModalData {
 
   conditionMet: WritableSignal<boolean> = signal<boolean>(false);
   public data: { isForgemaging: boolean, user: UserDto } = inject(MAT_DIALOG_DATA);

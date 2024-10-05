@@ -13,13 +13,13 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {GuildHeaderComponent} from "../../components/guild-header/guild-header.component";
 import {GuildMembersTableComponent} from "../../components/guild-members-table/guild-members-table.component";
 import {AllianceCardComponent} from "../../components/alliance-card/alliance-card.component";
-import {AllianceRequestsListComponent} from "../alliance-requests-list/alliance-requests-list.component";
-import {MembershipRequestsTabComponent} from "../membership-requests-tab/membership-requests-tab.component";
 import {MatIconModule} from "@angular/material/icon";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {AllianceRequestsListComponent} from "../alliance-requests-list/alliance-requests-list.component";
+import {MembershipRequestsTabComponent} from "../membership-requests-tab/membership-requests-tab.component";
 
 @Component({
   selector: 'app-guild-dashboard',
@@ -78,7 +78,7 @@ export class GuildDashboardComponent implements OnInit {
   }
 
   public onOpenPendingAllianceRequests(): void {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       "Demandes d'alliances en attente",
       {},
       'xl',
@@ -86,11 +86,13 @@ export class GuildDashboardComponent implements OnInit {
       AllianceRequestsListComponent,
       undefined,
       true
-    ).subscribe();
+    );
+
+    ref.onClose.subscribe();
   }
 
   public onOpenPendingMembershipRequests(): void {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       "Demandes d'adhésion en attente",
       {},
       'xl',
@@ -98,56 +100,56 @@ export class GuildDashboardComponent implements OnInit {
       MembershipRequestsTabComponent,
       undefined,
       true
-    ).subscribe();
+    );
+
+    ref.onClose.subscribe();
   }
 
   public updateRole({user, role}: { user: UserDto, role: UserRoleEnum }): void {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
       {primary: 'Oui'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir changer le rôle de ${user.username} à ${role} ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.guildFacade.updateUserRole(user.id, role);
-        else return EMPTY;
-      })
+      `Es-tu sûr de vouloir changer le rôle de ${user.username} à ${role} ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.guildFacade.updateUserRole(user.id, role) : EMPTY)
     ).subscribe();
   }
 
   public removeMember(user: UserDto): void {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
-      {warn: 'Oui'},
+      {danger: 'Oui'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir exclure ${user.username} de la guilde sur Guilds Retro ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return EMPTY;
-        else return EMPTY;
-      })
+      `Es-tu sûr de vouloir exclure ${user.username} de la guilde sur Guilds Retro ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap(() => EMPTY)
     ).subscribe();
   }
 
   public updateGuildLevel(level: number): void {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
       {primary: 'Oui'},
       'sm',
       null,
       null,
-      `Confirmes-tu que la guilde est passée au niveau ${level} ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.guildFacade.updateGuildLevel(this.guild()!.id!, level);
-        else return EMPTY;
-      })
+      `Confirmes-tu que la guilde est passée au niveau ${level} ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.guildFacade.updateGuildLevel(this.guild()!.id!, level) : EMPTY)
     ).subscribe(() => this.editMode.set(false));
   }
+
 
   public toggleUpdateGuildHideStats(hideStats: boolean): void {
     this.guildFacade.updateGuildHideStats(this.guild()!.id!, hideStats).subscribe();

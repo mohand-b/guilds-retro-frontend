@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {JobDto} from "../../state/jobs/job.model";
 import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatSliderModule} from "@angular/material/slider";
+import {ModalData} from "../../../../shared/interfaces/modal-data.interface";
 
 @Component({
   selector: 'app-edit-job-level',
@@ -14,7 +15,7 @@ import {MatSliderModule} from "@angular/material/slider";
   templateUrl: './edit-job-level.component.html',
   styleUrl: './edit-job-level.component.scss'
 })
-export class EditJobLevelComponent implements OnInit {
+export class EditJobLevelComponent implements OnInit, ModalData {
 
   public data: { job: JobDto } = inject(MAT_DIALOG_DATA);
   public job = this.data.job;

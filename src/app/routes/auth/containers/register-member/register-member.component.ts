@@ -1,11 +1,7 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {Router, RouterOutlet} from "@angular/router";
 import {FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatSliderModule} from "@angular/material/slider";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
 import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
 import {GuildFacade} from "../../../guild/guild.facade";
 import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
@@ -13,14 +9,16 @@ import {AuthFacade} from "../../auth.facade";
 import {RegisterMemberDto} from "../../state/auth/auth.model";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {CommonModule, Location} from "@angular/common";
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
-import {MatRadioModule} from "@angular/material/radio";
-import {MatSelectModule} from "@angular/material/select";
 import {GuildSelectedCardComponent} from "../../components/guild-selected-card/guild-selected-card.component";
-import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
+import {InputTextModule} from "primeng/inputtext";
+import {PasswordModule} from "primeng/password";
+import {DropdownModule} from "primeng/dropdown";
+import {SliderModule} from "primeng/slider";
+import {ButtonDirective, ButtonModule} from "primeng/button";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
 
 @Component({
   selector: 'app-register-member',
@@ -29,18 +27,16 @@ import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.
     RouterOutlet,
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSliderModule,
-    MatIconModule,
-    MatRadioModule,
-    MatSelectModule,
     GuildSelectionCardComponent,
     GuildSelectedCardComponent,
-    MatProgressSpinner,
-    MatProgressSpinnerModule,
-    AlertComponent
+    AlertComponent,
+    InputTextModule,
+    PasswordModule,
+    DropdownModule,
+    SliderModule,
+    ButtonModule,
+    ProgressSpinnerModule,
+    ButtonDirective
   ],
   templateUrl: './register-member.component.html',
   styleUrls: ['./register-member.component.scss']
@@ -50,10 +46,9 @@ export class RegisterMemberComponent implements OnInit {
   public guildSelected: GuildSummaryDto | null = null;
   public registerAsMemberForm: FormGroup;
   public loadingGuilds = true;
-
+  public isLoading = false;
   protected readonly characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
   protected readonly GenderEnum = GenderEnum;
-
   private guildFacade = inject(GuildFacade);
   private fb = inject(NonNullableFormBuilder);
   private destroyRef = inject(DestroyRef);
@@ -85,16 +80,18 @@ export class RegisterMemberComponent implements OnInit {
     });
   }
 
-  public onOpenGuildSelection(): void {
-    this.genericModalService.open(
+  onOpenGuildSelection(): void {
+    const ref = this.genericModalService.open(
       'Choisir une guilde',
       {primary: 'Confirmer'},
       'xl',
       {guilds: this.guilds},
       GuildSelectionComponent,
       undefined,
-      true,
-    ).subscribe(selectedGuild => {
+      true
+    );
+
+    ref.onClose.subscribe((selectedGuild: any) => {
       if (selectedGuild) {
         this.registerAsMemberForm.patchValue({guildId: selectedGuild.id});
         this.guildSelected = selectedGuild;
