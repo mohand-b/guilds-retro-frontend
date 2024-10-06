@@ -2,16 +2,12 @@
      [class.bg-green-100]="type === 'info'"
      [class.bg-red-100]="type === 'error'"
      [class.bg-yellow-100]="type === 'warning'"
+     [class.text-green-700]="type === 'info'"
+     [class.text-red-700]="type === 'error'"
+     [class.text-yellow-700]="type === 'warning'"
      class="flex items-center p-4 rounded-lg gap-4">
-  <mat-icon [class.text-green-700]="type === 'info'"
-            [class.text-red-700]="type === 'error'"
-            [class.text-yellow-700]="type === 'warning'">
-    {{ icon }}
-  </mat-icon>
-  <span [class.text-green-700]="type === 'info'"
-        [class.text-red-700]="type === 'error'"
-        [class.text-yellow-700]="type === 'warning'"
-        class="text-sm">
+  <i [ngClass]="icon" class="text-xl"></i>
+  <span>
     {{ message }}
   </span>
 </div>

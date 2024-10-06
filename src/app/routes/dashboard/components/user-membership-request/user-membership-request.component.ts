@@ -1,35 +1,43 @@
 import {Component, Input} from '@angular/core';
-import {MatIcon} from "@angular/material/icon";
 import {CommonModule} from "@angular/common";
 import {
   MembershipRequestDto,
   RequestStatusEnum
 } from "../../../guild/state/membership-requests/membership-request.model";
+import {BadgeModule} from "primeng/badge";
+import {TagModule} from "primeng/tag";
 
 @Component({
   selector: 'app-user-membership-request',
   standalone: true,
   imports: [
-    MatIcon,
-    CommonModule
+    CommonModule,
+    BadgeModule,
+    TagModule
   ],
   templateUrl: './user-membership-request.component.html',
   styleUrl: './user-membership-request.component.scss'
 })
-export class UserMembershipRequestComponent {
 
+export class UserMembershipRequestComponent {
   @Input() request!: MembershipRequestDto;
+
+  statusClass: string = '';
+
+  ngOnInit() {
+    this.statusClass = this.getStatusClass();
+  }
 
   getStatusIcon(): string {
     switch (this.request.status) {
       case RequestStatusEnum.PENDING:
-        return 'hourglass_empty';
+        return 'pi-hourglass';
       case RequestStatusEnum.APPROVED:
-        return 'check_circle';
+        return 'pi-check';
       case RequestStatusEnum.REJECTED:
-        return 'cancel';
+        return 'pi-times';
       default:
-        return 'info';
+        return 'pi-info';
     }
   }
 
@@ -45,4 +53,20 @@ export class UserMembershipRequestComponent {
         return 'text-gray-500';
     }
   }
+
+  getStatusSeverity(): 'success' | 'info' | 'warning' | 'danger' | 'secondary' | 'contrast' | undefined {
+    switch (this.request.status) {
+      case RequestStatusEnum.PENDING:
+        return 'warning';
+      case RequestStatusEnum.APPROVED:
+        return 'success';
+      case RequestStatusEnum.REJECTED:
+        return 'danger';
+      default:
+        return 'info';
+    }
+  }
+
+
 }
+

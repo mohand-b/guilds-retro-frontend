@@ -1,4 +1,4 @@
-$primaryColor: #009d23;
+$primaryColor: #29863e;
 $primaryDarkColor: darken($primaryColor, 5%);
 $primaryDarkerColor: darken($primaryColor, 10%);
 
@@ -6,8 +6,9 @@ $secondaryColor: #ffc107;
 $secondaryTextColor: #ffffff;
 $secondaryDarkColor: darken($secondaryColor, 10%);
 $secondaryHoverColor: lighten($secondaryColor, 10%);
+$extraLightSecondaryColor: lighten($secondaryColor, 30%);
 
-$accentColor: #ffc107;
+$accentColor: $secondaryColor;
 $warnColor: #ff5722;
 $tertiaryColor: #e91e63;
 
@@ -15,6 +16,7 @@ $textColor: #1c1c1c;
 $buttonTextColor: #ffffff;
 $lightTextColor: #ffffff;
 $inputTextColor: #495057;
+$lightGray: #f5f5f5;
 
 $colors: (
   "primary": $primaryColor,
@@ -33,6 +35,24 @@ $colors: (
   "purple": #9C27B0,
   "red": #FF4032,
 );
+
+:root {
+  --primary-color: #{$primaryColor};
+  --primary-dark-color: #{$primaryDarkColor};
+  --primary-darker-color: #{$primaryDarkerColor};
+  --secondary-color: #{$secondaryColor};
+  --secondary-dark-color: #{$secondaryDarkColor};
+  --secondary-hover-color: #{$secondaryHoverColor};
+  --extra-light-secondary-color: #{$extraLightSecondaryColor};
+  --accent-color: #{$accentColor};
+  --warn-color: #{$warnColor};
+  --tertiary-color: #{$tertiaryColor};
+  --text-color: #{$textColor};
+  --button-text-color: #{$buttonTextColor};
+  --light-text-color: #{$lightTextColor};
+  --input-text-color: #{$inputTextColor};
+  --light-gray: #{$lightGray};
+}
 
 // Mandatory Designer Variables
 @import './variables/general';

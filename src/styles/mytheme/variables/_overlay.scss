@@ -4,7 +4,7 @@ $overlayContentBorder: 0 none;
 
 /// Background of an overlay container element such as dialog or overlaypanel
 /// @group overlay
-$overlayContentBg:$panelContentBg;
+$overlayContentBg: $panelContentBg;
 
 /// Box shadow of an overlay container element such as dialog or overlaypanel
 /// @group overlay
@@ -12,11 +12,11 @@ $overlayContainerShadow: 0 0 14px 0 rgba(0, 0, 0, 0.1);
 
 /// Background of a dialog header
 /// @group overlay
-$dialogHeaderBg: #ffffff;
+$dialogHeaderBg: $lightGray;
 
 /// Border of a dialog header
 /// @group overlay
-$dialogHeaderBorder: 1px solid #dee2e6;
+$dialogHeaderBorder: 1px solid $extraLightSecondaryColor;
 
 /// Text color of a dialog header
 /// @group overlay
@@ -32,7 +32,7 @@ $dialogHeaderFontSize: 1.25rem;
 
 /// Padding of a dialog header
 /// @group overlay
-$dialogHeaderPadding: 1.5rem;
+$dialogHeaderPadding: 1rem 1.5rem;
 
 /// Padding of a dialog content
 /// @group overlay

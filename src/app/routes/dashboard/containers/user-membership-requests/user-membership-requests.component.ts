@@ -19,6 +19,9 @@ import {
 import {MatProgressBar} from "@angular/material/progress-bar";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
+import {ButtonModule} from "primeng/button";
+import {ProgressBarModule} from "primeng/progressbar";
+import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
 
 @Component({
   selector: 'app-user-membership-requests',
@@ -31,6 +34,9 @@ import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/
     MatIcon,
     UserMembershipRequestComponent,
     MatProgressBar,
+    ButtonModule,
+    ProgressBarModule,
+    PageBlockComponent,
   ],
   templateUrl: './user-membership-requests.component.html',
   styleUrl: './user-membership-requests.component.scss'

@@ -1,36 +1,41 @@
-<div class="p-6 bg-gray-100 rounded-lg shadow-lg space-y-4">
-  <div class="flex items-center justify-between">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Vos demandes de candidature</h2>
+<app-page-block [title]="'Vos demandes de candidature'">
+  <ng-container header-action>
     @if (pendingRequestsCount() === 0 && !approvedRequest() && rejectedRequestsCount() < 5) {
-      <button (click)="onOpenGuildSelection()" color="primary" mat-raised-button type="button">
-        <mat-icon>add</mat-icon>
-        Faire une nouvelle demande
-      </button>
+      <p-button
+        label="Faire une nouvelle demande"
+        icon="pi pi-plus"
+        (click)="onOpenGuildSelection()"
+        rounded
+      />
     }
-  </div>
+  </ng-container>
 
-  @if (approvedRequest()) {
-    <mat-progress-bar [bufferValue]="bufferValue" [value]="progressValue" color="accent"
-                      mode="buffer"></mat-progress-bar>
-  }
+  <ng-container content>
+    <div class="flex flex-col gap-2">
+      @if (approvedRequest()) {
+        <p-progressBar [value]="progressValue" [showValue]="false"/>
+      }
 
-  <div class="flex flex-col gap-2">
-    @if (approvedRequest()) {
-      <app-alert message="Tu as une demande acceptée."/>
-    }
-    @if (rejectedRequestsCount() > 4) {
-      <app-alert message="Tu as trop de demandes rejetées, tu ne peux pas en faire de nouvelles.
-      Contacte un administrateur du site." type="error"/>
-    }
-    @if (pendingRequestsCount() === 0) {
-      <app-alert message="Aucune demande en cours." type="info"/>
-    }
-  </div>
+      @if (approvedRequest()) {
+        <app-alert message="Tu as une demande acceptée."/>
+      }
 
+      @if (rejectedRequestsCount() > 4) {
+        <app-alert
+          message="Tu as trop de demandes rejetées, tu ne peux pas en faire de nouvelles. Contacte un administrateur du site."
+          type="error"
+        />
+      }
 
-  <div class="flex flex-col gap-3">
-    @for (request of requests(); track request.id) {
-      <app-user-membership-request [request]="request"/>
-    }
-  </div>
-</div>
+      @if (pendingRequestsCount() === 0) {
+        <app-alert message="Aucune demande en cours." type="info"/>
+      }
+    </div>
+
+    <div class="flex flex-col gap-3 mt-4">
+      @for (request of requests(); track request.id) {
+        <app-user-membership-request [request]="request"/>
+      }
+    </div>
+  </ng-container>
+</app-page-block>

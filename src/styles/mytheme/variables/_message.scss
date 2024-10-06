@@ -12,11 +12,11 @@ $messageBorderWidth: 0 0 0 4px;
 
 /// Font size of a message icon
 /// @group message
-$messageIconFontSize: 1.5rem;
+$messageIconFontSize: 1rem;
 
 /// Font size of a message text
 /// @group message
-$messageTextFontSize: 1rem;
+$messageTextFontSize: $fontSize;
 
 /// Font weight of a message text
 /// @group message

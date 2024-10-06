@@ -1,33 +1,29 @@
-<div class="p-dialog-content">
+<div class="max-h-[60vh] overflow-y-auto p-2">
+  @if (contentComponent) {
+    <ng-container #dynamicComponentContainer/>
+  } @else if (contentText) {
+    <p>{{ contentText }}</p>
+  }
+</div>
 
-  <div class="max-h-[60vh] overflow-y-auto p-2">
-    @if (contentComponent) {
-      <ng-container #dynamicComponentContainer/>
-    } @else if (contentText) {
-      <p>{{ contentText }}</p>
-    }
-  </div>
+<div class="flex justify-end gap-2 my-4">
+  <button
+    (click)="onCancel()"
+    icon="pi pi-times"
+    label="Annuler"
+    pButton
+    rounded
+    severity="secondary"
+    text
+  ></button>
 
-  <div class="flex justify-end gap-2 my-4">
-    <button
-      (click)="onCancel()"
-      icon="pi pi-times"
-      label="Annuler"
-      pButton
-      rounded
-      severity="secondary"
-      text
-    ></button>
-
-    <button
-      (click)="onAction()"
-      [disabled]="buttonDisabled()"
-      [label]="buttonText"
-      [severity]="buttonColor"
-      icon="pi pi-check"
-      pButton
-      rounded
-    ></button>
-  </div>
-
+  <button
+    (click)="onAction()"
+    [disabled]="buttonDisabled()"
+    [label]="buttonText"
+    [severity]="buttonColor"
+    icon="pi pi-check"
+    pButton
+    rounded
+  ></button>
 </div>
