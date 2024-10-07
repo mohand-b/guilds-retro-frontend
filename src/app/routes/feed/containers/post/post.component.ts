@@ -94,12 +94,9 @@ export class PostComponent implements OnInit {
         return this.feedFacade.getPost(postId);
       })
     ).subscribe(post => {
-      // Convert UTC string to the user's local timezone
-      const localDate = DateTime.fromISO(post.createdAt, {zone: 'utc'}) // Parse as UTC
-        .setZone(DateTime.local().zoneName) // Convert to the user's local timezone
+      const localDate = DateTime.fromISO(post.createdAt, {zone: 'utc'})
+        .setZone(DateTime.local().zoneName)
         .toLocaleString(DateTime.DATETIME_MED);
-      console.log(localDate);
-
       this.post.set(post);
     });
   }

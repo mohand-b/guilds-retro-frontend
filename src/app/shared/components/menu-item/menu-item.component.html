@@ -1,6 +1,7 @@
 <div class="relative">
   @if (selected) {
-    <img alt="tofu" class="absolute -left-3 -top-3 z-10" height="20" ngSrc="assets/bestiaries/1558.svg" width="20"/>
+    <img [@flyAndBounceIn]
+         alt="tofu" class="absolute -left-3 -top-3 z-10" height="20" ngSrc="assets/bestiaries/1558.svg" width="20"/>
   }
   <span [ngClass]="{'font-bold' : selected}">{{ text }}</span>
 </div>
