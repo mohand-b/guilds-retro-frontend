@@ -11,12 +11,12 @@ export class GenericModalService {
 
   open(
     title: string,
-    button: { primary?: string; danger?: string },
+    button: { primary?: string; danger?: string, icon?: string },
     size: 'xs' | 'sm' | 'md' | 'xl',
     data: any,
     contentComponent?: any,
     contentText?: string,
-    disableButtonUntilConditionMet: boolean = false // Nouvelle option pour conditionner le bouton
+    disableButtonUntilConditionMet: boolean = false
   ): DynamicDialogRef {
     const sizeMap = {
       xs: '30%',
@@ -27,6 +27,8 @@ export class GenericModalService {
 
     const buttonText = button.primary || button.danger;
     const buttonColor = button.primary ? 'primary' : 'danger';
+    const buttonIcon = button.icon || 'pi pi-check';
+
 
     return this.dialogService.open(GenericModalComponent, {
       header: title,
@@ -36,6 +38,7 @@ export class GenericModalService {
         buttonColor,
         contentComponent,
         contentText,
+        buttonIcon,
         payload: data,
         disableButtonUntilConditionMet,
       },

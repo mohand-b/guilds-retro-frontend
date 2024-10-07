@@ -29,6 +29,7 @@ export class GenericModalComponent implements AfterViewInit {
   private config = inject(DynamicDialogConfig);
   public buttonText: string = this.config.data.buttonText;
   public buttonColor: 'primary' | 'danger' = this.config.data.buttonColor;
+  public buttonIcon: string = this.config.data.buttonIcon;
   public contentText?: string = this.config.data.contentText;
   public payload: any = this.config.data.payload;
   public contentComponent: any = this.config.data.contentComponent;

@@ -1,36 +1,58 @@
 <div (scroll)="onScroll($event)"
      class="w-full flex flex-col p-4 gap-6 h-full overflow-y-auto no-scrollbar">
 
-  <h2 class="text-2xl font-bold">Fil d'actualité</h2>
+  <app-page-block title="Fil d'actualité">
+    <ng-container header-action>
 
-  <mat-slide-toggle
-    (change)="toggleFeedClosingToGuildAndAllies($event.checked)"
-    [checked]="feedClosingToGuildAndAllies()"
-    color="primary">
-    Fermer son fil d'actualité au gens de sa guilde et des guilde alliées
-  </mat-slide-toggle>
+      @if (feedClosingToGuildAndAllies()) {
+        <p-button
+          label="Ouvrir son fil d'actualité à tous"
+          icon="pi pi-lock"
+          severity="warning"
+          outlined
+          rounded
+          (onClick)="toggleFeedClosingToGuildAndAllies(false)"
+        />
+      } @else {
+        <p-button
+          label="Fermer son fil d'actualité à sa guilde et guildes alliées"
+          icon="pi pi-lock-open"
+          severity="primary"
+          outlined
+          rounded
+          (onClick)="toggleFeedClosingToGuildAndAllies(true)"
+        />
+      }
 
-  <div class="flex items-center">
-    <div class="flex-shrink-0">
-      <div class="w-12 h-12 rounded-full  flex items-center justify-center">
-        <img [src]="currentUser | characterIcon" alt="Avatar"
-             class="object-cover no-select no-copy">
+
+    </ng-container>
+
+    <ng-container content>
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 rounded-full  flex items-center justify-center">
+            <img [src]="currentUser | characterIcon" alt="Avatar"
+                 class="object-cover no-select no-copy">
+          </div>
+        </div>
+        <div class="flex-grow ml-4">
+          <div class="w-full">
+            <input (click)="openCreatePostModal()"
+                   class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                   pInputText
+                   placeholder="Que veux-tu dire ?"
+                   readonly>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="flex-grow ml-4">
-      <div class="w-full">
-        <input (click)="openCreatePostModal()"
-               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-               placeholder="Que veux-tu dire ?"
-               readonly>
-      </div>
-    </div>
-  </div>
+    </ng-container>
+  </app-page-block>
+
 
   <div class="flex flex-col gap-4  mb-10">
     @for (item of feed(); track item.id) {
       @if (item.post) {
-        <app-feed-post [currentUser]="currentUser" [post]="item.post"/>
+        <app-feed-post [@fadeIn] [currentUser]="currentUser" [post]="item.post"/>
       } @else if (item.event) {
         <app-feed-event [currentUser]="currentUser" [event]="item.event"/>
       }
@@ -41,7 +63,7 @@
     }
     @if (isLoading) {
       <div class="flex justify-center">
-        <mat-spinner diameter="32"></mat-spinner>
+        <p-progressSpinner strokeWidth="5"/>
       </div>
     }
   </div>

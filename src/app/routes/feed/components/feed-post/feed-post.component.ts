@@ -2,20 +2,20 @@ import {ChangeDetectionStrategy, Component, computed, inject, Input, signal, Wri
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {DatePipe, NgOptimizedImage} from "@angular/common";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
-import {MatIcon} from "@angular/material/icon";
 import {FeedFacade} from "../../feed.facade";
 import {RouterLink} from "@angular/router";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {LineClampDirective} from "../../../../shared/directives/line-clamp.directive";
-import {MatMenuModule} from "@angular/material/menu";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {PostDto} from "../../state/posts/post.model";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButtonModule} from "@angular/material/button";
 import {CommentDto, CreateCommentDto} from "../../state/comments/comment.model";
 import {animate, style, transition, trigger} from "@angular/animations";
 import {EMPTY, switchMap} from "rxjs";
+import {ButtonModule} from "primeng/button";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {ImageModule} from "primeng/image";
 
 @Component({
   selector: 'app-feed-post',
@@ -25,15 +25,15 @@ import {EMPTY, switchMap} from "rxjs";
     CharacterIconPipe,
     DatePipe,
     GuildMembershipPipe,
-    MatMenuModule,
-    MatIcon,
     RouterLink,
     DateFormatPipe,
     NgOptimizedImage,
     LineClampDirective,
     ReactiveFormsModule,
     FormsModule,
-    MatButtonModule
+    ButtonModule,
+    OverlayPanelModule,
+    ImageModule
   ],
   templateUrl: './feed-post.component.html',
   styles: ``,
@@ -49,6 +49,16 @@ import {EMPTY, switchMap} from "rxjs";
         style({transform: 'scale(1)'}),
         animate('0.15s ease-in', style({transform: 'scale(1.3)'})),
         animate('0.15s ease-out', style({transform: 'scale(1)'}))
+      ])
+    ]),
+    trigger('countAnimation', [
+      transition(':increment', [
+        style({transform: 'translateY(-100%)', opacity: 0}),
+        animate('300ms ease-out', style({transform: 'translateY(0)', opacity: 1}))
+      ]),
+      transition(':decrement', [
+        style({transform: 'translateY(100%)', opacity: 0}),
+        animate('300ms ease-out', style({transform: 'translateY(0)', opacity: 1}))
       ])
     ])
   ],

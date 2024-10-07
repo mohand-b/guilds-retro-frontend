@@ -1,4 +1,4 @@
-<div class="max-h-[60vh] overflow-y-auto p-2">
+<div class="max-h-[60vh] overflow-y-auto pt-4">
   @if (contentComponent) {
     <ng-container #dynamicComponentContainer/>
   } @else if (contentText) {
@@ -22,7 +22,7 @@
     [disabled]="buttonDisabled()"
     [label]="buttonText"
     [severity]="buttonColor"
-    icon="pi pi-check"
+    [icon]="buttonIcon"
     pButton
     rounded
   ></button>

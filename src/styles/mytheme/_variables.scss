@@ -2,7 +2,7 @@ $primaryColor: #29863e;
 $primaryDarkColor: darken($primaryColor, 5%);
 $primaryDarkerColor: darken($primaryColor, 10%);
 
-$secondaryColor: #ffc107;
+$secondaryColor: #FF8C42;
 $secondaryTextColor: #ffffff;
 $secondaryDarkColor: darken($secondaryColor, 10%);
 $secondaryHoverColor: lighten($secondaryColor, 10%);
@@ -17,6 +17,9 @@ $buttonTextColor: #ffffff;
 $lightTextColor: #ffffff;
 $inputTextColor: #495057;
 $lightGray: #f5f5f5;
+
+$toggleButtonColor: $primaryColor;
+$toggleButtonActiveColor: $secondaryColor;
 
 $colors: (
   "primary": $primaryColor,
