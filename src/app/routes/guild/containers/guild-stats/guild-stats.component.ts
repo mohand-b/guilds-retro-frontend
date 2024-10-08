@@ -2,16 +2,20 @@ import {Component, effect, inject, input, signal, WritableSignal} from '@angular
 import {GuildEventStatsDto} from "../../state/guilds/guild.model";
 import {forkJoin, tap} from "rxjs";
 import {GuildFacade} from "../../guild.facade";
-import {MatCardModule} from "@angular/material/card";
 import {ClassCountComponent} from "../../components/class-count/class-count.component";
 import {EventTypesEnum} from "../../../events/state/events/event.model";
+import {PanelModule} from "primeng/panel";
+import {DividerModule} from "primeng/divider";
+import {CardModule} from "primeng/card";
 
 @Component({
   selector: 'app-guild-stats',
   standalone: true,
   imports: [
-    MatCardModule,
-    ClassCountComponent
+    ClassCountComponent,
+    PanelModule,
+    DividerModule,
+    CardModule
   ],
   templateUrl: './guild-stats.component.html',
   styleUrl: './guild-stats.component.scss'

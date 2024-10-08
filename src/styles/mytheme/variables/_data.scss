@@ -32,7 +32,7 @@ $paginatorElementBg: transparent;
 
 /// Border of a paginator element
 /// @group data
-$paginatorElementBorder: 0 none;
+$paginatorElementBorder: 0;
 
 /// Icon color of a paginator element
 /// @group data
@@ -52,7 +52,7 @@ $paginatorElementIconHoverColor: $textSecondaryColor;
 
 /// Border radius of a paginator element
 /// @group data
-$paginatorElementBorderRadius: $borderRadius;
+$paginatorElementBorderRadius: 50%;
 
 /// Margin of a paginator element
 /// @group data
@@ -144,7 +144,7 @@ $tableHeaderCellHighlightTextHoverColor: $primaryColor;
 
 /// Size of a multiple column sorting order indicator
 /// @group data
-$tableSortableColumnBadgeSize: 1.143rem;
+$tableSortableColumnBadgeSize: 1rem;
 
 /// Background of a table body row
 /// @group data

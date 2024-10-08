@@ -1,114 +1,51 @@
 @if (currentUser(); as currentUser) {
   @if (guild(); as guild) {
-    <div class="flex justify-between items-center p-6">
+    <div class="flex justify-between items-center px-4 mb-4 text-base">
       <div class="flex flex-col gap-2">
-        <div class="text-3xl font-extrabold">{{ guild.name }}</div>
-        <div class="flex flex-row items-center gap-4">
 
-          <div class="flex flex-row items-center gap-2 text-sm">
-            Niveau de guilde:
-            @if (editMode()) {
-              <mat-form-field appearance="fill" class="flex-1">
-                <input matInput [formControl]="guildLevelControl" type="number" min="1" max="200">
-              </mat-form-field>
-              <div class="flex items-center gap-2">
-                <button mat-icon-button (click)="onUpdateGuildLevel()" color="primary">
-                  <mat-icon class="small-icon">check</mat-icon>
-                </button>
-                <button mat-icon-button (click)="toggleEditMode()" color="warn">
-                  <mat-icon class="small-icon">close</mat-icon>
-                </button>
-              </div>
-            } @else {
-              <span>{{ guild.level }}</span>
-              @if (isCurrentGuild && hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER)) {
-                <button mat-icon-button (click)="toggleEditMode()">
-                  <mat-icon class="small-icon">edit</mat-icon>
-                </button>
-              }
-            }
-          </div>
-
-        </div>
-        @if (guild.description) {
-          <div class="text-sm mt-2">{{ guild.description }}</div>
-        } @else {
-          <div class="text-sm mt-2 text-gray-500">Aucune description disponible pour cette guilde.</div>
-        }
-        @if (guild.leaderUsername) {
-          <div class="flex items-center mt-2">
-            <div class="text-md font-medium">Meneur: {{ guild.leaderUsername }}</div>
-          </div>
-        }
-        <div class="flex items-center mt-2">
-          <div class="text-md font-medium">
-            {{ guild.memberCount }} membres inscrits
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-col items-end">
-        @if (guild.logo) {
-          <div class="flex justify-center items-center w-20 h-20 bg-white rounded-full overflow-hidden mb-4">
-            <img [src]="guild.logo" alt="Guild Logo" class="w-full h-full object-cover">
-          </div>
-        }
-
-        @if (hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER)) {
-
-          @if (isCurrentGuild) {
-
-            <button (click)="onShowMembershipRequests()"
-                    [matBadge]="pendingMembershipRequestsCount()"
-                    [matBadgeHidden]="pendingMembershipRequestsCount() === 0"
-                    matBadgeColor="warn"
-                    mat-raised-button
-                    color="accent">
-              Demandes d'adhésion
-            </button>
-
+        <div class="flex items-center gap-4 text-gray-800">
+          <span>Niveau de guilde:</span>
+          @if (editMode()) {
+            <p-inputNumber [formControl]="guildLevelControl" [min]="1" [max]="200"
+                           variant="filled" showButtons/>
+            <div class="flex items-center gap-2">
+              <p-button icon="pi pi-check" (click)="onUpdateGuildLevel()" rounded outlined severity="success"/>
+              <p-button icon="pi pi-times" (click)="toggleEditMode()" rounded outlined severity="warning"/>
+            </div>
           } @else {
-
-            @if (!guild.isAlly && hasSentRequest() === false && !hasReceivedRequest() && currentUser.guildAlliesIds!.length < 3) {
-              <button (click)="onSendAllianceRequest()"
-                      mat-raised-button
-                      color="primary">
-                Proposer une alliance
-              </button>
-            }
-
-            @if (!guild.isAlly && hasSentRequest() === true) {
-              <button
-                mat-raised-button
-                color="warn"
-                disabled>
-                Demande d'alliance envoyée
-              </button>
-            }
-
-            @if (!guild.isAlly && hasReceivedRequest()) {
-              <div class="flex items-center">
-                <span class="mr-2">Demande d'alliance reçue :</span>
-                <div
-                  [matTooltip]="currentUser.guildAlliesIds!.length >= 3 ? 'Ta guilde compte déjà 3 guildes alliées.' :
-                 guild.allyCount! >= 3 ? 'La guilde émettrice compte déjà 3 guildes alliées.' : ''"
-                  matTooltipPosition="above">
-                  <button [disabled]="currentUser.guildAlliesIds!.length >= 3 || guild.allyCount! >= 3"
-                          mat-icon-button
-                          color="primary"
-                          (click)="onAcceptAllianceRequest()">
-                    <mat-icon>check</mat-icon>
-                  </button>
-                </div>
-                <button mat-icon-button color="warn" (click)="onDeclineAllianceRequest()">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
+            <span>{{ guild.level }}</span>
+            @if (isCurrentGuild && hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER)) {
+              <p-button icon="pi pi-pencil" (click)="toggleEditMode()" rounded text severity="primary"/>
             }
           }
+        </div>
 
+        <div class="text-gray-700 leading-relaxed">
+          @if (guild.description) {
+            {{ guild.description }}
+          } @else {
+            Aucune description disponible pour cette guilde.
+          }
+        </div>
+
+        @if (guild.leaderUsername) {
+          <div class="flex items-center gap-2 text-gray-800">
+            <i class="pi pi-crown text-yellow-500 mr-1"></i>
+            <span>Meneur: <a
+              [routerLink]="['/registry/user', guild.leaderUsername]">{{ guild.leaderUsername }}</a></span>
+          </div>
         }
 
+        <div class="text-gray-800">
+          {{ guild.memberCount }} membres inscrits
+        </div>
       </div>
+
+      @if (guild.logo) {
+        <div class="flex justify-center items-center w-24 h-24 overflow-hidden rounded-full">
+          <img [src]="guild.logo" alt="Guild Logo" class="w-full h-full object-cover">
+        </div>
+      }
     </div>
   }
 }

@@ -1,5 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {CharacterClassEnum, UserDto} from "../../routes/profile/state/users/user.model";
+import {MemberDto} from "../../routes/guild/state/guilds/guild.model";
 
 @Pipe({
   name: 'characterIcon',
@@ -7,7 +8,7 @@ import {CharacterClassEnum, UserDto} from "../../routes/profile/state/users/user
 })
 export class CharacterIconPipe implements PipeTransform {
 
-  transform(user: UserDto): string {
+  transform(user: UserDto | MemberDto): string {
     if (!user || !user.characterClass || !user.gender) {
       return '';
     }

@@ -1,42 +1,42 @@
 import {Component, effect, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
-import {GuildDto} from "../../state/guilds/guild.model";
+import {GuildDto, MemberDto} from "../../state/guilds/guild.model";
 import {EMPTY, forkJoin, switchMap, tap} from "rxjs";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {CommonModule} from "@angular/common";
-import {MatCardModule} from "@angular/material/card";
-import {MatButtonModule} from "@angular/material/button";
-import {MatBadgeModule} from "@angular/material/badge";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {GuildHeaderComponent} from "../../components/guild-header/guild-header.component";
 import {GuildMembersTableComponent} from "../../components/guild-members-table/guild-members-table.component";
 import {AllianceCardComponent} from "../../components/alliance-card/alliance-card.component";
-import {MatIconModule} from "@angular/material/icon";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {AllianceRequestsListComponent} from "../alliance-requests-list/alliance-requests-list.component";
 import {MembershipRequestsTabComponent} from "../membership-requests-tab/membership-requests-tab.component";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {InputSwitchModule} from "primeng/inputswitch";
+import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
+import {ButtonModule} from "primeng/button";
+import {BadgeModule} from "primeng/badge";
+import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 
 @Component({
   selector: 'app-guild-dashboard',
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatBadgeModule,
-    MatProgressSpinnerModule,
     AllianceCardComponent,
     GuildHeaderComponent,
     GuildMembersTableComponent,
-    MatIconModule,
     GuildMembersTableComponent,
     GuildStatsComponent,
-    MatSlideToggleModule
+    ProgressSpinnerModule,
+    InputSwitchModule,
+    PageBlockComponent,
+    ButtonModule,
+    BadgeModule,
+    AlertComponent
   ],
   templateUrl: './guild-dashboard.component.html',
   styleUrls: ['./guild-dashboard.component.scss']
@@ -85,7 +85,6 @@ export class GuildDashboardComponent implements OnInit {
       {},
       AllianceRequestsListComponent,
       undefined,
-      true
     );
 
     ref.onClose.subscribe();
@@ -99,20 +98,19 @@ export class GuildDashboardComponent implements OnInit {
       {},
       MembershipRequestsTabComponent,
       undefined,
-      true
     );
 
     ref.onClose.subscribe();
   }
 
-  public updateRole({user, role}: { user: UserDto, role: UserRoleEnum }): void {
+  public updateRole({user, role}: { user: MemberDto, role: UserRoleEnum }): void {
     const ref = this.genericModalService.open(
       'Confirmation',
       {primary: 'Oui'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir changer le rôle de ${user.username} à ${role} ?`
+      `Es-tu sûr de vouloir changer le rôle de ${user.username} à ${role} ?`,
     );
 
     ref.onClose.pipe(
@@ -120,7 +118,7 @@ export class GuildDashboardComponent implements OnInit {
     ).subscribe();
   }
 
-  public removeMember(user: UserDto): void {
+  public removeMember(user: MemberDto): void {
     const ref = this.genericModalService.open(
       'Confirmation',
       {danger: 'Oui'},
@@ -152,6 +150,19 @@ export class GuildDashboardComponent implements OnInit {
 
 
   public toggleUpdateGuildHideStats(hideStats: boolean): void {
-    this.guildFacade.updateGuildHideStats(this.guild()!.id!, hideStats).subscribe();
+    const messageForHide = "Les statistiques de la guilde ne seront visibles que par les membres de la guilde."
+    const messageForShow = "Les statistiques de la guilde seront visibles par tout le monde."
+    const ref = this.genericModalService.open(
+      'Confirmation',
+      {primary: 'Confirmer', icon: hideStats ? 'pi pi-eye-slash' : 'pi pi-eye'},
+      'sm',
+      null,
+      null,
+      hideStats ? messageForHide : messageForShow
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.guildFacade.updateGuildHideStats(this.guild()!.id!, hideStats) : EMPTY)
+    ).subscribe();
   }
 }

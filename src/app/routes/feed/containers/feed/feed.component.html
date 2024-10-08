@@ -1,5 +1,5 @@
 <div (scroll)="onScroll($event)"
-     class="w-full flex flex-col p-4 gap-6 h-full overflow-y-auto no-scrollbar">
+     class="w-full flex flex-col gap-6 h-full overflow-y-auto no-scrollbar">
 
   <app-page-block title="Fil d'actualité">
     <ng-container header-action>
@@ -24,13 +24,12 @@
         />
       }
 
-
     </ng-container>
 
     <ng-container content>
       <div class="flex items-center">
         <div class="flex-shrink-0">
-          <div class="w-12 h-12 rounded-full  flex items-center justify-center">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center">
             <img [src]="currentUser | characterIcon" alt="Avatar"
                  class="object-cover no-select no-copy">
           </div>
@@ -48,8 +47,7 @@
     </ng-container>
   </app-page-block>
 
-
-  <div class="flex flex-col gap-4  mb-10">
+  <div class="flex flex-col gap-4 mb-10">
     @for (item of feed(); track item.id) {
       @if (item.post) {
         <app-feed-post [@fadeIn] [currentUser]="currentUser" [post]="item.post"/>

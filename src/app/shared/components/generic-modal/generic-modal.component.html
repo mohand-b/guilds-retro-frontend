@@ -17,13 +17,15 @@
     text
   ></button>
 
-  <button
-    (click)="onAction()"
-    [disabled]="buttonDisabled()"
-    [label]="buttonText"
-    [severity]="buttonColor"
-    [icon]="buttonIcon"
-    pButton
-    rounded
-  ></button>
+  @if (buttonText) {
+    <button
+      (click)="onAction()"
+      [disabled]="buttonDisabled()"
+      [label]="buttonText"
+      [severity]="buttonColor"
+      [icon]="buttonIcon"
+      pButton
+      rounded
+    ></button>
+  }
 </div>
