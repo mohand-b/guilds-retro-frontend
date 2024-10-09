@@ -16,12 +16,13 @@
               severity="primary"
               rounded
               outlined
-              icon="pi pi-link"
+              icon="pi pi-shield"
             />
           }
 
           @if (!guild.isAlly && hasSentRequest() === true) {
             <p-button
+              styleClass="cursor-default"
               label="Demande d'alliance envoyée"
               severity="secondary"
               rounded
@@ -31,7 +32,7 @@
           }
 
           @if (!guild.isAlly && hasReceivedRequest()) {
-            <div class="flex items-center">
+            <div class="flex items-center gap-2">
               <span class="mr-2">Demande d'alliance reçue :</span>
               <p-button
                 [disabled]="currentUser()!.guildAlliesIds!.length >= 3 || guild.allyCount! >= 3"

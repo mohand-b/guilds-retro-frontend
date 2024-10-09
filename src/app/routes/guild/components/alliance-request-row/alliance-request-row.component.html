@@ -6,28 +6,35 @@
     </div>
     <div>
       <div class="text-xl font-bold">{{ allianceRequest.requesterGuild?.name }}</div>
-      <div class="text-sm text-gray-500">Niveau : {{ allianceRequest.requesterGuild?.level }}</div>
-      <div class="text-sm text-gray-500">Meneur : {{ allianceRequest.requesterGuild?.leaderUsername }}</div>
-    </div>
-  </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
+        <div class="text-sm text-gray-500">
+          Niveau : {{ allianceRequest.requesterGuild?.level }}
+        </div>
+        <div class="text-sm text-gray-500">
+          Niveau moyen : {{ allianceRequest.requesterGuild?.averageLevelOfMembers }}
+        </div>
+        <div class="text-sm text-gray-500">
+          Meneur : {{ allianceRequest.requesterGuild?.leaderUsername }}
+        </div>
+        <div class="text-sm text-gray-500">
+          Membres inscrits : {{ allianceRequest.requesterGuild?.memberCount }}
+        </div>
+      </div>
 
-  <div class="flex flex-col justify-center">
-    <div class="text-sm text-gray-500">Membres inscrits : {{ allianceRequest.requesterGuild?.memberCount }}</div>
-    <div class="text-sm text-gray-500">Niveau moyen : {{ allianceRequest.requesterGuild?.averageLevelOfMembers }}</div>
+    </div>
   </div>
 
   <div class="flex space-x-2">
-    <div
-      [matTooltip]="currentGuild()?.allies!.length >= 3 ? 'Votre guilde a déjà 3 alliés.' :
-                    allianceRequest.requesterGuild!.allyCount >= 3 ? 'La guilde émettrice a déjà 3 alliés.' : ''"
-      matTooltipPosition="above">
-      <button (click)="onAcceptRequest()"
-              [disabled]="currentGuild()?.allies!.length >= 3 || allianceRequest.requesterGuild!.allyCount >= 3" color="primary" mat-icon-button>
-        <mat-icon>check</mat-icon>
-      </button>
-    </div>
-    <button (click)="onDeclineRequest()" color="warn" mat-icon-button>
-      <mat-icon>clear</mat-icon>
-    </button>
+    <p-button (click)="onAcceptRequest()" severity="success" rounded outlined
+              [disabled]="currentGuild()?.allies!.length >= 3 || allianceRequest.requesterGuild!.allyCount >= 3"
+              pTooltip="Accepter la demande d'alliance."
+              icon="pi pi-check"
+              label="Accepter"
+    />
+    <p-button (click)="onDeclineRequest()" severity="danger" rounded outlined
+              pTooltip="Refuser la demande d'alliance."
+              icon="pi pi-times"
+              label="Refuser"
+    />
   </div>
 </div>
