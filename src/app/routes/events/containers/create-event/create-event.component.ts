@@ -1,165 +1,192 @@
 import {Component, inject, signal, WritableSignal} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
-import {EventsFacade} from "../../events.facade";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatIcon} from "@angular/material/icon";
-import {MatInput} from "@angular/material/input";
-import {CreateEventDto, EventTypesEnum} from "../../state/events/event.model";
-import {NgClass, NgForOf} from "@angular/common";
-import {MatStepperModule} from "@angular/material/stepper";
-import {MatButton} from "@angular/material/button";
-import {MatRadioModule} from "@angular/material/radio";
-import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {DUNGEONS} from "../../state/dungeons/dungeons.data";
-import {dungeonNameValidator} from "../../../../shared/validators/dungeon-name.validator";
-import {MatSlideToggle} from "@angular/material/slide-toggle";
-import {MatDialogRef} from "@angular/material/dialog";
-import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
-import {DateTime} from "luxon";
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CreateEventDto, EventTypesEnum} from '../../state/events/event.model';
+import {NgClass, NgForOf} from '@angular/common';
+import {EventsFacade} from '../../events.facade';
+import {CharacterClassEnum, GenderEnum} from '../../../profile/state/users/user.model';
+import {DateTime} from 'luxon';
+import {DUNGEONS} from '../../state/dungeons/dungeons.data';
+
+import {InputTextModule} from 'primeng/inputtext';
+import {DropdownModule} from 'primeng/dropdown';
+import {CheckboxModule} from 'primeng/checkbox';
+import {CalendarModule} from 'primeng/calendar';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {ButtonModule} from 'primeng/button';
+import {ToggleButtonModule} from 'primeng/togglebutton';
+import {DynamicDialogRef} from 'primeng/dynamicdialog';
+import {StepsModule} from 'primeng/steps';
+import {TabViewModule} from "primeng/tabview";
+import {StepperModule} from "primeng/stepper";
+import {AutoCompleteCompleteEvent, AutoCompleteModule} from "primeng/autocomplete";
+import {EventImagePipe} from "../../../../shared/pipes/event-image.pipe";
+import {InputGroupModule} from "primeng/inputgroup";
+import {InputGroupAddonModule} from "primeng/inputgroupaddon";
+import {SliderModule} from "primeng/slider";
+import {InputSwitchModule} from "primeng/inputswitch";
+
+import {eventTypeFieldsValidator} from "../../../../shared/validators/event-type-fields.validator";
+
+import {EventSummaryPreviewComponent} from "../../components/event-summary-preview/event-summary-preview.component";
+import {IconFieldModule} from "primeng/iconfield";
+import {InputIconModule} from "primeng/inputicon";
 
 @Component({
   selector: 'app-create-event',
   standalone: true,
   imports: [
-    MatFormField,
-    MatSelect,
-    MatOption,
-    MatCheckbox,
     ReactiveFormsModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatStepperModule,
-    MatRadioModule,
-    MatIcon,
-    MatInput,
+    InputTextModule,
+    DropdownModule,
+    CheckboxModule,
+    CalendarModule,
+    InputNumberModule,
+    ButtonModule,
+    ToggleButtonModule,
     NgForOf,
-    MatButton,
     NgClass,
-    MatAutocompleteTrigger,
-    MatAutocomplete,
-    MatSlideToggle
+    StepsModule,
+    TabViewModule,
+    StepperModule,
+    AutoCompleteModule,
+    EventImagePipe,
+    InputGroupModule,
+    InputGroupAddonModule,
+    SliderModule,
+    InputSwitchModule,
+    EventSummaryPreviewComponent,
+    IconFieldModule,
+    InputIconModule,
   ],
   templateUrl: './create-event.component.html',
-  styleUrl: './create-event.component.scss'
+  styleUrl: './create-event.component.scss',
 })
 export class CreateEventComponent {
-
   eventForm: FormGroup;
   eventDetailsFormGroup: FormGroup;
   participationRequirementsFormGroup: FormGroup;
+
   characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
-  dungeonNames: WritableSignal<string[]> = signal(DUNGEONS.map(dungeon => dungeon.dungeonName));
+  dungeonNames: WritableSignal<string[]> = signal(DUNGEONS.map((dungeon) => dungeon.dungeonName));
   protected readonly EventTypes = EventTypesEnum;
   protected readonly GenderEnum = GenderEnum;
-  private dialogRef: MatDialogRef<CreateEventComponent> = inject(MatDialogRef);
+  public readonly minDate = new Date();
+
+  private dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
   private eventsFacade = inject(EventsFacade);
 
   constructor(private fb: FormBuilder) {
-
     this.eventDetailsFormGroup = this.fb.group({
       type: [EventTypesEnum.DUNGEON, Validators.required],
       title: [''],
-      dungeonName: ['', dungeonNameValidator()],
+      dungeonName: [''],
       arenaTargets: [''],
       description: [''],
       isAccessibleToAllies: [false],
       date: ['', Validators.required],
-      time: ['', Validators.required]
+      time: ['18:00', Validators.required],
+    }, {
+      validators: eventTypeFieldsValidator(),
     });
 
     this.participationRequirementsFormGroup = this.fb.group({
-      maxParticipants: [0, [Validators.required, Validators.min(1)]],
+      maxParticipants: [8, [Validators.required, Validators.min(1)]],
       minLevel: [0, Validators.min(0)],
       requiredClasses: this.fb.array([]),
-      requiresOptimization: [false]
+      requiresOptimization: [false],
     });
 
     this.eventForm = this.fb.group({
       eventDetailsStep: this.eventDetailsFormGroup,
-      participationRequirementsStep: this.participationRequirementsFormGroup
+      participationRequirementsStep: this.participationRequirementsFormGroup,
     });
 
-    this.eventDetailsFormGroup.get('type')!.valueChanges.subscribe(type => {
-      this.updateDungeonNameValidator(type);
+    this.eventDetailsFormGroup.get('dungeonName')?.valueChanges.subscribe((dungeonName) => {
+      const dungeonLevel = this.getDungeonLevel(dungeonName);
+      this.participationRequirementsFormGroup.patchValue({minLevel: dungeonLevel});
     });
-
-    this.eventDetailsFormGroup.get('dungeonName')!.valueChanges.subscribe(input => {
-      if (input) {
-        this.dungeonNames.set(
-          DUNGEONS.map(dungeon => dungeon.dungeonName)
-            .filter(dungeonName => dungeonName.toLowerCase().includes(input.toLowerCase()))
-        );
-      }
-    });
-  }
-
-  get minDate() {
-    return new Date();
   }
 
   onSubmit() {
     if (this.eventDetailsFormGroup.valid && this.participationRequirementsFormGroup.valid) {
-      let formValues = {
-        ...this.eventDetailsFormGroup.value,
-        ...this.participationRequirementsFormGroup.value,
-      };
-
-      const combinedDateTime = this.combineDateAndTime(formValues.date, formValues.time);
-      delete formValues.time;
-
-      formValues = this.filterFormValuesByType(formValues);
-
-      const createEventDto: CreateEventDto = {
-        ...formValues,
-        date: combinedDateTime
-      };
-
-      this.eventsFacade.createEvent(createEventDto)
-        .subscribe(event => this.dialogRef.close(event));
+      const createEventDto = this.createEventDto();
+      this.eventsFacade.createEvent(createEventDto).subscribe((event) => this.dialogRef.close(event));
     }
   }
 
-  onCheckboxChange(event: MatCheckboxChange) {
+  createEventDto(): CreateEventDto {
+    let formValues = {
+      ...this.eventDetailsFormGroup.value,
+      ...this.participationRequirementsFormGroup.value,
+    };
+
+    const combinedDateTime = this.combineDateAndTime(formValues.date, formValues.time);
+    delete formValues.time;
+
+    formValues = this.filterFormValuesByType(formValues);
+
+    return {
+      ...formValues,
+      date: combinedDateTime,
+    };
+  }
+
+  isClassRequired(className: string) {
+    const formArray: FormArray = this.participationRequirementsFormGroup.get('requiredClasses') as FormArray;
+    return this.fb.control(formArray.value.includes(className));
+  }
+
+  onCheckboxChange(className: string, isChecked: boolean) {
     const checkArray: FormArray = this.participationRequirementsFormGroup.get('requiredClasses') as FormArray;
 
-    if (event.checked) {
-      checkArray.push(this.fb.control(event.source.value));
+    if (isChecked) {
+      checkArray.push(this.fb.control(className));
     } else {
-      let i: number = 0;
-      checkArray.controls.forEach((item) => {
-        if (item.value === event.source.value) {
-          checkArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
+      const index = checkArray.controls.findIndex((item) => item.value === className);
+      if (index >= 0) {
+        checkArray.removeAt(index);
+      }
     }
+  }
+
+  filterDungeons(event: AutoCompleteCompleteEvent) {
+    const query = event.query.toLowerCase();
+    if (query) {
+      this.dungeonNames.set(DUNGEONS.filter((dungeon) =>
+        dungeon.dungeonName.toLowerCase().includes(query) ||
+        dungeon.boss.toLowerCase().includes(query)
+      ).map((dungeon) => dungeon.dungeonName));
+    }
+  }
+
+  getDungeonLevel(dungeonName: string): number {
+    const dungeon = DUNGEONS.find(d => d.dungeonName === dungeonName);
+    if (dungeon && dungeon.levelRange) {
+      const [firstLevel] = dungeon.levelRange.split('-').map(Number);
+      return firstLevel;
+    }
+    return 0;
   }
 
   selectType(type: EventTypesEnum) {
     this.eventDetailsFormGroup.patchValue({type});
   }
 
-  private updateDungeonNameValidator(type: EventTypesEnum) {
-    const dungeonNameControl = this.eventDetailsFormGroup.get('dungeonName');
-    if (type === EventTypesEnum.DUNGEON) {
-      dungeonNameControl!.setValidators([dungeonNameValidator()]);
-    } else {
-      dungeonNameControl!.clearValidators();
-    }
-    dungeonNameControl!.updateValueAndValidity();
+  dungeonImageUrl(dungeonName: string): string {
+    const dungeon = DUNGEONS.find(d => d.dungeonName === dungeonName);
+    return dungeon ? `assets/dungeons/${dungeon.imageUrl}` : 'default-dungeon-image-url';
   }
 
   private combineDateAndTime(date: string, time: string): string {
-    const formattedDate = DateTime.fromISO(date).toFormat('yyyy-MM-dd');
-    const formattedTime = DateTime.fromFormat(time, 'HH:mm').toFormat('HH:mm');
+    const dateObj = DateTime.fromJSDate(new Date(date));
+    const timeObj = DateTime.fromFormat(time, 'HH:mm');
 
-    const dateTime = DateTime.fromISO(`${formattedDate}T${formattedTime}`);
+    const combinedDateTime = dateObj.set({
+      hour: timeObj.hour,
+      minute: timeObj.minute,
+    });
 
-    return dateTime.toISO()!;
+    return combinedDateTime.toISO()!;
   }
 
   private filterFormValuesByType(formValues: any) {

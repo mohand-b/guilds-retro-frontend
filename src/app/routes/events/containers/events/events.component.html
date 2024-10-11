@@ -1,10 +1,20 @@
 <div class="w-full flex flex-col gap-6">
 
-  <div class="flex items-center justify-between">
-    <h2 class="text-2xl font-bold">Événements</h2>
-    <button (click)="openCreateEventModal()" color="primary" mat-raised-button>Créer un événement</button>
-  </div>
+  <app-page-block title="Événements">
 
+    <ng-container header-action>
+      <p-button
+        (click)="openCreateEventModal()"
+        label="Créer un événement"
+        color="primary"
+        rounded
+        icon="pi pi-plus"
+      />
+    </ng-container>
+
+  </app-page-block>
+
+  <div class="flex items-center justify-between">
   <div class="p-4">
 
     <div>

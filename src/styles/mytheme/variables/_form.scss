@@ -52,11 +52,11 @@ $inputFilledFocusBg: #f8f9fa;
 
 /// Backgroud color of an input group addon
 /// @group form
-$inputGroupBg: #e9ecef;
+$inputGroupBg: #eff0f1;
 
 /// Text color of an input group addon
 /// @group form
-$inputGroupTextColor: $textSecondaryColor;
+$inputGroupTextColor: $inputTextColor;
 
 /// Minimum width of an input group addon
 /// @group form
@@ -185,7 +185,7 @@ $checkboxActiveBg: $primaryColor;
 
 /// Icon color of a selected checkbox
 /// @group form
-$checkboxIconActiveColor: $inputTextColor;
+$checkboxIconActiveColor: $secondaryColor;
 
 /// Background of a selected checkbox in hover state
 /// @group form
@@ -209,11 +209,11 @@ $radiobuttonHeight: 20px;
 
 /// Border of a radiobutton
 /// @group form
-$radiobuttonBorder: 2px solid #ced4da;
+$radiobuttonBorder: 1px solid #ced4da;
 
 /// Font size of a radiobutton icon
 /// @group form
-$radiobuttonIconSize: 12px;
+$radiobuttonIconSize: 2rem;
 
 /// Border color of a selected radiobutton
 /// @group form
@@ -393,7 +393,7 @@ $calendarMonthYearHeaderHoverTextColor: $primaryColor !default;
 
 /// Padding of a calendar date cell
 /// @group form
-$calendarCellDatePadding: .5rem;
+$calendarCellDatePadding: .2rem;
 
 /// Width of a calendar date cell
 /// @group form
@@ -417,7 +417,7 @@ $calendarCellDateHoverBg: #e9ecef;
 
 /// Background of a calendar date cell indicating today
 /// @group form
-$calendarCellDateTodayBg: #ced4da;
+$calendarCellDateTodayBg: #e5e5e5;
 
 /// Border color of a calendar date cell indicating today
 /// @group form
@@ -433,15 +433,15 @@ $calendarButtonBarPadding: 1rem 0;
 
 /// Padding of a time picker container of a calendar
 /// @group form
-$calendarTimePickerPadding: .5rem;
+$calendarTimePickerPadding: .2rem;
 
 /// Padding of a time picker element of a calendar
 /// @group form
-$calendarTimePickerElementPadding: 0 .429rem;
+$calendarTimePickerElementPadding: 0 .2rem;
 
 /// Font size of a time picker element of a calendar
 /// @group form
-$calendarTimePickerTimeFontSize: 1.286rem;
+$calendarTimePickerTimeFontSize: 1rem;
 
 /// Breakpoint of calendar to apply styles for small screens like phones
 /// @group form
