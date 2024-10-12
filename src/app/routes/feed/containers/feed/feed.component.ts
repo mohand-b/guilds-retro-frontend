@@ -92,7 +92,7 @@ export class FeedComponent {
     const messageForLock = "Seuls les membres de votre guilde et de ses alliés pourront voir vos publications et vous les leurs.";
     const messageForUnlock = "Tout le monde peut voir vos publications, à condition qu'ils aient aussi leur fil d'actualité ouvert à tous. Et vous verrez aussi les publications de tous les utilisateurs qui ont ce paramètre ouvert.";
     const ref = this.genericModalService.open(
-      'Confirmation',
+      checked ? "Fermer son fil d'actualité" : "Ouvrir son fil d'actualité",
       {
         primary: 'Confirmer',
         icon: checked ? 'pi pi-lock' : 'pi pi-lock-open'

@@ -35,7 +35,7 @@
             {{ post.user.role }} de ma guilde
           }
           @case ('alliedGuild') {
-            {{ post.user.role }} de la guilde <span class="text-pink-600">alliée</span>
+            {{ post.user.role }} de la guilde <span class="text-pink-600">alliée </span>
             <a [routerLink]="['/registry/guild', post.user.guild.id]"
                class="underline cursor-pointer">{{ post.user.guild.name }}</a>
           }

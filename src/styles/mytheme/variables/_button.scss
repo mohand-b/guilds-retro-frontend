@@ -86,7 +86,7 @@ $secondaryButtonActiveBorderColor: #455A64;
 
 /// Background of an info button
 /// @group button
-$infoButtonBg: #03A9F4;
+$infoButtonBg: $infoColor;
 
 /// Text color of an info button
 /// @group button
@@ -98,7 +98,7 @@ $infoButtonBorder: 0;
 
 /// Background of an info button in hover state
 /// @group button
-$infoButtonHoverBg: #039BE5;
+$infoButtonHoverBg: $infoDarkColor;
 
 /// Text color of an info button in hover state
 /// @group button
@@ -106,11 +106,11 @@ $infoButtonTextHoverColor: #ffffff;
 
 /// Border color of an info button in hover state
 /// @group button
-$infoButtonHoverBorderColor: #039BE5;
+$infoButtonHoverBorderColor: $infoDarkColor;
 
 /// Background of an info button in pressed state
 /// @group button
-$infoButtonActiveBg: #0288D1;
+$infoButtonActiveBg: $infoColor;
 
 /// Text color of an info button in pressed state
 /// @group button
@@ -118,7 +118,7 @@ $infoButtonTextActiveColor: #ffffff;
 
 /// Border color of an info button in pressed state
 /// @group button
-$infoButtonActiveBorderColor: #0288D1;
+$infoButtonActiveBorderColor: $infoColor;
 
 /// Background of a success button
 /// @group button

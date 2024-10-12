@@ -74,7 +74,11 @@
 
     <app-page-block title="Statistiques de Guilde">
       <ng-container content>
-        <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
+        @if (guild.hideStats) {
+          <app-alert type="warning" message="Les statistiques de cette guilde sont masquées"/>
+        } @else {
+          <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
+        }
       </ng-container>
     </app-page-block>
 

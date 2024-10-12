@@ -54,7 +54,7 @@
         @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.LEADER) && !loading) {
           @if (guild.hideStats) {
             <p-button
-              label="Afficher les statistiques"
+              label="Statistiques masquées"
               icon="pi pi-eye-slash"
               (onClick)="toggleUpdateGuildHideStats(false)"
               severity="warning"
@@ -63,7 +63,7 @@
             />
           } @else {
             <p-button
-              label="Masquer les statistiques"
+              label="Statistiques visibles"
               icon="pi pi-eye"
               (onClick)="toggleUpdateGuildHideStats(true)"
               severity="primary"

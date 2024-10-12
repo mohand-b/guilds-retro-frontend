@@ -3,10 +3,9 @@
 
   <app-page-block title="Fil d'actualité">
     <ng-container header-action>
-
       @if (feedClosingToGuildAndAllies()) {
         <p-button
-          label="Ouvrir son fil d'actualité à tous"
+          label="Fil d'actualité fermé à sa guilde et alliés"
           icon="pi pi-lock"
           severity="warning"
           outlined
@@ -15,7 +14,7 @@
         />
       } @else {
         <p-button
-          label="Fermer son fil d'actualité à sa guilde et guildes alliées"
+          label="Fil d'actualité ouvert à tous"
           icon="pi pi-lock-open"
           severity="primary"
           outlined
@@ -23,7 +22,6 @@
           (onClick)="toggleFeedClosingToGuildAndAllies(true)"
         />
       }
-
     </ng-container>
 
     <ng-container content>

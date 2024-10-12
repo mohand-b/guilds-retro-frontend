@@ -92,7 +92,7 @@
 
         <input pInputText formControlName="description" placeholder="Description de l'événement" class="w-full"/>
 
-        <div class="flex flex-wrap gap-4">
+        <div class="flex flex-wrap items-center gap-4">
           <p-calendar
             formControlName="date"
             dateFormat="dd MM yy"
@@ -110,12 +110,16 @@
             icon="pi pi-clock"
           />
 
+          @if (eventDetailsFormGroup.get('isAccessibleToAllies')?.value) {
+            <p-button (click)="onChangeIsAccessibleToAllies(false)"
+                      label="Ouvert aux guildes alliées"
+                      icon="pi pi-lock-open" outlined/>
+          } @else {
+            <p-button (click)="onChangeIsAccessibleToAllies(true)" severity="warning"
+                      label="Fermé aux guildes alliées"
+                      icon="pi pi-lock" outlined/>
+          }
         </div>
-
-        <p-iconField iconPosition="left">
-          <p-inputIcon styleClass="pi pi-search"/>
-          <input type="text" pInputText placeholder="Search"/>
-        </p-iconField>
       </form>
 
       <div class="flex justify-end my-4">

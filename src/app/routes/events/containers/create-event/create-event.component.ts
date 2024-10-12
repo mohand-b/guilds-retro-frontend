@@ -131,6 +131,10 @@ export class CreateEventComponent {
     };
   }
 
+  onChangeIsAccessibleToAllies(isAccessibleToAllies: boolean) {
+    this.eventDetailsFormGroup.patchValue({isAccessibleToAllies});
+  }
+
   isClassRequired(className: string) {
     const formArray: FormArray = this.participationRequirementsFormGroup.get('requiredClasses') as FormArray;
     return this.fb.control(formArray.value.includes(className));

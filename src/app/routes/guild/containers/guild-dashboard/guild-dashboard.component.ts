@@ -153,7 +153,7 @@ export class GuildDashboardComponent implements OnInit {
     const messageForHide = "Les statistiques de la guilde ne seront visibles que par les membres de la guilde."
     const messageForShow = "Les statistiques de la guilde seront visibles par tout le monde."
     const ref = this.genericModalService.open(
-      'Confirmation',
+      hideStats ? "Masquer les statistiques de la guilde" : "Afficher les statistiques de la guilde",
       {primary: 'Confirmer', icon: hideStats ? 'pi pi-eye-slash' : 'pi pi-eye'},
       'sm',
       null,
