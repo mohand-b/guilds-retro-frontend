@@ -11,6 +11,7 @@ import {DialogService} from "primeng/dynamicdialog";
 import {AccordionModule} from "primeng/accordion";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {EventDto} from "../../state/events/event.model";
+import {SortByPipe} from "../../../../shared/pipes/sort-by.pipe";
 
 @Component({
   selector: 'app-events',
@@ -24,6 +25,7 @@ import {EventDto} from "../../state/events/event.model";
     PageBlockComponent,
     Button,
     AccordionModule,
+    SortByPipe,
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',

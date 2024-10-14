@@ -17,7 +17,7 @@
       <p-accordion [multiple]="true" [activeIndex]="[0]">
         <p-accordionTab header="Evenement à venir (rejoints)" contentStyleClass="custom-accordion-content">
           <div class="flex flex-wrap gap-4">
-            @for (event of futureEventsJoined$(); track event.id) {
+            @for (event of futureEventsJoined$() | sortBy:'date':'asc'; track event.id) {
               <app-event-item (leaveEvent)="leaveEvent($event)"
                               [event]="event" [currentUser]="currentUser$()!"/>
             }
@@ -26,7 +26,7 @@
 
         <p-accordionTab header="Evenement à venir (non rejoints)">
           <div class="flex flex-wrap gap-4">
-            @for (event of futureEventsNotJoined$(); track event.id) {
+            @for (event of futureEventsNotJoined$() | sortBy:'date':'asc'; track event.id) {
               <app-event-item (joinEvent)="joinEvent($event)"
                               [event]="event" [currentUser]="currentUser$()!"/>
             }
@@ -35,7 +35,7 @@
 
         <p-accordionTab header="Evenement passés">
           <div class="flex flex-wrap gap-4">
-            @for (event of pastEvents$(); track event.id) {
+            @for (event of pastEvents$() | sortBy:'date':'asc'; track event.id) {
               <app-event-item [event]="event"/>
             }
           </div>

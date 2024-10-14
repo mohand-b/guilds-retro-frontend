@@ -28,9 +28,7 @@ export const eventsStore = createStore(
 @Injectable({providedIn: 'root'})
 export class EventsFacade {
 
-  events$: Signal<EventDto[]> = toSignal(eventsStore.pipe(selectAllEntities()), {
-    initialValue: []
-  });
+
   futureEventsNotJoined$: Signal<EventDto[]> = toSignal(
     eventsStore.pipe(
       selectAllEntities(),
