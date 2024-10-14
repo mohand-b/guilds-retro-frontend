@@ -1,6 +1,5 @@
 <div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md filter-container">
   <form (ngSubmit)="onSearchUsers()" [formGroup]="searchForm" class="flex flex-col gap-4 w-full h-full">
-    <!-- Première rangée : Pseudo, Classe, Niveau -->
     <div class="flex flex-wrap gap-4 justify-start">
       <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
         <mat-label>Pseudo</mat-label>
@@ -23,7 +22,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Deuxième rangée : Métier, Niveau du métier -->
     <div class="flex flex-wrap gap-4 justify-start">
       <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
         <mat-label>Métier</mat-label>

@@ -8,6 +8,9 @@ import {CommonModule} from "@angular/common";
 import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
 import {Button} from "primeng/button";
 import {DialogService} from "primeng/dynamicdialog";
+import {AccordionModule} from "primeng/accordion";
+import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
+import {EventDto} from "../../state/events/event.model";
 
 @Component({
   selector: 'app-events',
@@ -20,6 +23,7 @@ import {DialogService} from "primeng/dynamicdialog";
     EventItemComponent,
     PageBlockComponent,
     Button,
+    AccordionModule,
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
@@ -29,10 +33,12 @@ export class EventsComponent implements OnInit {
 
   protected readonly length = length;
   private readonly eventsFacade = inject(EventsFacade);
+  private readonly authenticatedFacade = inject(AuthenticatedFacade);
   futureEventsNotJoined$ = this.eventsFacade.futureEventsNotJoined$;
   futureEventsJoined$ = this.eventsFacade.futureEventsJoined$;
   pastEvents$ = this.eventsFacade.pastEvents$;
   private dialogService = inject(DialogService);
+  currentUser$ = this.authenticatedFacade.currentUser;
 
   ngOnInit() {
     this.eventsFacade.setEvents().subscribe();
@@ -44,6 +50,15 @@ export class EventsComponent implements OnInit {
       width: '800px',
       contentStyle: {'overflow-y': 'visible'},
     });
-
   }
+
+  joinEvent(event: EventDto) {
+    this.eventsFacade.joinEvent(event.id).subscribe();
+  }
+
+  leaveEvent(event: EventDto) {
+    this.eventsFacade.withdrawFromEvent(event.id).subscribe();
+  }
+
+
 }

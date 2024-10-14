@@ -22,7 +22,7 @@
       } @else if (!isCreator) {
         <div class="absolute bottom-0 w-full p-2 flex justify-center gap-2">
           @if (isParticipant) {
-            <p-button label="Se retirer" icon="pi pi-times" severity="warning" (click)="withdraw()"/>
+            <p-button label="Se retirer" icon="pi pi-minus" severity="warning" (click)="withdraw()"/>
           } @else if (!isParticipant && !isFull) {
             <p-button label="Participer" icon="pi pi-user-plus" severity="primary"
                       [disabled]="!meetsClassRequirements || !levelRequirementMet" (click)="participate()"/>

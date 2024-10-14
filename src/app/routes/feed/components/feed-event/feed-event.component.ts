@@ -41,7 +41,6 @@ export class FeedEventComponent {
 
   get isParticipant(): boolean {
     return this.event.participants.some(participant => participant.id === this.currentUser.id);
-
   }
 
   get isCreator(): boolean {

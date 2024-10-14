@@ -88,7 +88,7 @@ $accordionHeaderBorder: $panelHeaderBorder;
 
 /// Background of an accordion panel header
 /// @group panel
-$accordionHeaderBg: $panelHeaderBg;
+$accordionHeaderBg: $lightGray;
 
 /// Text color of an accordion panel header
 /// @group panel
@@ -116,7 +116,7 @@ $accordionHeaderTextHoverColor: $textColor;
 
 /// Background of an accordion panel header in expanded state
 /// @group panel
-$accordionHeaderActiveBg: $panelHeaderBg;
+$accordionHeaderActiveBg: $lightGray;
 
 /// Border of an accordion panel header in expanded state
 /// @group panel

@@ -183,7 +183,7 @@ export class CreateEventComponent {
 
   private combineDateAndTime(date: string, time: string): string {
     const dateObj = DateTime.fromJSDate(new Date(date));
-    const timeObj = DateTime.fromFormat(time, 'HH:mm');
+    const timeObj = DateTime.fromJSDate(new Date(time));
 
     const combinedDateTime = dateObj.set({
       hour: timeObj.hour,
