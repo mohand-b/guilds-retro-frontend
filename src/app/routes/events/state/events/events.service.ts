@@ -1,5 +1,5 @@
 import {inject, Injectable} from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {CreateEventDto, EventDto} from "./event.model";
 import {Observable} from "rxjs";
@@ -17,6 +17,13 @@ export class EventsService {
       event,
     );
   }
+
+  getEventById(eventId: number): Observable<EventDto> {
+    return this.http.get<EventDto>(
+      `${this.eventsBaseUrl}/${eventId}`,
+    );
+  }
+
 
   getEvents(): Observable<EventDto[]> {
     return this.http.get<EventDto[]>(

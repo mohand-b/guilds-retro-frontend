@@ -44,26 +44,27 @@
           }
 
           <p class="text-gray-700 text-sm truncate">
-            {{ event.description | slice:0:40 }}<span
-            *ngIf="event.description && event.description.length > 40">...</span>
+            {{ event.description | slice:0:40 }}
+            @if (event.description && event.description.length > 40) {
+              ...
+            }
           </p>
         </div>
       </div>
 
       <div class="flex items-center flex-wrap gap-1 mt-2 mx-3">
-        <div *ngFor="let participant of event.participants" class="flex items-center space-x-1">
-          <div class="relative">
+        @for (participant of event.participants; track participant.id) {
+          <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/user', participant.username]">
             <div class="w-5 h-5 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
               <img [src]="participant | characterIcon" alt="Avatar"
                    class="w-4 h-4 rounded-full object-cover no-select no-copy">
             </div>
+            <span class="text-xs text-gray-700 font-medium">{{ participant.username }}</span>
           </div>
-          <span class="text-xs text-gray-700 font-medium">
-        {{ participant.username }}
-      </span>
-        </div>
+        }
         <span class="text-xs text-gray-600 ml-2">({{ event.participants.length }}/{{ event.maxParticipants }})</span>
       </div>
+
     </div>
 
     <div class="flex justify-between items-center mb-2 mx-2">
@@ -90,7 +91,7 @@
         <div class="text-[.6rem] uppercase font-extrabold">Aujourd'hui !</div>
       }
 
-      <p-button label="Voir" icon="pi pi-eye" severity="info" text/>
+      <p-button [routerLink]="['/events', event.id]" label="Voir" icon="pi pi-eye" severity="info" text/>
     </div>
 
 

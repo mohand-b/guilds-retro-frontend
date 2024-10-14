@@ -10,12 +10,13 @@ import {Button} from "primeng/button";
 import {TagComponent} from "../../../../shared/components/tag/tag.component";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {animate, keyframes, state, style, transition, trigger} from "@angular/animations";
+import {RouterLink} from "@angular/router";
 
 
 @Component({
   selector: 'app-event-item',
   standalone: true,
-  imports: [CommonModule, DateFormatPipe, CharacterIconPipe, EventImagePipe, CardModule, TagModule, Button, TagComponent],
+  imports: [CommonModule, DateFormatPipe, CharacterIconPipe, EventImagePipe, CardModule, TagModule, Button, TagComponent, RouterLink],
   templateUrl: './event-item.component.html',
   styleUrls: ['./event-item.component.scss'],
   animations: [
@@ -83,7 +84,6 @@ export class EventItemComponent implements OnInit {
 
     return eventDate.toDateString() === now.toDateString() && eventDate.getTime() >= now.getTime();
   }
-
 
   get isParticipant(): boolean {
     return this.event.participants.some(participant => participant.id === this.currentUser.id);

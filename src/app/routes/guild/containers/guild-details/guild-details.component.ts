@@ -14,7 +14,6 @@ import {ClassCountComponent} from "../../components/class-count/class-count.comp
 import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
-import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {AllianceRequestDto} from "../../state/alliances/alliance.model";
 import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
@@ -31,7 +30,6 @@ import {BadgeModule} from "primeng/badge";
     AllianceCardComponent,
     ClassCountComponent,
     GuildStatsComponent,
-    MatSlideToggle,
     AlertComponent,
     PageBlockComponent,
     ButtonModule,

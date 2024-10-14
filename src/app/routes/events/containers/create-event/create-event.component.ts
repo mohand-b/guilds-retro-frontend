@@ -84,7 +84,7 @@ export class CreateEventComponent {
       description: [''],
       isAccessibleToAllies: [false],
       date: ['', Validators.required],
-      time: ['18:00', Validators.required],
+      time: [new Date(new Date().setHours(18, 0, 0)), Validators.required],
     }, {
       validators: eventTypeFieldsValidator(),
     });

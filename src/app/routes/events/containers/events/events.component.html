@@ -14,29 +14,42 @@
 
     <ng-container content>
 
-      <p-accordion [multiple]="true" [activeIndex]="[0]">
-        <p-accordionTab header="Evenement à venir (rejoints)" contentStyleClass="custom-accordion-content">
+      <p-accordion [activeIndex]="[0]">
+        <p-accordionTab header="Evenement à venir (inscrit)" contentStyleClass="custom-accordion-content">
           <div class="flex flex-wrap gap-4">
-            @for (event of futureEventsJoined$() | sortBy:'date':'asc'; track event.id) {
-              <app-event-item (leaveEvent)="leaveEvent($event)"
-                              [event]="event" [currentUser]="currentUser$()!"/>
+            @if (futureEventsJoined$().length === 0) {
+              <div class="text-gray-600">Aucun événement à venir</div>
+            } @else {
+              @for (event of futureEventsJoined$() | sortBy:'date':'asc'; track event.id) {
+                <app-event-item (leaveEvent)="leaveEvent($event)"
+                                [event]="event" [currentUser]="currentUser$()!"/>
+              }
+            }
+
+          </div>
+        </p-accordionTab>
+
+        <p-accordionTab header="Evenement à venir (non inscrit)" contentStyleClass="custom-accordion-content">
+          <div class="flex flex-wrap gap-4">
+            @if (futureEventsNotJoined$().length === 0) {
+              <div class="text-gray-600">Aucun événement à venir</div>
+            } @else {
+              @for (event of futureEventsNotJoined$() | sortBy:'date':'asc'; track event.id) {
+                <app-event-item (joinEvent)="joinEvent($event)"
+                                [event]="event" [currentUser]="currentUser$()!"/>
+              }
             }
           </div>
         </p-accordionTab>
 
-        <p-accordionTab header="Evenement à venir (non rejoints)">
+        <p-accordionTab header="Evenement passés" contentStyleClass="custom-accordion-content">
           <div class="flex flex-wrap gap-4">
-            @for (event of futureEventsNotJoined$() | sortBy:'date':'asc'; track event.id) {
-              <app-event-item (joinEvent)="joinEvent($event)"
-                              [event]="event" [currentUser]="currentUser$()!"/>
-            }
-          </div>
-        </p-accordionTab>
-
-        <p-accordionTab header="Evenement passés">
-          <div class="flex flex-wrap gap-4">
-            @for (event of pastEvents$() | sortBy:'date':'asc'; track event.id) {
-              <app-event-item [event]="event"/>
+            @if (pastEvents$().length === 0) {
+              <div class="text-gray-600">Aucun événement passé</div>
+            } @else {
+              @for (event of pastEvents$() | sortBy:'date':'desc'; track event.id) {
+                <app-event-item [event]="event"/>
+              }
             }
           </div>
         </p-accordionTab>

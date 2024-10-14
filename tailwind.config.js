@@ -28,6 +28,7 @@ module.exports = {
         extraLightSecondary: 'var(--extra-light-secondary-color)',
         accent: 'var(--accent-color)',
         warn: 'var(--warn-color)',
+        danger: 'var(--danger-color)',
         tertiary: 'var(--tertiary-color)',
         text: 'var(--text-color)',
         buttonText: 'var(--button-text-color)',

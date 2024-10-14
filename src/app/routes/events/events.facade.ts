@@ -89,6 +89,10 @@ export class EventsFacade {
     );
   }
 
+  getEventById(eventId: number): Observable<EventDto> {
+    return this.eventsService.getEventById(eventId);
+  }
+
   joinEvent(eventId: number): Observable<EventDto> {
     return this.eventsService.joinEvent(eventId).pipe(
       tap({
