@@ -11,6 +11,7 @@ export interface GuildSearchResponseDto {
   logo: Buffer | null;
   membersCount: number;
   averageLevel: number;
+  leaderUsername: string;
 }
 
 export interface PaginatedGuildSearchResponseDto {

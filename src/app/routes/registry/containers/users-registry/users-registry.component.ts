@@ -97,7 +97,6 @@ export class UsersRegistryComponent implements OnInit {
 
   onPageChange(event: PaginatorState) {
     const nextPage = event.page! + 1;
-
     this.onSearchUsers(nextPage);
   }
 

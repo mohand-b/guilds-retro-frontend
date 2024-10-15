@@ -125,5 +125,14 @@ export class RegistryFacade {
       }));
   }
 
+  resetGuildsFilter() {
+    guildsRegistryStore.update(
+      deleteAllEntities(),
+      setProps({
+        name: undefined,
+        minAverageLevel: undefined,
+      }));
+  }
+
 
 }
