@@ -3,7 +3,7 @@ import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from
 import {CreateEventDto, EventTypesEnum} from '../../state/events/event.model';
 import {NgClass, NgForOf} from '@angular/common';
 import {EventsFacade} from '../../events.facade';
-import {CharacterClassEnum, GenderEnum} from '../../../profile/state/users/user.model';
+import {CharacterClassEnum} from '../../../profile/state/users/user.model';
 import {DateTime} from 'luxon';
 import {DUNGEONS} from '../../state/dungeons/dungeons.data';
 
@@ -69,7 +69,6 @@ export class CreateEventComponent {
   characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
   dungeonNames: WritableSignal<string[]> = signal(DUNGEONS.map((dungeon) => dungeon.dungeonName));
   protected readonly EventTypes = EventTypesEnum;
-  protected readonly GenderEnum = GenderEnum;
   public readonly minDate = new Date();
 
   private dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
@@ -160,6 +159,8 @@ export class CreateEventComponent {
         dungeon.dungeonName.toLowerCase().includes(query) ||
         dungeon.boss.toLowerCase().includes(query)
       ).map((dungeon) => dungeon.dungeonName));
+    } else {
+      this.dungeonNames.set(DUNGEONS.map((dungeon) => dungeon.dungeonName));
     }
   }
 

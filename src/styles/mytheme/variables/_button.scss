@@ -70,11 +70,11 @@ $secondaryButtonTextHoverColor: #ffffff;
 
 /// Border color of a secondary button in hover state
 /// @group button
-$secondaryButtonHoverBorderColor: #546E7A;
+$secondaryButtonHoverBorderColor: darken($secondaryColor, 10%);
 
 /// Background of a secondary button in pressed state
 /// @group button
-$secondaryButtonActiveBg: #455A64;
+$secondaryButtonActiveBg: darken($secondaryColor, 10%);
 
 /// Text color of a secondary button in pressed state
 /// @group button
