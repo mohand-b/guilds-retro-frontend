@@ -6,7 +6,6 @@ import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {NgStyle} from "@angular/common";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {ActivatedRoute, RouterLink} from "@angular/router";
-import {MatRipple} from "@angular/material/core";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {PermissionsService} from "../../../../shared/services/permissions.service";
 import {UserDto} from "../../../profile/state/users/user.model";
@@ -19,7 +18,6 @@ import {ButtonModule} from "primeng/button";
   standalone: true,
   imports: [
     RouterLink,
-    MatRipple,
     CardModule,
     NgStyle,
     ButtonModule

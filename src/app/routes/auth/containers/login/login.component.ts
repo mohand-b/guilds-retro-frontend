@@ -1,7 +1,4 @@
 import {Component, DestroyRef, inject} from '@angular/core';
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {MatButton} from "@angular/material/button";
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AuthFacade} from "../../auth.facade";
 import {Router, RouterLink} from "@angular/router";
@@ -19,10 +16,6 @@ import {InputTextModule} from "primeng/inputtext";
   selector: 'app-login',
   standalone: true,
   imports: [
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatButton,
     ReactiveFormsModule,
     RouterLink,
     AlertComponent,

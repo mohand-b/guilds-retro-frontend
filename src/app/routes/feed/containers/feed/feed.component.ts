@@ -1,7 +1,6 @@
 import {Component, DestroyRef, HostListener, inject, Input, Signal} from '@angular/core';
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {FeedPostComponent} from "../../components/feed-post/feed-post.component";
-import {MatDialog} from "@angular/material/dialog";
 import {FeedFacade} from "../../feed.facade";
 import {FeedEventComponent} from "../../components/feed-event/feed-event.component";
 import {GenericModalService} from '../../../../shared/services/generic-modal.service';
@@ -48,7 +47,7 @@ import {animate, style, transition, trigger} from "@angular/animations";
 })
 export class FeedComponent {
   @Input() currentUser!: UserDto;
-  public dialog = inject(MatDialog);
+
   isLoading = false;
   currentPage = 1;
   pageSize = 10;

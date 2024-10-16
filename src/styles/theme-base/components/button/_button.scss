@@ -508,55 +508,55 @@
 
 @if variable-exists(contrastButtonTextColor) {
   .p-button.p-button-contrast, .p-button-group.p-button-contrast > .p-button, .p-splitbutton.p-button-contrast > .p-button {
-    color: $contrastButtonTextColor;
-    background: $contrastButtonBg;
-    border: $contrastButtonBorder;
+    color: #fff;
+    background: #fff;
+    border: #fff;
 
     &:not(:disabled):hover {
       background: $contrastButtonHoverBg;
-      color: $contrastButtonTextHoverColor;
+      color: #fff;
       border-color: $contrastButtonHoverBorderColor;
     }
 
     &:not(:disabled):active {
       background: $contrastButtonActiveBg;
-      color: $contrastButtonTextActiveColor;
+      color: #fff;
       border-color: $contrastButtonActiveBorderColor;
     }
 
     &.p-button-outlined {
       background-color: transparent;
-      color: $contrastButtonBg;
+      color: #fff;
       border: $outlinedButtonBorder;
 
       &:not(:disabled):hover {
-        background: rgba($contrastButtonBg, $textButtonHoverBgOpacity);
-        color: $contrastButtonBg;
+        background: rgba(#fff, $textButtonHoverBgOpacity);
+        color: #fff;
         border: $outlinedButtonBorder;
       }
 
       &:not(:disabled):active {
-        background: rgba($contrastButtonBg, $textButtonActiveBgOpacity);
-        color: $contrastButtonBg;
+        background: rgba(#fff, $textButtonActiveBgOpacity);
+        color: #fff;
         border: $outlinedButtonBorder;
       }
     }
 
     &.p-button-text {
       background-color: transparent;
-      color: $contrastButtonBg;
+      color: #ffffff;
       border-color: transparent;
 
       &:not(:disabled):hover {
-        background: rgba($contrastButtonBg, $textButtonHoverBgOpacity);
+        background: rgba(#fff, $textButtonHoverBgOpacity);
         border-color: transparent;
-        color: $contrastButtonBg;
+        color: #fff;
       }
 
       &:not(:disabled):active {
-        background: rgba($contrastButtonBg, $textButtonActiveBgOpacity);
+        background: rgba(#fff, $textButtonActiveBgOpacity);
         border-color: transparent;
-        color: $contrastButtonBg;
+        color: #fff;
       }
     }
   }

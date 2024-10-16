@@ -1,12 +1,10 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {EventsFacade} from "../../events.facade";
 import {CreateEventComponent} from "../create-event/create-event.component";
-import {MatButton} from "@angular/material/button";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {EventItemComponent} from "../../components/event-item/event-item.component";
 import {CommonModule} from "@angular/common";
 import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
-import {Button} from "primeng/button";
+import {ButtonModule} from "primeng/button";
 import {DialogService} from "primeng/dynamicdialog";
 import {AccordionModule} from "primeng/accordion";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
@@ -19,11 +17,9 @@ import {SortByPipe} from "../../../../shared/pipes/sort-by.pipe";
   imports: [
     CommonModule,
     CreateEventComponent,
-    MatButton,
-    MatProgressSpinner,
     EventItemComponent,
     PageBlockComponent,
-    Button,
+    ButtonModule,
     AccordionModule,
     SortByPipe,
   ],

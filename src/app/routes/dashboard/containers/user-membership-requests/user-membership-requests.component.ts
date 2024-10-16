@@ -5,8 +5,6 @@ import {
 } from "../../../guild/state/membership-requests/membership-request.model";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {CommonModule, DatePipe} from "@angular/common";
-import {MatButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
 import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {GuildFacade} from "../../../guild/guild.facade";
@@ -16,7 +14,6 @@ import {interval, Observable, switchMap, takeUntil, timer} from "rxjs";
 import {
   UserMembershipRequestComponent
 } from "../../components/user-membership-request/user-membership-request.component";
-import {MatProgressBar} from "@angular/material/progress-bar";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
 import {ButtonModule} from "primeng/button";
@@ -30,10 +27,7 @@ import {PageBlockComponent} from "../../../../shared/components/page-block/page-
     AlertComponent,
     CommonModule,
     DatePipe,
-    MatButton,
-    MatIcon,
     UserMembershipRequestComponent,
-    MatProgressBar,
     ButtonModule,
     ProgressBarModule,
     PageBlockComponent,

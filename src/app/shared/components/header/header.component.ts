@@ -1,15 +1,15 @@
 import {Component, inject, Signal} from '@angular/core';
 import {AuthenticatedFacade} from "../../../routes/authenticated/authenticated.facade";
 import {NgIf} from "@angular/common";
-import {MatIcon} from "@angular/material/icon";
 import {UserDto} from "../../../routes/profile/state/users/user.model";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     NgIf,
-    MatIcon
+    ButtonModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

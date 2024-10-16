@@ -3,15 +3,13 @@ import {RouterLink} from "@angular/router";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
-import {MatButton} from "@angular/material/button";
-import {MatChip} from "@angular/material/chips";
 import {EventsFacade} from "../../../events/events.facade";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {EventImagePipe} from "../../../../shared/pipes/event-image.pipe";
 import {EventDto} from "../../../events/state/events/event.model";
 import {CharacterClassEnum, UserDto} from "../../../profile/state/users/user.model";
 import {TagModule} from "primeng/tag";
-import {Button} from "primeng/button";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-feed-event',
@@ -22,14 +20,12 @@ import {Button} from "primeng/button";
     CharacterIconPipe,
     DatePipe,
     NgIf,
-    MatButton,
     NgClass,
     NgForOf,
-    MatChip,
     DateFormatPipe,
     EventImagePipe,
     TagModule,
-    Button
+    ButtonModule
   ],
   templateUrl: './feed-event.component.html',
   styleUrl: './feed-event.component.scss'
