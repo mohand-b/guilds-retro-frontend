@@ -1,29 +1,16 @@
 <form [formGroup]="addJobForm" class="flex gap-4 items-center">
 
-  <mat-form-field appearance="outline" class="flex-1">
-    <input [matAutocomplete]="auto" formControlName="name" matInput placeholder="Nom du métier"/>
-    <mat-autocomplete #auto="matAutocomplete">
-      @for (job of (isForgemaging ? magusJobs : jobs) | sortAlphabetically; track job; let i = $index) {
-        <mat-option [value]="job">{{ job }}</mat-option>
-        @if (i < (isForgemaging ? magusJobs.length : jobs.length) - 1) {
-          <hr class="my-1 mx-auto w-1/2 border-t border-gray-300"/>
-        }
-      }
-    </mat-autocomplete>
-  </mat-form-field>
+  <p-autoComplete formControlName="name" placeholder="Métier"
+                  [suggestions]="filteredJobs | sortAlphabetically"
+                  (completeMethod)="filterJobs($event)"
+                  searchMessage=" "
+                  emptySelectionMessage=" "
+                  selectionMessage=" "
+                  completeOnFocus>
+    <ng-template pTemplate="loadingicon"></ng-template>
+    <ng-template pTemplate="empty">Aucun résultat</ng-template>
+  </p-autoComplete>
 
-  <div class="flex-1 flex flex-col overflow-hidden">
-    <div class="flex gap-3">
-      <label>Niveau du métier</label>
-      <label class="font-bold">{{ jobLevel.value }}</label>
-    </div>
-
-
-    <mat-slider class="mr-4" color="accent" max="100" min="0" showTickMark step="1">
-      <input #jobLevel class="w-full" formControlName="level" matSliderThumb>
-    </mat-slider>
-
-
-  </div>
+  <p-inputNumber formControlName="level" placeholder="Niveau du métier" min="0" max="100"></p-inputNumber>
 
 </form>

@@ -1,24 +1,22 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {OneWordQuestionnaireDto} from "../../state/questionnaire/questionnaire.model";
 import {ProfileFacade} from "../../profile.facade";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
 import {singleWordValidator} from "../../../../shared/validators/single-word.validator";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
-import {MatIconModule} from "@angular/material/icon";
+import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
+import {ButtonModule} from "primeng/button";
+import {InputTextModule} from "primeng/inputtext";
 
 @Component({
   selector: 'app-questionnaire',
   standalone: true,
   imports: [
-    MatFormFieldModule,
     ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
     AlertComponent,
-    MatIconModule,
+    PageBlockComponent,
+    ButtonModule,
+    InputTextModule,
   ],
   templateUrl: './questionnaire.component.html',
   styleUrl: './questionnaire.component.scss'

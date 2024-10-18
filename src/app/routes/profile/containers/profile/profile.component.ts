@@ -2,28 +2,24 @@ import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} fro
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {EMPTY, forkJoin, switchMap, tap} from 'rxjs';
 
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatIconModule} from '@angular/material/icon';
-
 import {ProfileFacade} from "../../profile.facade";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
-import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
+import {CharacterColorPipe, CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {JobImagePipe} from "../../../../shared/pipes/job-image.pipe";
 import {JobDto} from "../../state/jobs/job.model";
 import {JobDisplayComponent} from "../../components/job-display/job-display.component";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {Location} from "@angular/common";
 import {PostDto} from "../../../feed/state/posts/post.model";
 import {PostSummaryComponent} from "../../components/post-summary/post-summary.component";
 import {QuestionnaireComponent} from "../questionnaire/questionnaire.component";
-import {MatButtonModule} from "@angular/material/button";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {UserDto} from "../../state/users/user.model";
 import {EditJobLevelComponent} from "../../components/edit-job-level/edit-job-level.component";
 import {AddJobComponent} from "../../components/add-job/add-job.component";
 import {AddLinkedAccountComponent} from "../../components/add-linked-account/add-linked-account.component";
+import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-profile',
@@ -31,16 +27,14 @@ import {AddLinkedAccountComponent} from "../../components/add-linked-account/add
   imports: [
     CharacterIconPipe,
     JobImagePipe,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatSlideToggleModule,
-    MatIconModule,
     JobDisplayComponent,
     PostSummaryComponent,
     RouterLink,
     QuestionnaireComponent,
-    MatButtonModule,
-    AlertComponent
+    AlertComponent,
+    PageBlockComponent,
+    ButtonModule,
+    CharacterColorPipe
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -193,4 +187,5 @@ export class ProfileComponent implements OnInit {
   goBack() {
     this.location.back();
   }
+
 }

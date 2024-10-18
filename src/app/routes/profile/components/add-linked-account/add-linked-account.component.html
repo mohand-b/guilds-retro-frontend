@@ -1,12 +1,9 @@
 <div class="flex flex-col gap-4">
-  <form (submit)="onSearchAccount($event)" class="flex gap-4">
-    <mat-form-field appearance="outline" class="flex-1">
-      <input [formControl]="searchAccountControl" matInput placeholder="Nom du compte"/>
-    </mat-form-field>
+  <form (submit)="onSearchAccount($event)" class="flex items-center gap-4">
+    <input pInputText [formControl]="searchAccountControl" placeholder="Nom du compte" class="flex-1"/>
 
-    <button [disabled]="searchAccountControl.invalid" color="accent" mat-raised-button>
-      Chercher
-    </button>
+    <p-button label="Chercher" icon="pi pi-search" type="submit" [disabled]="searchAccountControl.invalid" text
+              rounded/>
   </form>
 
   @if (accountFound(); as account) {

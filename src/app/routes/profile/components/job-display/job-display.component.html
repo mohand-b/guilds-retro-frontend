@@ -1,15 +1,16 @@
-<div class="flex flex-col items-center
-min-h-[7.5rem] w-[5.5rem] w-max-[5.5rem]">
-  <div class="relative flex items-center justify-center h-[4.5rem]">
+<div class="flex flex-col items-center min-h-[7.5rem] w-[5.5rem]">
+  <div class="relative flex items-center justify-center h-[4.5rem] w-[4.5rem]">
     @if (job) {
-      <mat-progress-spinner
-        [value]="job.level"
-        mode="determinate"
-        diameter="76"
-        strokeWidth="8"
-        strokeColor="tertiary"
-        [color]="color">
-      </mat-progress-spinner>
+      <p-knob
+        [(ngModel)]="job.level"
+        [min]="0"
+        [max]="100"
+        [readonly]="true"
+        [size]="100"
+        [strokeWidth]="10"
+        [showValue]="false"
+        class="absolute">
+      </p-knob>
     } @else {
       <div class="w-[4.5rem] h-[4.5rem]"></div>
     }
@@ -25,9 +26,9 @@ min-h-[7.5rem] w-[5.5rem] w-max-[5.5rem]">
           </span>
         </div>
       } @else if (!job && isCurrentUser) {
-        <mat-icon class="text-gray-400">add</mat-icon>
+        <i class="text-gray-400 pi pi-plus"></i>
       } @else {
-        <mat-icon class="text-gray-400">lock</mat-icon>
+        <i class="text-gray-400 pi pi-lock"></i>
       }
     </div>
 
@@ -35,12 +36,12 @@ min-h-[7.5rem] w-[5.5rem] w-max-[5.5rem]">
       <button (click)="onEditJobLevel()"
               matTooltip="Modifier le niveau"
               class="absolute bottom-0 left-0 bg-orange-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
-        <mat-icon class="text-white text-[0.8rem] leading-[1.5rem]">edit</mat-icon>
+        <i class="pi pi-pencil text-white text-[0.8rem] leading-[1.5rem]"></i>
       </button>
       <button (click)="onRemoveJob()"
               matTooltip="Supprimer"
               class="absolute bottom-0 right-0 bg-red-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
-        <mat-icon class="text-white text-[0.8rem] leading-[1.5rem]">delete</mat-icon>
+        <i class="pi pi-trash text-white text-[0.8rem] leading-[1.5rem]"></i>
       </button>
     }
   </div>

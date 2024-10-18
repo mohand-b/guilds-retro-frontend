@@ -1,142 +1,116 @@
-<div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
-  <div class="flex items-center justify-between">
-    <h2 class="text-xl font-semibold text-gray-700 mb-2">Questionnaire, en 1 mot !</h2>
-    @if (isCurrentUser) {
-      <button class="-mt-3" mat-icon-button (click)="onEdit()">
-        <mat-icon>edit</mat-icon>
-      </button>
-    }
-  </div>
+<app-page-block title="Questionnaire, en 1 mot !" class="flex-1">
+  <ng-container header-action>
+    <p-button icon="pi pi-pencil" severity="secondary" label="Modifier" text rounded (click)="onEdit()"/>
+  </ng-container>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="questionnaireForm">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Âge</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="age" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.age }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Prénom</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="firstName" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.firstName }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Pizza préférée</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="favoritePizza" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.favoritePizza }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Dessert préféré</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="favoriteDessert" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.favoriteDessert }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Saveur de glace préférée</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="favoriteIceCreamFlavor" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.favoriteIceCreamFlavor }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Saison préférée</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="favoriteSeason" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.favoriteSeason }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Dofus préféré</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="favoriteDofus" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.favoriteDofus }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Zone préférée</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="favoriteZone" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.favoriteZone }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Pourquoi Dofus Retro</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="reasonForRetro" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.reasonForRetro }}</div>
-        }
-      </div>
-
-      <div class="flex items-center gap-2">
-        <div class="italic text-gray-500">Familier préféré</div>
-        @if (isEditable) {
-          <mat-form-field appearance="fill" class="flex-1">
-            <input formControlName="favoriteFamiliar" matInput/>
-          </mat-form-field>
-        } @else {
-          <div>{{ questionnaire?.favoriteFamiliar }}</div>
-        }
-      </div>
-    </div>
-
-    <div class="flex flex-col gap-4 mt-4">
-      @if (alertMessage) {
-        <app-alert [message]="alertMessage" type="info"/>
-      }
-      @if (isEditable) {
-        <div class="flex items-center justify-end gap-4">
-          <button color="warn" mat-button type="button" (click)="onCancel()">
-            Annuler
-          </button>
-          <button color="primary" mat-raised-button type="submit">
-            Enregistrer
-          </button>
+  <ng-container content>
+    <form (ngSubmit)="onSubmit()" [formGroup]="questionnaireForm">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Âge</div>
+          @if (isEditable) {
+            <input pInputText formControlName="age" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.age }}</div>
+          }
         </div>
-      }
-    </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Prénom</div>
+          @if (isEditable) {
+            <input pInputText formControlName="firstName" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.firstName }}</div>
+          }
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Pizza préférée</div>
+          @if (isEditable) {
+            <input pInputText formControlName="favoritePizza" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.favoritePizza }}</div>
+          }
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Dessert préféré</div>
+          @if (isEditable) {
+            <input pInputText formControlName="favoriteDessert" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.favoriteDessert }}</div>
+          }
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Saveur de glace préférée</div>
+          @if (isEditable) {
+            <input pInputText formControlName="favoriteIceCreamFlavor" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.favoriteIceCreamFlavor }}</div>
+          }
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Saison préférée</div>
+          @if (isEditable) {
+            <input pInputText formControlName="favoriteSeason" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.favoriteSeason }}</div>
+          }
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Dofus préféré</div>
+          @if (isEditable) {
+            <input pInputText formControlName="favoriteDofus" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.favoriteDofus }}</div>
+          }
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Zone préférée</div>
+          @if (isEditable) {
+            <input pInputText formControlName="favoriteZone" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.favoriteZone }}</div>
+          }
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Pourquoi Dofus Retro</div>
+          @if (isEditable) {
+            <input pInputText formControlName="reasonForRetro" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.reasonForRetro }}</div>
+          }
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="italic text-gray-500">Familier préféré</div>
+          @if (isEditable) {
+            <input pInputText formControlName="favoriteFamiliar" variant="filled"/>
+          } @else {
+            <div>{{ questionnaire?.favoriteFamiliar }}</div>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-4 mt-4">
+        @if (alertMessage) {
+          <app-alert [message]="alertMessage" type="info"/>
+        }
+        @if (isEditable) {
+          <div class="flex items-center justify-end gap-4">
+            <p-button label="Annuler" icon="pi pi-times" type="button" severity="warning" (click)="onCancel()" rounded
+                      text outlined/>
+            <p-button label="Enregistrer" icon="pi pi-check" type="submit" severity="primary" rounded/>
+          </div>
+        }
+      </div>
 
 
-  </form>
-</div>
+    </form>
+  </ng-container>
+</app-page-block>

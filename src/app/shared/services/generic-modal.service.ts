@@ -42,8 +42,8 @@ export class GenericModalService {
         payload: data,
         disableButtonUntilConditionMet,
       },
-      closable: false,
       focusOnShow: false,
+      contentStyle: {'overflow-y': 'visible'},
     });
   }
 }
