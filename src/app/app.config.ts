@@ -7,23 +7,10 @@ import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {TokenInterceptorProvider} from "./shared/services/token-interceptor.service";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
-import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {DialogService, DynamicDialogModule} from "primeng/dynamicdialog";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    {
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: {
-        subscriptSizing: 'dynamic'
-      }
-    },
-    {
-      provide: MAT_DATE_LOCALE,
-      useValue: 'fr-FR'
-    },
     provideHttpClient(withInterceptorsFromDi()),
     TokenInterceptorProvider,
     provideRouter(routes),
@@ -33,7 +20,5 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom([
       BrowserModule,
       BrowserAnimationsModule,
-      MatSnackBarModule,
-      MatNativeDateModule
     ])]
 };
