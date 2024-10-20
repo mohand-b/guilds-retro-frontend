@@ -1,35 +1,33 @@
-<app-alert *ngIf="pendingMembershipRequestsCount() === 0" message="Aucune demande d'adhésion en attente."
-           type="info"/>
-<table *ngIf="pendingMembershipRequestsCount() > 0" [dataSource]="pendingMembershipRequests()"
-       class="min-w-full divide-y divide-gray-300" mat-table>
-  <ng-container matColumnDef="username">
-    <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700 w-1/3" mat-header-cell>Nom</th>
-    <td *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap"
-        mat-cell>{{ request.user.username }}
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="characterClass">
-    <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700 w-1/4" mat-header-cell>Classe</th>
-    <td *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap" mat-cell>
-      <div class="flex items-center space-x-2">
-        <img [src]="request.user | characterIcon" alt="Character Icon" height="20" width="20">
-        <div>{{ request.user.characterClass }}</div>
-      </div>
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="characterLevel">
-    <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700 w-1/4" mat-header-cell>Niveau</th>
-    <td *matCellDef="let request" class="p-3 text-sm text-gray-700 whitespace-nowrap"
-        mat-cell>{{ request.user.characterLevel }}
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="actions">
-    <th *matHeaderCellDef class="p-3 text-left text-sm font-semibold text-gray-700 w-1/6" mat-header-cell>Actions</th>
-    <td *matCellDef="let request" class="p-3 flex justify-start space-x-2" mat-cell>
-      <button (click)="acceptRequest(request.id)" color="primary" mat-button>Accepter</button>
-      <button (click)="declineRequest(request.id)" color="warn" mat-button>Refuser</button>
-    </td>
-  </ng-container>
-  <tr *matHeaderRowDef="displayedColumns" class="bg-gray-100" mat-header-row></tr>
-  <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
-</table>
+@if (pendingMembershipRequestsCount() === 0) {
+  <app-alert message="Aucune demande d'adhésion en attente." type="info"/>
+} @else {
+  <p-table [value]="pendingMembershipRequests()" styleClass="p-datatable-sm">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="w-1/3">Nom</th>
+        <th class="w-1/4">Classe</th>
+        <th class="w-1/4">Niveau</th>
+        <th class="w-1/6">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-request>
+      <tr>
+        <td>{{ request.user.username }}</td>
+        <td>
+          <div class="flex items-center space-x-2">
+            <img [src]="request.user | characterIcon" alt="Character Icon" height="20" width="20">
+            <div>{{ request.user.characterClass }}</div>
+          </div>
+        </td>
+        <td>{{ request.user.characterLevel }}</td>
+        <td class="flex justify-start space-x-2">
+          <p-button (click)="acceptRequest(request.id)" severity="success" rounded outlined>Accepter</p-button>
+          <p-button (click)="declineRequest(request.id)" severity="danger" rounded outlined>Refuser</p-button>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+}

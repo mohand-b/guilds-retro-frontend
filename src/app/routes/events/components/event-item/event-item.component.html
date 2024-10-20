@@ -1,39 +1,99 @@
-<div class="bg-white p-4 mb-4 relative overflow-hidden">
-  <h3 class="text-lg font-bold mb-2">{{ event.title || event.dungeonName || event.arenaTargets }}</h3>
-  <p class="text-gray-600 mb-2">{{ event.description }}</p>
-  <p class="text-gray-800 mb-2">
-    {{ event.date | dateFormat }}
-  </p>
-  <div class="flex flex-grow gap-1">
-    @for (participant of event.participants; track participant.id; let isLast = $last) {
-      <div class="flex items-baseline gap-1">
-        <div class="w-6 h-6 rounded bg-beige border border-gray-300 flex items-center justify-center">
-          <img [src]="participant | characterIcon" alt="Avatar"
-               class="w-5 h-5 rounded object-cover no-select no-copy">
-        </div>
-        <div class="text-xs text-gray-600">
-          {{ participant.username }}
-          @if (!isLast) {
-            <span>,</span>
+<div
+  class="rounded-md shadow-sm border border-gray-200 h-52 w-[21.25rem] bg-white"
+  [@innerShadowPulse]="{
+    value: isToday ? animationState : 'initial',
+    params: {
+      eventShadowColor: eventShadowColor,
+      eventShadowColorSmall: eventShadowColorSmall,
+      eventShadowColorMedium: eventShadowColorMedium,
+      eventShadowColorLarge: eventShadowColorLarge
+    }
+  }"
+>
+  <div
+    class="flex flex-col justify-between h-full relative overflow-hidden">
+
+    <div class="flex flex-col gap-2">
+      <div [style.background-color]="eventColor+20"
+           [style.border-color]="eventColor+60"
+           class="flex items-start border-b gap-2 p-3">
+        <img [src]="event | eventImage" alt="Event image"
+             [style.background-color]="eventColor+30"
+             class="w-16 h-16 object-cover rounded-md border border-gray-300">
+        <div class="flex-1 flex flex-col gap-1">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-800 truncate">
+              @if (event.title || event.dungeonName || event.arenaTargets; as title) {
+                @if (title.length > 25) {
+                  {{ title | slice:0:23 }}...
+                } @else {
+                  {{ title }}
+                }
+              }
+            </h3>
+            <app-tag [label]="event.type"/>
+          </div>
+
+          @if (isFinished) {
+            <div class="text-sm text-red-600">Terminé {{ event.date | dateFormat }}</div>
+          } @else {
+            <div class="text-sm text-gray-600">
+              <span>{{ event.date | dateFormat }}</span>
+              <span class="text-xs"> ({{ event.date | date:'dd-MM-yyyy à HH:mm' }})</span>
+            </div>
           }
+
+          <p class="text-gray-700 text-sm truncate">
+            {{ event.description | slice:0:40 }}
+            @if (event.description && event.description.length > 40) {
+              ...
+            }
+          </p>
         </div>
       </div>
-    }
-  </div>
-  @if (event.minLevel) {
-    <p class="text-gray-800 mb-2">
-      Niveau minimum: {{ event.minLevel }}
-    </p>
-  }
-  @if (event.requiredClasses?.length) {
-    <p class="text-gray-800 mb-2">
-      Classes requises: {{ event.requiredClasses!.join(', ') }}
-    </p>
-  }
-  @if (event.requiresOptimization) {
-    <p class="text-greeb-500 mb-2">
-      Optimisation requise
-    </p>
-  }
 
+      <div class="flex items-center flex-wrap gap-1 mt-2 mx-3">
+        @for (participant of event.participants; track participant.id) {
+          <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/user', participant.username]">
+            <div class="w-5 h-5 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
+              <img [src]="participant | characterIcon" alt="Avatar"
+                   class="w-4 h-4 rounded-full object-cover no-select no-copy">
+            </div>
+            <span class="text-xs text-gray-700 font-medium">{{ participant.username }}</span>
+          </div>
+        }
+        <span class="text-xs text-gray-600 ml-2">({{ event.participants.length }}/{{ event.maxParticipants }})</span>
+      </div>
+
+    </div>
+
+    <div class="flex justify-between items-center mb-2 mx-2">
+      <div class="min-w-[5rem]">
+        @if (isFinished) {
+          <div class="text-red-600">
+            Terminé
+          </div>
+        } @else if (isFull && !isParticipant) {
+          <div class="text-red-600 ">
+            Complet
+          </div>
+        } @else if (!isCreator) {
+          @if (isParticipant) {
+            <p-button text label="Se retirer" icon="pi pi-minus" severity="warning" (click)="onLeave()"/>
+          } @else if (!isParticipant && !isFull) {
+            <p-button text label="Participer" icon="pi pi-user-plus" severity="primary"
+                      [disabled]="!levelRequirementMet" (click)="onJoin()"/>
+          }
+        }
+      </div>
+
+      @if (isToday) {
+        <div class="text-[.6rem] uppercase font-extrabold">Aujourd'hui !</div>
+      }
+
+      <p-button [routerLink]="['/events', event.id]" label="Voir" icon="pi pi-eye" severity="info" text/>
+    </div>
+
+
+  </div>
 </div>

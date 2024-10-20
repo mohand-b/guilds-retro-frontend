@@ -5,20 +5,20 @@ import {
 } from "../../../guild/state/membership-requests/membership-request.model";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {CommonModule, DatePipe} from "@angular/common";
-import {MatButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
 import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {GuildFacade} from "../../../guild/guild.facade";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {interval, Observable, switchMap, takeUntil, timer} from "rxjs";
-import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
 import {
   UserMembershipRequestComponent
 } from "../../components/user-membership-request/user-membership-request.component";
-import {MatProgressBar} from "@angular/material/progress-bar";
 import {UserDto} from "../../../profile/state/users/user.model";
+import {GuildSelectionComponent} from "../../../auth/containers/guild-selection/guild-selection.component";
+import {ButtonModule} from "primeng/button";
+import {ProgressBarModule} from "primeng/progressbar";
+import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
 
 @Component({
   selector: 'app-user-membership-requests',
@@ -27,10 +27,10 @@ import {UserDto} from "../../../profile/state/users/user.model";
     AlertComponent,
     CommonModule,
     DatePipe,
-    MatButton,
-    MatIcon,
     UserMembershipRequestComponent,
-    MatProgressBar,
+    ButtonModule,
+    ProgressBarModule,
+    PageBlockComponent,
   ],
   templateUrl: './user-membership-requests.component.html',
   styleUrl: './user-membership-requests.component.scss'
@@ -95,7 +95,7 @@ export class UserMembershipRequestsComponent implements OnInit {
   }
 
   public onOpenGuildSelection(): void {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Choisir une guilde',
       {primary: 'Confirmer'},
       'xl',
@@ -103,11 +103,14 @@ export class UserMembershipRequestsComponent implements OnInit {
       GuildSelectionComponent,
       undefined,
       true
-    ).subscribe(selectedGuild => {
+    );
+
+    ref.onClose.subscribe((selectedGuild) => {
       if (selectedGuild) {
         this.selectedGuild.set(selectedGuild);
       }
     });
   }
+
 
 }

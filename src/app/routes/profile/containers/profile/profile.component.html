@@ -1,138 +1,172 @@
 @if (!isCurrentUser) {
-  <button (click)="goBack()" class="text-gray-600 hover:text-gray-800">
-    <mat-icon>arrow_back</mat-icon>
+  <button (click)="goBack()" class="text-gray-600 hover:text-gray-800 mb-4">
+    <i class="pi pi-arrow-left" style="font-size: 1.5rem"></i>
   </button>
 }
 
 @if (profileToUse(); as user) {
   <div class="flex flex-col gap-4">
 
-    @if (user.hideProfile && !isCurrentUser) {
-
-      <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
-
-
-        <div class="flex items-center gap-4">
-          <div class="w-24 h-24 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
-            <img [src]="user | characterIcon" alt="Avatar"
-                 class="w-20 h-20 rounded-full object-cover no-select no-copy"/>
-          </div>
-          <div>
-            <h2 class="text-2xl font-bold text-gray-800">{{ user.username }}</h2>
-            <div class="text-lg text-gray-600">{{ user.characterClass }} - Niveau {{ user.characterLevel }}</div>
-          </div>
-        </div>
-
-
-        <app-alert type="warning" message="Ce profil est masqué."/>
-
-      </div>
-
-    } @else {
-
-      <div class="bg-white p-6 rounded-lg shadow-md relative overflow-hidden">
-        <div class="flex items-center justify-between mb-6">
-          <div class="flex items-center gap-4">
-            <div class="w-24 h-24 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
-              <img [src]="user | characterIcon" alt="Avatar"
-                   class="w-20 h-20 rounded-full object-cover no-select no-copy"/>
-            </div>
-            <div>
-              <h2 class="text-2xl font-bold text-gray-800">{{ user.username }}</h2>
-              <div class="text-lg text-gray-600">{{ user.characterClass }} - Niveau {{ user.characterLevel }}</div>
-              @if (user.guild) {
-                <div class="text-md text-gray-500 mt-2">Membre de <span
-                  class="font-semibold">{{ user.guild.name }}</span></div>
-              }
-            </div>
-          </div>
-
-          @if (isCurrentUser) {
-            <mat-slide-toggle
-              [checked]="user.hideProfile"
-              (change)="onHideProfile($event.checked)">
-              Masquer les stats aux non membres de ma guilde
-            </mat-slide-toggle>
+    <app-page-block [title]="user.username" [contentPadding]="false">
+      <ng-container header-action>
+        @if (isCurrentUser) {
+          @if (user.hideProfile) {
+            <p-button
+              label="Profil masqué"
+              icon="pi pi-eye-slash"
+              severity="warning"
+              rounded
+              outlined
+              (click)="onHideProfile(false)"
+            />
+          } @else {
+            <p-button
+              label="Profil visible"
+              icon="pi pi-eye"
+              severity="primary"
+              rounded
+              outlined
+              (click)="onHideProfile(true)"
+            />
           }
-        </div>
+        }
+      </ng-container>
 
-        @if (user.guild?.logo) {
-          <div class="absolute inset-0 right-0 flex justify-end items-center pointer-events-none">
-            <img [src]="user.guild.logo" alt="Logo de la guilde"
-                 class="opacity-20 w-48 h-48 object-contain"/>
+      <ng-container content>
+
+
+        @if (user.hideProfile && !isCurrentUser) {
+          <div class="relative space-y-4 overflow-hidden p-4 flex flex-col justify-center">
+            <div class="flex items-center gap-4 z-10">
+              <div [style.border-color]="(user.characterClass | characterColor)+ '50'"
+                   class="w-24 h-24 rounded-full bg-white border flex items-center justify-center">
+                <img [src]="user | characterIcon" alt="Avatar"
+                     class="w-20 h-20 rounded-full object-cover no-select no-copy"/>
+              </div>
+              <div>
+                <div class="text-lg text-gray-600">{{ user.characterClass }} - Niveau {{ user.characterLevel }}</div>
+              </div>
+            </div>
+
+            <app-alert type="warning" message="Ce profil est masqué."/>
+          </div>
+
+        } @else {
+          <div class="relative overflow-hidden p-4 flex flex-col justify-center">
+            <div [style.background-color]="(user.characterClass | characterColor) + '20'"
+                 class="rotate-45 w-[12rem] h-[12rem] absolute top-[2rem] -left-[6rem] z-0"></div>
+
+            <div class="flex items-center gap-4 z-10">
+              <div [style.border-color]="(user.characterClass | characterColor)+ '50'"
+                   class="w-24 h-24 rounded-full bg-white border flex items-center justify-center">
+                <img [src]="user | characterIcon" alt="Avatar"
+                     class="w-20 h-20 rounded-full object-cover no-select no-copy"/>
+              </div>
+
+              <div>
+                <div class="text-lg text-gray-600">{{ user.characterClass }} - Niveau {{ user.characterLevel }}
+                </div>
+                @if (user.guild) {
+                  <div class="text-md text-gray-500 mt-2">Membre de la guilde <span
+                    class="font-semibold">{{ user.guild.name }}</span></div>
+                }
+              </div>
+            </div>
+
+            @if (user.guild?.logo) {
+              <div class="absolute inset-0 right-0 flex justify-end items-center pointer-events-none">
+                <img [src]="user.guild.logo" alt="Logo de la guilde"
+                     class="opacity-20 w-48 h-48 object-contain"/>
+              </div>
+            }
           </div>
         }
-      </div>
+
+      </ng-container>
+
+    </app-page-block>
+
+    @if (!user.hideProfile || isCurrentUser) {
 
       <div class="flex flex-col lg:flex-row gap-4">
-        <div class="bg-white flex flex-col gap-4 p-6 rounded-lg shadow-md flex-1 min-w-0">
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">Métiers</h2>
-          <div class="flex flex-wrap gap-4">
-            <div class="flex flex-nowrap gap-4">
-              @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
-                <app-job-display
-                  [job]="job" [color]="'primary'" [isCurrentUser]="isCurrentUser"
-                  (removeJob)="onRemoveJob(job!)"
-                  (addJob)="onAddJob(false, user)"
-                  (editJobLevel)="onEditJobLevel(job!)"
-                />
-              }
+
+        <app-page-block title="Métiers" class="flex-1">
+          <ng-container content>
+
+            <div class="flex flex-wrap gap-4">
+              <div class="flex flex-nowrap gap-4">
+                @for (job of nonForgemagingJobs(); let idx = $index; track idx) {
+                  <app-job-display
+                    [job]="job" [color]="'primary'" [isCurrentUser]="isCurrentUser"
+                    (removeJob)="onRemoveJob(job!)"
+                    (addJob)="onAddJob(false, user)"
+                    (editJobLevel)="onEditJobLevel(job!)"
+                  />
+                }
+              </div>
+
+              <div class="flex flex-nowrap gap-4">
+                @for (job of forgemagingJobs(); let idx = $index; track idx) {
+                  <app-job-display
+                    [job]="job" [color]="'tertiary'" [isCurrentUser]="isCurrentUser"
+                    (removeJob)="onRemoveJob(job!)"
+                    (addJob)="onAddJob(true, user)"
+                    (editJobLevel)="onEditJobLevel(job!)"
+                  />
+                }
+              </div>
             </div>
 
-            <div class="flex flex-nowrap gap-4">
-              @for (job of forgemagingJobs(); let idx = $index; track idx) {
-                <app-job-display
-                  [job]="job" [color]="'tertiary'" [isCurrentUser]="isCurrentUser"
-                  (removeJob)="onRemoveJob(job!)"
-                  (addJob)="onAddJob(true, user)"
-                  (editJobLevel)="onEditJobLevel(job!)"
-                />
-              }
-            </div>
-          </div>
-        </div>
+          </ng-container>
+        </app-page-block>
 
-        <div class="bg-white flex flex-col gap-4 p-6 rounded-lg shadow-md w-full md:w-auto md:min-w-[25rem]">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-gray-700 mb-2">Autres personnages</h2>
-            @if (isCurrentUser) {
-              <button class="-mt-3" mat-icon-button (click)="onAddLinkedAccount()">
-                <mat-icon>add</mat-icon>
-              </button>
-            }
-          </div>
-          @if (user.linkedAccounts && user.linkedAccounts.length > 0) {
-            <ul>
-              @for (linkedUser of user.linkedAccounts; track linkedUser.id) {
-                <li class="flex justify-between items-center">
-                  <a [routerLink]="['/registry/user', linkedUser.username]"
-                     class="text-gray-800">{{ linkedUser.username }}</a>
-                  <span class="text-gray-500">{{ linkedUser.characterClass }}
-                    - Niveau {{ linkedUser.characterLevel }}</span>
-                </li>
-              }
-            </ul>
-          } @else {
-            <div class="text-gray-500">Aucun autre personnage</div>
+        <app-page-block title="Autres personnages">
+          @if (isCurrentUser) {
+            <ng-container header-action>
+              <p-button label="Lier un personnage" icon="pi pi-plus" text rounded (click)="onAddLinkedAccount()"/>
+            </ng-container>
           }
-        </div>
+          <ng-container content>
+            <div class="flex">
+
+              @if (user.linkedAccounts && user.linkedAccounts.length > 0) {
+                <ul>
+                  @for (linkedUser of user.linkedAccounts; track linkedUser.id) {
+                    <li class="flex justify-between items-center">
+                      <a [routerLink]="['/registry/user', linkedUser.username]"
+                         class="text-gray-800">{{ linkedUser.username }}</a>
+                      <span class="text-gray-500">{{ linkedUser.characterClass }}
+                        - Niveau {{ linkedUser.characterLevel }}</span>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <div class="text-gray-500">Aucun autre personnage</div>
+              }
+            </div>
+          </ng-container>
+
+        </app-page-block>
       </div>
 
-
-      <div class="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4">
-        <h2 class="text-xl font-semibold text-gray-700 mb-2">Derniers posts</h2>
-        @if (posts().length > 0) {
-          <div class="flex flex-col gap-2">
-            @for (post of posts(); track post.id) {
-              <app-post-summary [post]="post"/>
+      <div class="flex flex-col xl:flex-row gap-4">
+        <app-page-block title="Derniers posts" class="flex-1">
+          <ng-container content>
+            @if (posts().length > 0) {
+              <div class="flex flex-col gap-2">
+                @for (post of posts(); track post.id) {
+                  <app-post-summary [post]="post"/>
+                }
+              </div>
+            } @else {
+              <div class="text-gray-500">Aucun post</div>
             }
-          </div>
-        } @else {
-          <div class="text-gray-500">Aucun post</div>
-        }
-      </div>
+          </ng-container>
+        </app-page-block>
 
-      <app-questionnaire [questionnaire]="user.questionnaire" [isCurrentUser]="isCurrentUser"/>
+
+        <app-questionnaire [questionnaire]="user.questionnaire" [isCurrentUser]="isCurrentUser" class="flex-1"/>
+      </div>
     }
   </div>
 }

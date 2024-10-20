@@ -293,4 +293,11 @@ export const DUNGEONS = [
     levelRange: "190-200",
     imageUrl: "1665.svg",
   },
+  {
+    dungeonName: "Sanctuaire de Pandala",
+    boss: "Péki Garou",
+    position: [0, 0],
+    levelRange: "190-200",
+    imageUrl: "666.svg",
+  }
 ];

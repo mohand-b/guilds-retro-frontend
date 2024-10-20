@@ -1,22 +1,19 @@
-<div class="flex justify-center space-x-4 my-4">
-  <button
-    [class.active]="isActive('/users')"
-    [routerLink]="['/registry/users']"
-    color="primary"
-    mat-button
-    routerLinkActive="active"
+<div class="flex justify-center mb-4">
+  <p-selectButton
+    [options]="navOptions"
+    [formControl]="navigationControl"
+    optionLabel="label"
+    optionValue="route"
+    (onChange)="onChange($event.value)"
+    unselectable
   >
-    Utilisateurs
-  </button>
-  <button
-    [class.active]="isActive('/guilds')"
-    [routerLink]="['/registry/guilds']"
-    color="primary"
-    mat-button
-    routerLinkActive="active"
-  >
-    Guildes
-  </button>
+    <ng-template let-item pTemplate>
+      <div class="flex items-center gap-2 font-bold">
+        <i [class]="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </div>
+    </ng-template>
+  </p-selectButton>
 </div>
 
 <router-outlet/>

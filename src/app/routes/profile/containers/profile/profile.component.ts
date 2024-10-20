@@ -2,28 +2,24 @@ import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} fro
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {EMPTY, forkJoin, switchMap, tap} from 'rxjs';
 
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatIconModule} from '@angular/material/icon';
-
 import {ProfileFacade} from "../../profile.facade";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
-import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
+import {CharacterColorPipe, CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {JobImagePipe} from "../../../../shared/pipes/job-image.pipe";
 import {JobDto} from "../../state/jobs/job.model";
 import {JobDisplayComponent} from "../../components/job-display/job-display.component";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
-import {AddJobComponent} from "../../components/add-job/add-job.component";
-import {EditJobLevelComponent} from "../../components/edit-job-level/edit-job-level.component";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {Location} from "@angular/common";
 import {PostDto} from "../../../feed/state/posts/post.model";
 import {PostSummaryComponent} from "../../components/post-summary/post-summary.component";
-import {AddLinkedAccountComponent} from "../../components/add-linked-account/add-linked-account.component";
 import {QuestionnaireComponent} from "../questionnaire/questionnaire.component";
-import {MatButtonModule} from "@angular/material/button";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {UserDto} from "../../state/users/user.model";
+import {EditJobLevelComponent} from "../../components/edit-job-level/edit-job-level.component";
+import {AddJobComponent} from "../../components/add-job/add-job.component";
+import {AddLinkedAccountComponent} from "../../components/add-linked-account/add-linked-account.component";
+import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-profile',
@@ -31,16 +27,14 @@ import {UserDto} from "../../state/users/user.model";
   imports: [
     CharacterIconPipe,
     JobImagePipe,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatSlideToggleModule,
-    MatIconModule,
     JobDisplayComponent,
     PostSummaryComponent,
     RouterLink,
     QuestionnaireComponent,
-    MatButtonModule,
-    AlertComponent
+    AlertComponent,
+    PageBlockComponent,
+    ButtonModule,
+    CharacterColorPipe
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -114,20 +108,22 @@ export class ProfileComponent implements OnInit {
   }
 
   onRemoveJob(job: JobDto) {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
-      {warn: 'Oui'},
+      {danger: 'Oui'},
       'sm',
       null,
       null,
       `Es-tu sûr de vouloir retirer le métier ${job.name} ?`
-    ).pipe(
+    );
+
+    ref.onClose.pipe(
       switchMap(result => result ? this.profileFacade.removeJobFromUser(job.id) : EMPTY)
     ).subscribe();
   }
 
   onAddJob(isForgemaging: boolean, user: UserDto) {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       `Ajouter un métier ${isForgemaging ? "(forgemagie)" : ""}`,
       {primary: 'Ajouter'},
       'md',
@@ -135,13 +131,15 @@ export class ProfileComponent implements OnInit {
       AddJobComponent,
       undefined,
       true
-    ).pipe(
+    );
+
+    ref.onClose.pipe(
       switchMap(job => job ? this.profileFacade.addJobToUser(job) : EMPTY)
     ).subscribe();
   }
 
   onEditJobLevel(job: JobDto) {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       `Modifier le niveau de ${job.name}`,
       {primary: 'Modifier'},
       'sm',
@@ -149,12 +147,15 @@ export class ProfileComponent implements OnInit {
       EditJobLevelComponent,
       undefined,
       true
-    ).pipe(
+    );
+
+    ref.onClose.pipe(
       switchMap(updatedJob =>
         updatedJob ? this.profileFacade.updateJobLevel(updatedJob.id, updatedJob.level) : EMPTY
       )
     ).subscribe();
   }
+
 
   navigateToCurrentUsersProfile() {
     this.router.navigate(['profile']);
@@ -165,7 +166,7 @@ export class ProfileComponent implements OnInit {
   }
 
   onAddLinkedAccount() {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Lier un compte à mon profil',
       {primary: 'Envoyer la demande'},
       'md',
@@ -173,14 +174,18 @@ export class ProfileComponent implements OnInit {
       AddLinkedAccountComponent,
       undefined,
       true
-    ).pipe(
+    );
+
+    ref.onClose.pipe(
       switchMap((user: UserDto) =>
         user ? this.profileFacade.requestLinkAccount(user.id) : EMPTY
       )
-    ).subscribe()
+    ).subscribe();
   }
+
 
   goBack() {
     this.location.back();
   }
+
 }

@@ -7,7 +7,7 @@ import {CharacterClassEnum, UserDto} from "../../routes/profile/state/users/user
 })
 export class CharacterIconPipe implements PipeTransform {
 
-  transform(user: UserDto): string {
+  transform(user: Pick<UserDto, 'characterClass' | 'gender'>): string {
     if (!user || !user.characterClass || !user.gender) {
       return '';
     }

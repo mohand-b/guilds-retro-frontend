@@ -1,130 +1,214 @@
-<mat-horizontal-stepper #stepper [linear]="true">
-  <mat-step [stepControl]="eventDetailsFormGroup" label="Détails de l'événement">
-    <form [formGroup]="eventDetailsFormGroup" class="flex flex-col gap-4">
-      <h2 class="text-2xl font-bold mb-4">Créer un événement</h2>
+<p-stepper [linear]="true">
 
-      <div class="flex gap-4">
-        <div class="flex items-center gap-2 h-full">
-          <div
-            (click)="selectType(EventTypes.DUNGEON)"
-            [ngClass]="{
+  <p-stepperPanel>
+    <ng-template pTemplate="header">
+      <p-button label="Détails de l'événement" icon="pi pi-info-circle" text rounded outlined/>
+    </ng-template>
+
+    <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+      <form [formGroup]="eventDetailsFormGroup" class="flex flex-col gap-3 py-4 ">
+        <div class="flex flex-wrap gap-3 items-center">
+
+          <div class="flex items-center gap-2">
+            <div
+              (click)="selectType(EventTypes.DUNGEON)"
+              [ngClass]="{
               'text-accent': eventDetailsFormGroup.get('type')?.value === EventTypes.DUNGEON,
               'text-gray-400': eventDetailsFormGroup.get('type')?.value !== EventTypes.DUNGEON
             }"
-            class="h-14 flex items-center gap-2 justify-center border-gray-400 border rounded px-4 py-2 cursor-pointer transition-colors">
-            <mat-icon>castle</mat-icon>
-            <span>Donjon</span>
-          </div>
-          <div
-            (click)="selectType(EventTypes.ARENA)"
-            [ngClass]="{
+              class="h-[2.5rem] flex items-center gap-2 justify-center border-gray-400 border rounded-[.5rem] px-4 py-2 cursor-pointer transition-colors">
+              <span>Donjon</span>
+            </div>
+            <div
+              (click)="selectType(EventTypes.ARENA)"
+              [ngClass]="{
               'text-accent': eventDetailsFormGroup.get('type')?.value === EventTypes.ARENA,
               'text-gray-400': eventDetailsFormGroup.get('type')?.value !== EventTypes.ARENA
             }"
-            class="h-14 flex items-center gap-2 justify-center border-gray-400 border rounded px-4 py-2 cursor-pointer transition-colors">
-            <mat-icon>stadium</mat-icon>
-            <span>Arène</span>
-          </div>
-          <div
-            (click)="selectType(EventTypes.OTHER)"
-            [ngClass]="{
+              class="h-[2.5rem] flex items-center gap-2 justify-center border-gray-400 border rounded-[.5rem] px-4 py-2 cursor-pointer transition-colors">
+              <span>Arène</span>
+            </div>
+            <div
+              (click)="selectType(EventTypes.OTHER)"
+              [ngClass]="{
               'text-accent': eventDetailsFormGroup.get('type')?.value === EventTypes.OTHER,
               'text-gray-400': eventDetailsFormGroup.get('type')?.value !== EventTypes.OTHER
             }"
-            class="h-14 flex items-center gap-2 justify-center border-gray-400 border rounded px-4 py-2 cursor-pointer transition-colors">
-            <mat-icon>not_listed_location</mat-icon>
-            <span>Autre</span>
+              class="h-[2.5rem] flex items-center gap-2 justify-center border-gray-400 border rounded-[.5rem] px-4 py-2 cursor-pointer transition-colors">
+              <span>Autre</span>
+            </div>
+          </div>
+
+          <div class="flex-1">
+            @if (eventDetailsFormGroup.get('type')?.value === EventTypes.DUNGEON) {
+
+              <p-autoComplete
+                styleClass="w-full"
+                [inputStyle]="{width: '100%'}"
+                formControlName="dungeonName"
+                searchMessage=" "
+                emptySelectionMessage=" "
+                selectionMessage=" "
+                [suggestions]="dungeonNames()"
+                (completeMethod)="filterDungeons($event)"
+                placeholder="Nom du donjon"
+                [minLength]="1"
+                completeOnFocus
+                forceSelection
+              >
+                <ng-template let-dungeon pTemplate="item">
+                  <div class="flex items-center">
+                    <img [src]="dungeonImageUrl(dungeon)" alt="Dungeon" class="w-8 h-8 rounded-full object-cover">
+                    <span class="ml-2">{{ dungeon }}</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="loadingicon"></ng-template>
+                <ng-template pTemplate="empty">Aucun résultat</ng-template>
+              </p-autoComplete>
+
+            } @else if (eventDetailsFormGroup.get('type')?.value === EventTypes.ARENA) {
+
+              <p-inputGroup styleClass="w-full">
+                <p-inputGroupAddon>Capture de</p-inputGroupAddon>
+                <input
+                  pInputText
+                  formControlName="arenaTargets"
+                  placeholder="Cibles de l'arène"
+                />
+              </p-inputGroup>
+
+            } @else {
+
+              <input
+                pInputText
+                formControlName="title"
+                placeholder="Titre de l'événement"
+                class="w-full"
+              />
+            }
+          </div>
+
+        </div>
+
+        <input pInputText formControlName="description" placeholder="Description de l'événement" class="w-full"/>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <p-calendar
+            formControlName="date"
+            dateFormat="dd MM yy"
+            placeholder="Date"
+            [minDate]="minDate"
+            showIcon
+            icon="pi pi-calendar"
+          />
+          <p-calendar
+            formControlName="time"
+            [timeOnly]="true"
+            stepMinute="15"
+            placeholder="Heure"
+            showIcon
+            icon="pi pi-clock"
+          />
+
+          @if (eventDetailsFormGroup.get('isAccessibleToAllies')?.value) {
+            <p-button (click)="onChangeIsAccessibleToAllies(false)"
+                      label="Ouvert aux guildes alliées"
+                      icon="pi pi-lock-open" outlined/>
+          } @else {
+            <p-button (click)="onChangeIsAccessibleToAllies(true)" severity="warning"
+                      label="Fermé aux guildes alliées"
+                      icon="pi pi-lock" outlined/>
+          }
+        </div>
+      </form>
+
+      <div class="flex justify-end my-4">
+        <p-button label="Suivant" [disabled]="eventDetailsFormGroup.invalid" icon="pi pi-arrow-right"
+                  rounded outlined
+                  (onClick)="nextCallback.emit()"/>
+      </div>
+    </ng-template>
+  </p-stepperPanel>
+
+  <p-stepperPanel>
+    <ng-template pTemplate="header">
+      <p-button label="Prérequis" icon="pi pi-check" text rounded outline/>
+    </ng-template>
+
+    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+      <form [formGroup]="participationRequirementsFormGroup" class="flex flex-col gap-3 py-4">
+        <div class="flex gap-3">
+          <div class="flex-1 flex flex-col w-full gap-2">
+            <label for="maxParticipants" class="font-semibold">Nombre maximum de participants</label>
+            <p-inputNumber
+              id="maxParticipants"
+              formControlName="maxParticipants"
+              [inputStyle]="{ borderRadius: '0.5rem', width: '100%'}"
+              class="w-full"
+              placeholder="Nombre maximum de participants"
+              min="1"
+            />
+          </div>
+
+          <div class="flex-1 flex flex-col w-full gap-2">
+            <label for="minLevel" class="font-semibold">Niveau minimum</label>
+            <p-inputNumber
+              id="minLevel"
+              formControlName="minLevel"
+              [inputStyle]="{ borderRadius: '0.5rem' }"
+              class="w-full"
+              placeholder="Niveau minimum"
+              min="0"
+              max="200"
+            />
+          </div>
+
+          <div class="flex-1 flex items-center gap-2">
+            <label for="requiresOptimization" class="font-semibold">Optimisation requise</label>
+            <p-inputSwitch id="requiresOptimization" formControlName="requiresOptimization"></p-inputSwitch>
           </div>
         </div>
 
-        <div class="flex-1">
-          @if (eventDetailsFormGroup.get('type')?.value === EventTypes.DUNGEON) {
-            <mat-form-field appearance="outline" class="w-full">
-              <input formControlName="dungeonName" matInput [matAutocomplete]="auto" placeholder="Nom du donjon"/>
-              <mat-autocomplete #auto="matAutocomplete">
-                @for (dungeonName of dungeonNames(); track dungeonName) {
-                  <mat-option [value]="dungeonName">{{ dungeonName }}</mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          } @else if (eventDetailsFormGroup.get('type')?.value === EventTypes.ARENA) {
-            <mat-form-field appearance="outline" class="w-full">
-              <span matPrefix class="ml-4">Capture de : </span>
-              <input formControlName="arenaTargets" matInput placeholder="Cibles en arène"/>
-            </mat-form-field>
-          } @else if (eventDetailsFormGroup.get('type')?.value === EventTypes.OTHER) {
-            <mat-form-field appearance="outline" class="w-full">
-              <input formControlName="title" matInput placeholder="Titre de l'événement"/>
-            </mat-form-field>
+        <label class="font-semibold">Classes requises:</label>
+        <div class="flex flex-wrap gap-4">
+          @for (className of characterClasses; track className) {
+            <p-checkbox
+              [value]="className"
+              [formControl]="isClassRequired(className)"
+              (onChange)="onCheckboxChange(className, $event.checked)"
+              [binary]="true"
+              label="{{ className }}"
+            />
           }
         </div>
+      </form>
+
+      <div class="flex justify-between my-4">
+        <p-button icon="pi pi-arrow-left" label="Précédent" rounded outlined severity="warning"
+                  (onClick)="prevCallback.emit()"/>
+        <p-button icon="pi pi-arrow-right" label="Suivant" [disabled]="!participationRequirementsFormGroup.valid"
+                  rounded outlined (onClick)="nextCallback.emit()"/>
+      </div>
+    </ng-template>
+  </p-stepperPanel>
+
+  <p-stepperPanel>
+    <ng-template pTemplate="header">
+      <p-button label="Récapitulatif" icon="pi pi-list" text rounded outline/>
+    </ng-template>
+
+    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">
+
+      <div class="my-4 p-4 border border-dashed">
+        <app-event-summary-preview [createEvent]="createEventDto()"/>
       </div>
 
-      <mat-form-field appearance="outline" class="w-full">
-        <input formControlName="description" matInput placeholder="Description"/>
-      </mat-form-field>
-
-      <div class="flex gap-4">
-        <mat-form-field appearance="outline" class="flex-1 w-full">
-          <input (focus)="picker.open()" [matDatepicker]="picker" [min]="minDate" formControlName="date" matInput
-                 placeholder="Date"/>
-          <mat-icon matSuffix>calendar_today</mat-icon>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="flex-1 w-full">
-          <input #t="matTimepicker" formControlName="time" matInput matTimepicker placeholder="Heure">
-          <mat-icon (click)="t.showDialog()" matSuffix>access_time</mat-icon>
-        </mat-form-field>
+      <div class="flex justify-between my-4">
+        <p-button icon="pi pi-arrow-left" label="Précédent" rounded outlined severity="warning"
+                  (onClick)="prevCallback.emit()"/>
+        <p-button label="Créer l'événément" (click)="onSubmit()" icon="pi pi-plus" rounded/>
       </div>
+    </ng-template>
+  </p-stepperPanel>
 
-      <mat-slide-toggle formControlName="isAccessibleToAllies">Ouvert aux guildes alliées</mat-slide-toggle>
-
-      <div class="flex justify-end">
-        <button [disabled]="eventDetailsFormGroup.invalid" color="primary" mat-raised-button matStepperNext>Suivant
-        </button>
-      </div>
-
-
-    </form>
-  </mat-step>
-
-  <mat-step [stepControl]="participationRequirementsFormGroup" label="Exigences de participation">
-    <form [formGroup]="participationRequirementsFormGroup" class="flex flex-col gap-4 pt-4">
-
-      <div class="flex items-center gap-4">
-        <mat-form-field appearance="outline" class="flex-1 w-full">
-          <mat-label>Nombre maximum de participants</mat-label>
-          <input formControlName="maxParticipants" matInput placeholder="Nombre maximum de participants" type="number"/>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="flex-1 w-full">
-          <mat-label>Niveau minimum</mat-label>
-          <input formControlName="minLevel" matInput placeholder="Niveau minimum" type="number"/>
-        </mat-form-field>
-
-        <mat-slide-toggle class="flex-1 w-full" formControlName="requiresOptimization">
-          Optimisation requise
-        </mat-slide-toggle>
-
-      </div>
-
-      <label class="font-semibold">Classes requises:</label>
-      <div class="flex flex-wrap">
-        @for (className of characterClasses; track className) {
-          <mat-checkbox
-            (change)="onCheckboxChange($event)"
-            [value]="className"
-            class="w-1/2 sm:w-1/3 md:w-1/4">
-            {{ className }}
-          </mat-checkbox>
-        }
-      </div>
-
-      <div class="flex justify-between">
-        <button color="primary" mat-raised-button matStepperPrevious>Précédent</button>
-        <button (click)="onSubmit()" [disabled]="eventForm.invalid" color="primary" mat-raised-button>Créer</button>
-      </div>
-    </form>
-  </mat-step>
-</mat-horizontal-stepper>
+</p-stepper>

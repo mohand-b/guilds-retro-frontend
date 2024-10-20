@@ -1,0 +1,51 @@
+.p-selectbutton {
+
+  .p-button {
+    background: #f1f5f9;
+    border: .4rem solid #f1f5f9;
+    color: lighten($textColor, 50);
+    border-radius: 20px;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, outline-color 0.2s;
+
+    .p-button-icon-left,
+    .p-button-icon-right {
+      color: $textColor;
+    }
+
+    &:not(.p-disabled):not(.p-highlight):hover {
+      color: lighten($textColor, 20);
+      background: #f1f5f9;
+
+      .p-button-icon-left,
+      .p-button-icon-right {
+        color: $textColor;
+      }
+    }
+
+    &.p-highlight {
+      background: $secondaryColor;
+      border-color: #f1f5f9;
+      border-radius: 20px;
+      color: #f1f5f9;
+
+      .p-button-icon-left,
+      .p-button-icon-right {
+        color: $textColor;
+      }
+
+      &:hover {
+        background: $secondaryColor;
+        color: #f1f5f9;
+
+        .p-button-icon-left,
+        .p-button-icon-right {
+          color: $textColor;
+        }
+      }
+    }
+  }
+}
+
+p-selectbutton.ng-dirty.ng-invalid > .p-selectbutton > .p-button {
+  @include invalid-input();
+}

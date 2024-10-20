@@ -1,36 +1,32 @@
-import {Component, inject, Input, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import {debounceTime, distinctUntilChanged, filter, startWith} from 'rxjs';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {AlertComponent} from '../../../../shared/components/alert/alert.component';
+import {NgForOf, NgIf} from '@angular/common';
 import {GuildSummaryDto} from "../../../guild/state/guilds/guild.model";
 import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
-import {NgForOf, NgIf} from "@angular/common";
-import {MatButton} from "@angular/material/button";
-import {MAT_DIALOG_DATA, MatDialogClose} from "@angular/material/dialog";
-import {debounceTime, distinctUntilChanged, filter, startWith} from "rxjs";
-import {FormControl, ReactiveFormsModule} from "@angular/forms";
-import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {ModalData} from "../../../../shared/interfaces/modal-data.interface";
 
 @Component({
   selector: 'app-guild-selection',
   standalone: true,
   imports: [
     GuildSelectionCardComponent,
-    NgForOf,
-    MatButton,
-    MatDialogClose,
     ReactiveFormsModule,
+    NgForOf,
     NgIf,
     AlertComponent
   ],
   templateUrl: './guild-selection.component.html',
   styleUrls: ['./guild-selection.component.scss']
 })
-export class GuildSelectionComponent implements OnInit {
+export class GuildSelectionComponent implements OnInit, ModalData {
 
   selectedGuild: GuildSummaryDto | null = null;
   conditionMet: WritableSignal<boolean> = signal<boolean>(false);
   searchControl = new FormControl<string>('', {nonNullable: true});
   filteredGuilds: GuildSummaryDto[] = [];
-  private data: { guilds: GuildSummaryDto[] } = inject(MAT_DIALOG_DATA);
-  @Input() guilds: GuildSummaryDto[] = this.data.guilds;
+  private data: { guilds: GuildSummaryDto[] } = {guilds: []};
 
   ngOnInit() {
     this.searchControl.valueChanges.pipe(
@@ -45,9 +41,9 @@ export class GuildSelectionComponent implements OnInit {
 
   filterGuilds(searchTerm: string): void {
     if (searchTerm.length === 0) {
-      this.filteredGuilds = this.guilds;
+      this.filteredGuilds = this.data.guilds;
     } else {
-      this.filteredGuilds = this.guilds.filter(guild => guild.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      this.filteredGuilds = this.data.guilds.filter(guild => guild.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }
   }
 
@@ -59,6 +55,4 @@ export class GuildSelectionComponent implements OnInit {
   getData(): GuildSummaryDto | null {
     return this.selectedGuild;
   }
-
 }
-

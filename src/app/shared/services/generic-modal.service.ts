@@ -1,52 +1,49 @@
-import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
-import {inject, Injectable, Injector} from "@angular/core";
+import {inject, Injectable} from '@angular/core';
+import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {GenericModalComponent} from "../components/generic-modal/generic-modal.component";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GenericModalService {
 
-  private dialog: MatDialog = inject(MatDialog);
-  private injector: Injector = inject(Injector);
+  private dialogService = inject(DialogService);
 
   open(
     title: string,
-    button: { primary?: string, warn?: string },
+    button: { primary?: string; danger?: string, icon?: string },
     size: 'xs' | 'sm' | 'md' | 'xl',
     data: any,
     contentComponent?: any,
     contentText?: string,
-    disableButtonUntilConditionMet: boolean = false,
-  ) {
+    disableButtonUntilConditionMet: boolean = false
+  ): DynamicDialogRef {
     const sizeMap = {
-      xs: '300px',
-      sm: '400px',
-      md: '500px',
-      xl: '800px'
+      xs: '30%',
+      sm: '40%',
+      md: '50%',
+      xl: '80%',
     };
 
-    const buttonText: string | undefined = button.primary || button.warn;
-    const buttonColor: 'primary' | 'warn' = button.primary ? 'primary' : 'warn';
+    const buttonText = button.primary || button.danger;
+    const buttonColor = button.primary ? 'primary' : 'danger';
+    const buttonIcon = button.icon || 'pi pi-check';
 
-    return this.dialog.open(GenericModalComponent, {
+
+    return this.dialogService.open(GenericModalComponent, {
+      header: title,
       width: sizeMap[size] || sizeMap.md,
       data: {
-        title,
         buttonText,
         buttonColor,
-        injector: Injector.create({
-          providers: [
-            {provide: MAT_DIALOG_DATA, useValue: data},
-          ],
-          parent: this.injector,
-        }),
         contentComponent,
         contentText,
+        buttonIcon,
+        payload: data,
         disableButtonUntilConditionMet,
       },
-      autoFocus: false,
-    }).afterClosed();
+      focusOnShow: false,
+      contentStyle: {'overflow-y': 'visible'},
+    });
   }
-
 }

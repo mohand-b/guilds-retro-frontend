@@ -1,0 +1,62 @@
+$fontFamily: 'Nunito', sans-serif;
+
+$fontSize: .875rem;
+
+$fontWeight: normal;
+
+$textColor: $textColor;
+$textSecondaryColor: $textColor;
+
+
+$highlightBg: $primaryColor;
+$highlightTextColor: $textColor;
+$highlightFocusBg: rgba($primaryColor, .24) !default;
+
+$borderRadius: .5rem;
+
+$transitionDuration: .2s;
+
+$formElementTransition: background-color $transitionDuration, color $transitionDuration, border-color $transitionDuration, box-shadow $transitionDuration;
+$actionIconTransition: background-color $transitionDuration, color $transitionDuration, box-shadow $transitionDuration;
+$listItemTransition: background-color $transitionDuration, border-color $transitionDuration, box-shadow $transitionDuration;
+
+$primeIconFontSize: .875rem;
+
+$divider: 1px solid #dee2e6;
+
+$inlineSpacing: .5rem;
+
+$disabledOpacity: .4;
+
+$maskBg: rgba(0, 0, 0, 0.4);
+
+$loadingIconFontSize: 2rem;
+
+$errorColor: #f44336;
+$focusOutlineColor: #bfd1f6;
+
+$focusOutline: 0 none;
+$focusOutlineOffset: 0;
+
+$inputFocusOutlineOffset: $focusOutlineOffset;
+
+$actionIconWidth: 2rem;
+
+$actionIconHeight: 2rem;
+
+$actionIconBg: transparent;
+
+$actionIconBorder: 0 none;
+$actionIconColor: $textSecondaryColor;
+
+$actionIconHoverBg: #e9ecef;
+
+$actionIconHoverBorderColor: transparent;
+
+$actionIconHoverColor: $textColor;
+
+$actionIconBorderRadius: 50%;
+
+$scaleSM: 0.875;
+
+$scaleLG: 1.25;

@@ -14,10 +14,10 @@ import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
 import {LineClampDirective} from "../../../../shared/directives/line-clamp.directive";
-import {MatIcon} from "@angular/material/icon";
-import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {MatButton} from "@angular/material/button";
+import {MatMenuTrigger} from "@angular/material/menu";
 import {DateTime} from "luxon";
+import {ButtonModule} from "primeng/button";
+import {OverlayPanelModule} from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-post',
@@ -26,15 +26,13 @@ import {DateTime} from "luxon";
     CharacterIconPipe,
     DateFormatPipe,
     GuildMembershipPipe,
-    MatIcon,
-    MatMenu,
-    MatMenuItem,
     RouterLink,
     MatMenuTrigger,
     LineClampDirective,
     FormsModule,
-    MatButton,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ButtonModule,
+    OverlayPanelModule
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
@@ -50,6 +48,16 @@ import {DateTime} from "luxon";
         style({transform: 'scale(1)'}),
         animate('0.15s ease-in', style({transform: 'scale(1.3)'})),
         animate('0.15s ease-out', style({transform: 'scale(1)'}))
+      ])
+    ]),
+    trigger('countAnimation', [
+      transition(':increment', [
+        style({transform: 'translateY(-100%)', opacity: 0}),
+        animate('300ms ease-out', style({transform: 'translateY(0)', opacity: 1}))
+      ]),
+      transition(':decrement', [
+        style({transform: 'translateY(100%)', opacity: 0}),
+        animate('300ms ease-out', style({transform: 'translateY(0)', opacity: 1}))
       ])
     ])
   ],
@@ -94,12 +102,9 @@ export class PostComponent implements OnInit {
         return this.feedFacade.getPost(postId);
       })
     ).subscribe(post => {
-      // Convert UTC string to the user's local timezone
-      const localDate = DateTime.fromISO(post.createdAt, {zone: 'utc'}) // Parse as UTC
-        .setZone(DateTime.local().zoneName) // Convert to the user's local timezone
+      const localDate = DateTime.fromISO(post.createdAt, {zone: 'utc'})
+        .setZone(DateTime.local().zoneName)
         .toLocaleString(DateTime.DATETIME_MED);
-      console.log(localDate);
-
       this.post.set(post);
     });
   }
@@ -173,20 +178,20 @@ export class PostComponent implements OnInit {
   }
 
   deletePost() {
-    this.genericModalService.open(
+    const ref = this.genericModalService.open(
       'Confirmation',
-      {warn: 'Oui'},
+      {danger: 'Oui'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir supprimer ce post ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.feedFacade.deletePost(this.post()!.id);
-        else return EMPTY;
-      })
+      `Es-tu sûr de vouloir supprimer ce post ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.feedFacade.deletePost(this.post()!.id) : EMPTY)
     ).subscribe(() => this.router.navigate(['/dashboard']));
   }
+
 
   reportPost() {
   }

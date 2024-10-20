@@ -1,19 +1,15 @@
 import {Component, EventEmitter, input, Input, Output} from '@angular/core';
 import {AllianceRequestDto} from "../../state/alliances/alliance.model";
-import {MatCardModule} from "@angular/material/card";
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
-import {MatTooltipModule} from "@angular/material/tooltip";
 import {GuildDto} from "../../state/guilds/guild.model";
+import {ButtonModule} from "primeng/button";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'app-alliance-request-row',
   standalone: true,
   imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule
+    ButtonModule,
+    TooltipModule
   ],
   templateUrl: './alliance-request-row.component.html',
   styleUrl: './alliance-request-row.component.scss'

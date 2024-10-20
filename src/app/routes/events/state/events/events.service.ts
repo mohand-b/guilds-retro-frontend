@@ -18,6 +18,13 @@ export class EventsService {
     );
   }
 
+  getEventById(eventId: number): Observable<EventDto> {
+    return this.http.get<EventDto>(
+      `${this.eventsBaseUrl}/${eventId}`,
+    );
+  }
+
+
   getEvents(): Observable<EventDto[]> {
     return this.http.get<EventDto[]>(
       `${this.eventsBaseUrl}/accessible`,

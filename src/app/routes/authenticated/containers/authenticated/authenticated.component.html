@@ -1,19 +1,28 @@
 <div class="flex flex-col h-screen">
   <app-header class="flex-none"/>
-  <app-main-menu [drawer]="drawer" [notificationsCount]="unreadNotificationsCount()" class="flex-none"/>
+  <app-main-menu
+    (toggleNotifications)="toggleNotifications()"
+    [notificationsCount]="unreadNotificationsCount()"
+    class="flex-none"
+  />
 
   <div class="h-full flex flex-grow relative overflow-hidden">
-    <mat-drawer-container class="h-full flex flex-grow relative overflow-hidden">
+    <div class="h-full flex flex-grow relative overflow-hidden">
+
       <div class="p-4 lg:px-10 lg:pt-10 h-full body-background flex-grow overflow-x-hidden">
         <router-outlet/>
       </div>
 
-      <mat-drawer #drawer (closedStart)="showNotifications = false" (openedStart)="showNotifications = true"
-                  class="flex-none" mode="side"
-                  position="end">
+      <p-sidebar
+        (onHide)="toggleNotifications()"
+        [visible]="showNotifications()"
+        position="right">
+        <ng-template pTemplate="header">
+          <span class="font-semibold text-xl">Notifications</span>
+        </ng-template>
         <app-notifications/>
-      </mat-drawer>
+      </p-sidebar>
 
-    </mat-drawer-container>
+    </div>
   </div>
 </div>

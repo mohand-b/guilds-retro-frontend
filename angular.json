@@ -31,7 +31,9 @@
               "src/assets/fonts"
             ],
             "styles": [
-              "src/styles/main.scss"
+              "src/styles/main.scss",
+              "src/styles/mytheme/theme.scss",
+              "node_modules/primeicons/primeicons.css"
             ],
             "scripts": []
           },
@@ -105,7 +107,9 @@
               "src/assets/fonts"
             ],
             "styles": [
-              "src/styles/main.scss"
+              "src/styles/main.scss",
+              "src/styles/mytheme/theme.scss",
+              "node_modules/primeicons/primeicons.css"
             ],
             "scripts": []
           }

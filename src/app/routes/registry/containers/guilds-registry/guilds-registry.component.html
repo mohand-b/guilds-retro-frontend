@@ -1,23 +1,18 @@
 <div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md filter-container">
   <form (ngSubmit)="onSearchGuilds()" [formGroup]="searchForm" class="flex flex-col gap-4 w-full h-full">
     <div class="flex flex-wrap gap-4 justify-start">
-      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
-        <mat-label>Nom de la guilde</mat-label>
-        <input formControlName="name" matInput placeholder="Nom de la guilde"/>
-      </mat-form-field>
 
+      <input pInputText formControlName="name" placeholder="Nom de la guilde"/>
 
-      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
-        <mat-label>Niveau moyen minimum</mat-label>
-        <input formControlName="minAverageLevel" matInput max="200" min="0" placeholder="Niveau moyen minimum"
-               type="number"/>
-      </mat-form-field>
+      <p-inputNumber formControlName="minAverageLevel" placeholder="Niv. moyen des membres minimum" min="0"
+                     max="200" styleClass="w-[15rem]" inputStyleClass="w-[15rem]"/>
     </div>
 
     <div class="flex justify-end mt-4">
-      <button [disabled]="searchForm.invalid" color="primary" mat-raised-button type="submit">
-        Rechercher
-      </button>
+      <p-button label="Réinitialiser" icon="pi pi-refresh"
+                type="button" severity="danger" (click)="resetSearchForm()" class="mr-4" rounded/>
+      <p-button icon="pi pi-search" label="Rechercher" type="submit" [disabled]="searchForm.invalid"
+                rounded/>
     </div>
   </form>
 </div>
@@ -25,38 +20,49 @@
 @if (guildsResults()!.length > 0 && guildsResults(); as guilds) {
   <div class="mt-6 flex flex-col gap-2">
     @for (guild of guilds; track guild.id) {
-      <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-md">
-        <div class="flex items-center space-x-4">
-          <div class="w-12 h-12 rounded-full overflow-hidden">
-            <img [src]="guild.logo" alt="Guild Icon" class="object-cover no-select no-copy">
+
+      <div [routerLink]="['/registry/guild', guild.id]"
+           class="relative h-20 flex border-b border-b-secondary cursor-pointer
+        items-center justify-between p-4 bg-white overflow-hidden rounded-lg shadow-md">
+        <img [src]="guild.logo" alt="Guild logo" class="w-24 h-24 object-cover absolute -left-[2rem] opacity-20 z-0"/>
+
+        <div class="flex items-center gap-4 z-10">
+          <div class="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center">
+            <img [src]="guild.logo" alt="Guild Icon" class="w-14 h-14 rounded-full object-cover no-select no-copy">
           </div>
-          <div class="text-lg font-bold">{{ guild.name }}</div>
+
+          <div class="grid grid-cols-2 gap-x-2">
+            <div class="w-[10rem] font-semibold">{{ guild.name }}</div>
+
+            <div class="flex items-center">
+              <i class="pi pi-crown text-yellow-500 mr-1"></i>
+              <div class="content-base text-base">{{ guild.leaderUsername }}</div>
+            </div>
+
+            <div class="text-base">
+              {{ guild.membersCount }} membre{{ guild.membersCount > 1 ? 's' : '' }}
+              inscrit{{ guild.membersCount > 1 ? 's' : '' }}
+            </div>
+
+            <div class="text-base">
+              Niveau moyen : {{ guild.averageLevel }}
+            </div>
+          </div>
         </div>
-        <div class="flex items-center space-x-4">
-          <div class="flex items-center space-x-2">
-            <div>{{ guild.averageLevel }}</div>
-          </div>
-          <div class="flex items-center space-x-2">
-            <div>{{ guild.membersCount }}</div>
-          </div>
-          <button [routerLink]="['/registry/guild', guild.id]" color="primary" mat-raised-button>
-            Détails
-          </button>
-        </div>
+
+        <p-button label="Détails" icon="pi pi-eye" [routerLink]="['/registry/guild', guild.id]"
+                  rounded text severity="secondary"/>
       </div>
 
     }
 
     @if (paginationData(); as paginationData) {
-      <mat-paginator
-        (page)="onPageChange($event)"
-        [length]="paginationData.total"
-        [pageIndex]="paginationData.currentPage - 1"
-        hidePageSize
-        [pageSize]="paginationData.perPage"
-        showFirstLastButtons
-      >
-      </mat-paginator>
+      <p-paginator
+        (onPageChange)="onPageChange($event)"
+        [first]="page"
+        [rows]="paginationData.perPage"
+        [totalRecords]="paginationData.total"
+      />
     }
 
   </div>

@@ -28,9 +28,7 @@ export const eventsStore = createStore(
 @Injectable({providedIn: 'root'})
 export class EventsFacade {
 
-  events$: Signal<EventDto[]> = toSignal(eventsStore.pipe(selectAllEntities()), {
-    initialValue: []
-  });
+
   futureEventsNotJoined$: Signal<EventDto[]> = toSignal(
     eventsStore.pipe(
       selectAllEntities(),
@@ -89,6 +87,10 @@ export class EventsFacade {
         error: (error) => console.error(error),
       }),
     );
+  }
+
+  getEventById(eventId: number): Observable<EventDto> {
+    return this.eventsService.getEventById(eventId);
   }
 
   joinEvent(eventId: number): Observable<EventDto> {

@@ -1,41 +1,66 @@
 <div class="w-full flex flex-col gap-6">
 
-  <div class="flex items-center justify-between">
-    <h2 class="text-2xl font-bold">Événements</h2>
-    <button (click)="openCreateEventModal()" color="primary" mat-raised-button>Créer un événement</button>
-  </div>
+  <app-page-block title="Événements">
 
-  <div class="p-4">
+    <ng-container header-action>
+      <p-button
+        (click)="openCreateEventModal()"
+        label="Créer un événement"
+        color="primary"
+        rounded
+        icon="pi pi-plus"
+      />
+    </ng-container>
 
-    <div>
-      <h2 class="text-xl font-semibold mb-2">Événements à venir (non rejoints)</h2>
-      @if (futureEventsNotJoined$().length > 0) {
-        <div class="flex flex-wrap gap-4">
-          <app-event-item *ngFor="let event of futureEventsNotJoined$()" [event]="event"></app-event-item>
-        </div>
-      } @else {
-        <p class="text-gray-600">Aucun événement à venir que vous n'avez pas rejoint.</p>
-      }
+    <ng-container content>
 
-      <h2 class="text-xl font-semibold mb-2">Événements à venir (rejoints)</h2>
-      @if (futureEventsJoined$().length > 0) {
-        <div class="flex flex-wrap gap-4">
-          <app-event-item *ngFor="let event of futureEventsJoined$()" [event]="event"></app-event-item>
-        </div>
-      } @else {
-        <p class="text-gray-600">Aucun événement à venir auquel vous êtes inscrit.</p>
-      }
+      <p-accordion [activeIndex]="[0]">
+        <p-accordionTab header="Evenement à venir (inscrit)" contentStyleClass="custom-accordion-content">
+          <div class="flex flex-wrap gap-4">
+            @if (futureEventsJoined$().length === 0) {
+              <div class="text-gray-600">Aucun événement à venir</div>
+            } @else {
+              @for (event of futureEventsJoined$() | sortBy:'date':'asc'; track event.id) {
+                <app-event-item (leaveEvent)="leaveEvent($event)"
+                                [event]="event" [currentUser]="currentUser$()!"/>
+              }
+            }
 
-      <h2 class="text-xl font-semibold mb-2">Événements passés</h2>
-      @if (pastEvents$().length > 0) {
-        <div class="flex flex-wrap gap-4">
-          <app-event-item *ngFor="let event of pastEvents$()" [event]="event"></app-event-item>
-        </div>
-      } @else {
-        <p class="text-gray-600">Aucun événement passé.</p>
-      }
-    </div>
-  </div>
+          </div>
+        </p-accordionTab>
+
+        <p-accordionTab header="Evenement à venir (non inscrit)" contentStyleClass="custom-accordion-content">
+          <div class="flex flex-wrap gap-4">
+            @if (futureEventsNotJoined$().length === 0) {
+              <div class="text-gray-600">Aucun événement à venir</div>
+            } @else {
+              @for (event of futureEventsNotJoined$() | sortBy:'date':'asc'; track event.id) {
+                <app-event-item (joinEvent)="joinEvent($event)"
+                                [event]="event" [currentUser]="currentUser$()!"/>
+              }
+            }
+          </div>
+        </p-accordionTab>
+
+        <p-accordionTab header="Evenement passés" contentStyleClass="custom-accordion-content">
+          <div class="flex flex-wrap gap-4">
+            @if (pastEvents$().length === 0) {
+              <div class="text-gray-600">Aucun événement passé</div>
+            } @else {
+              @for (event of pastEvents$() | sortBy:'date':'desc'; track event.id) {
+                <app-event-item [event]="event"/>
+              }
+            }
+          </div>
+        </p-accordionTab>
+
+      </p-accordion>
+
+
+    </ng-container>
+
+  </app-page-block>
+
 
 </div>
 

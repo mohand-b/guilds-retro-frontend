@@ -1,5 +1,7 @@
-@if (currentUser()!.role !== UserRoleEnum.CANDIDATE) {
-  <app-feed [currentUser]="currentUser()!"/>
-} @else {
-  <app-user-membership-requests/>
+@if (currentUser(); as user) {
+  @if (hasRequiredRole(user.role, UserRoleEnum.MEMBER)) {
+    <app-feed [currentUser]="user"/>
+  } @else {
+    <app-user-membership-requests/>
+  }
 }

@@ -5,6 +5,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatIconModule} from "@angular/material/icon";
 import {NgClass} from "@angular/common";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {KnobModule} from "primeng/knob";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-job-display',
@@ -14,7 +17,10 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     MatIconModule,
     MatTooltipModule,
     JobImagePipe,
-    NgClass
+    NgClass,
+    ProgressSpinnerModule,
+    KnobModule,
+    FormsModule
   ],
   templateUrl: './job-display.component.html',
   styleUrl: './job-display.component.scss'

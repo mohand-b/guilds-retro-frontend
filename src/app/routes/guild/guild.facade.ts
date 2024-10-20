@@ -360,7 +360,7 @@ export class GuildFacade {
           guildStore.update(
             (state) => ({
               ...state,
-              displayStats: guild.hideStats,
+              hideStats: guild.hideStats,
             }),
           );
         },

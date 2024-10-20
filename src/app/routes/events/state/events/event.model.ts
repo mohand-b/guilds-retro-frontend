@@ -12,6 +12,7 @@ export interface EventDto {
   minLevel?: number;
   requiredClasses?: CharacterClassEnum[];
   requiresOptimization?: boolean;
+  isAccessibleToAllies: boolean;
   creator: UserDto;
   participants: UserDto[];
   createdAt: string;

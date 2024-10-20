@@ -1,12 +1,5 @@
 import {inject, Injectable, Signal} from '@angular/core';
-import {
-  HTTP_INTERCEPTORS,
-  HttpEvent,
-  HttpHandler,
-  HttpHeaders,
-  HttpInterceptor,
-  HttpRequest,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthenticatedFacade} from "../../routes/authenticated/authenticated.facade";

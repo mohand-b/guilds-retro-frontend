@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {MatIcon} from "@angular/material/icon";
 import {NgClass} from "@angular/common";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 
@@ -8,11 +7,10 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatIcon,
-    NgClass
+    NgClass,
   ],
   templateUrl: './alert.component.html',
-  styleUrl: './alert.component.scss',
+  styleUrls: ['./alert.component.scss'],
   animations: [
     trigger('fadeInOut', [
       state('visible', style({opacity: 1})),
@@ -33,25 +31,17 @@ export class AlertComponent {
 
   get bgClass(): string {
     return {
-      'info': 'bg-green-100',
-      'error': 'bg-red-100',
-      'warning': 'bg-yellow-100'
-    }[this.type];
-  }
-
-  get textClass(): string {
-    return {
-      'info': 'text-green-700',
-      'error': 'text-red-700',
-      'warning': 'text-yellow-700'
-    }[this.type];
+      'info': 'bg-green-100 text-green-700',
+      'error': 'bg-red-100 text-red-700',
+      'warning': 'bg-yellow-100 text-yellow-700'
+    }[this.type] || '';
   }
 
   get icon(): string {
     return {
-      'info': 'info',
-      'error': 'error',
-      'warning': 'warning'
-    }[this.type];
+      'info': 'pi pi-info-circle',
+      'error': 'pi pi-times-circle',
+      'warning': 'pi pi-exclamation-triangle'
+    }[this.type] || 'pi pi-info-circle';
   }
 }

@@ -1,13 +1,11 @@
-import {Component, DestroyRef, inject} from '@angular/core';
+import {Component, DestroyRef, inject, signal, WritableSignal} from '@angular/core';
 import {MainMenuComponent} from "../../../../shared/components/main-menu/main-menu.component";
 import {HeaderComponent} from "../../../../shared/components/header/header.component";
 import {RouterOutlet} from "@angular/router";
 import {NotificationsFacade} from "../../../../shared/state/notifications/notifications.facade";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {MatSidenavModule} from "@angular/material/sidenav";
 import {NotificationsComponent} from "../../../dashboard/containers/notifications/notifications.component";
-import {MatIcon} from "@angular/material/icon";
-import {MatBadgeModule} from "@angular/material/badge";
+import {SidebarModule} from "primeng/sidebar";
 
 @Component({
   selector: 'app-authenticated',
@@ -16,17 +14,16 @@ import {MatBadgeModule} from "@angular/material/badge";
     MainMenuComponent,
     HeaderComponent,
     RouterOutlet,
-    MatSidenavModule,
-    MatBadgeModule,
     NotificationsComponent,
-    MatIcon,
+    SidebarModule,
   ],
   templateUrl: './authenticated.component.html',
   styleUrl: './authenticated.component.scss'
 })
 export class AuthenticatedComponent {
 
-  public showNotifications = false;
+  showNotifications: WritableSignal<boolean> = signal(false);
+
   protected readonly scroll = scroll;
   private notificationsFacade = inject(NotificationsFacade);
   public readonly unreadNotificationsCount = this.notificationsFacade.unreadNotificationsCount;
@@ -35,6 +32,12 @@ export class AuthenticatedComponent {
   constructor() {
     this.notificationsFacade.loadNotifications().pipe(
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe()
+    ).subscribe();
   }
+
+  toggleNotifications(): void {
+    this.showNotifications.set(!this.showNotifications());
+  }
+
+
 }

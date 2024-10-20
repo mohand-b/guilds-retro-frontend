@@ -1,7 +1,7 @@
 @if (classCount(); as classCount) {
   <div class="flex flex-wrap items-baseline gap-6">
     @for (classKey of getCharacterClassKeys(); track classKey) {
-      <div [matTooltip]="classKey" class="flex flex-col items-center">
+      <div [pTooltip]="classKey" tooltipPosition="top" class="flex flex-col items-center">
         <img
           [src]="'assets/characters/' + classKey.toLowerCase() + '_icon.svg'"
           [alt]="classKey + ' icon'"

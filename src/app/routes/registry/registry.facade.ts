@@ -9,7 +9,7 @@ import {
 import {Observable, tap} from "rxjs";
 import {createStore, select, setProps, withProps} from "@ngneat/elf";
 import {selectPaginationData, updatePaginationData, withPagination} from "@ngneat/elf-pagination";
-import {selectAllEntities, setEntities, withEntities} from "@ngneat/elf-entities";
+import {deleteAllEntities, selectAllEntities, setEntities, withEntities} from "@ngneat/elf-entities";
 import {
   GuildSearchDto,
   GuildSearchResponseDto,
@@ -111,6 +111,27 @@ export class RegistryFacade {
         }
       })
     );
+  }
+
+  resetUsersFilter() {
+    usersRegistryStore.update(
+      deleteAllEntities(),
+      setProps({
+        username: undefined,
+        characterClass: undefined,
+        characterLevel: undefined,
+        jobName: undefined,
+        jobLevel: undefined,
+      }));
+  }
+
+  resetGuildsFilter() {
+    guildsRegistryStore.update(
+      deleteAllEntities(),
+      setProps({
+        name: undefined,
+        minAverageLevel: undefined,
+      }));
   }
 
 

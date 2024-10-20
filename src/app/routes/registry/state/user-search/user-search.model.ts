@@ -1,4 +1,4 @@
-import {CharacterClassEnum} from "../../../profile/state/users/user.model";
+import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
 
 export interface UserSearchDto {
   username?: string;
@@ -14,7 +14,7 @@ export interface UserSearchResponseDto {
   id: number;
   username: string;
   characterClass: CharacterClassEnum;
-  gender: string;
+  gender: GenderEnum;
   characterLevel: number;
 }
 

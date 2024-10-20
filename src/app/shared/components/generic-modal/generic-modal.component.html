@@ -1,15 +1,31 @@
-<div class="p-4">
-  <h2 class="text-2xl font-bold mb-4">{{ data.title }}</h2>
-  <div class="max-h-[60vh] overflow-y-auto p-2">
-    <ng-template #dynamicComponentContainer *ngIf="data.contentComponent"></ng-template>
-    <div *ngIf="data.contentText as text" class="text-sm">{{ text }}</div>
-  </div>
-  <div class="flex justify-end gap-2 mt-4">
-    <button (click)="onCancel()" color="warn" mat-stroked-button>
-      {{ data.buttonText ? 'Annuler' : 'Quitter' }}
-    </button>
-    <button (click)="onAction()" *ngIf="data.buttonText" [color]="data.buttonColor" [disabled]="buttonDisabled()"
-            mat-raised-button>{{ data.buttonText }}
-    </button>
-  </div>
+<div class="max-h-[60vh] overflow-y-visible pt-4">
+  @if (contentComponent) {
+    <ng-container #dynamicComponentContainer/>
+  } @else if (contentText) {
+    <p>{{ contentText }}</p>
+  }
+</div>
+
+<div class="flex justify-end gap-2 my-4">
+  <button
+    (click)="onCancel()"
+    icon="pi pi-times"
+    label="Annuler"
+    pButton
+    rounded
+    severity="secondary"
+    text
+  ></button>
+
+  @if (buttonText) {
+    <button
+      (click)="onAction()"
+      [disabled]="buttonDisabled()"
+      [label]="buttonText"
+      [severity]="buttonColor"
+      [icon]="buttonIcon"
+      pButton
+      rounded
+    ></button>
+  }
 </div>

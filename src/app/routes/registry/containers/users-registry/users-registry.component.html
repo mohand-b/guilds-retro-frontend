@@ -1,55 +1,49 @@
 <div class="relative w-full max-h-[300px] bg-cover bg-center p-6 rounded-lg shadow-md filter-container">
+
   <form (ngSubmit)="onSearchUsers()" [formGroup]="searchForm" class="flex flex-col gap-4 w-full h-full">
-    <!-- Première rangée : Pseudo, Classe, Niveau -->
     <div class="flex flex-wrap gap-4 justify-start">
-      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
-        <mat-label>Pseudo</mat-label>
-        <input formControlName="username" matInput placeholder="Pseudo"/>
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
-        <mat-label>Classe</mat-label>
-        <input [matAutocomplete]="classesAuto" formControlName="characterClass" matInput placeholder="Classe"/>
-        <mat-autocomplete #classesAuto="matAutocomplete">
-          @for (characterClass of characterClasses | sortAlphabetically; track characterClass) {
-            <mat-option [value]="characterClass">
-              {{ characterClass }}
-            </mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
-        <mat-label>Niveau</mat-label>
-        <input formControlName="characterLevel" matInput max="200" min="0" placeholder="Niveau" type="number"/>
-      </mat-form-field>
+
+      <input pInputText formControlName="username" placeholder="Pseudo"/>
+
+      <p-autoComplete formControlName="characterClass" placeholder="Classe"
+                      [suggestions]="characterClasses | sortAlphabetically"
+                      (completeMethod)="filterCharacterClasses($event)"
+                      searchMessage=" "
+                      emptySelectionMessage=" "
+                      selectionMessage=" "
+                      completeOnFocus forceSelection>
+        <ng-template pTemplate="loadingicon"></ng-template>
+        <ng-template pTemplate="empty">Aucun résultat</ng-template>
+      </p-autoComplete>
+
+      <p-inputNumber formControlName="characterLevel" placeholder="Niveau du personnage" min="0"
+                     max="200"/>
     </div>
 
-    <!-- Deuxième rangée : Métier, Niveau du métier -->
     <div class="flex flex-wrap gap-4 justify-start">
-      <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
-        <mat-label>Métier</mat-label>
-        <input [matAutocomplete]="jobsAuto" formControlName="jobName" matInput placeholder="Métier"/>
-        <mat-autocomplete #jobsAuto="matAutocomplete">
-          @for (job of jobs | sortAlphabetically; track job) {
-            <mat-option [value]="job">
-              {{ job }}
-            </mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
+      <p-autoComplete formControlName="jobName" placeholder="Métier"
+                      [suggestions]="jobs | sortAlphabetically"
+                      (completeMethod)="filterJobs($event)"
+                      searchMessage=" "
+                      emptySelectionMessage=" "
+                      selectionMessage=" "
+                      completeOnFocus forceSelection>
+        <ng-template pTemplate="loadingicon"></ng-template>
+        <ng-template pTemplate="empty">Aucun résultat</ng-template>
+      </p-autoComplete>
+
       @if (searchForm.get('jobName')?.value; as jobName) {
         @if (isValidJobName(jobName)) {
-          <mat-form-field appearance="fill" class="max-w-[18.75rem] flex-1 bg-white opacity-90 rounded">
-            <mat-label>Niveau du métier</mat-label>
-            <input formControlName="jobLevel" matInput placeholder="Niveau du métier" type="number" min="0" max="100"/>
-          </mat-form-field>
+          <p-inputNumber formControlName="jobLevel" placeholder="Niveau du métier" min="0" max="100"/>
         }
       }
     </div>
 
     <div class="flex justify-end mt-4">
-      <button [disabled]="searchForm.invalid" color="primary" mat-raised-button type="submit">
-        Rechercher
-      </button>
+      <p-button label="Réinitialiser" icon="pi pi-refresh"
+                type="button" severity="danger" (click)="resetSearchForm()" class="mr-4" rounded/>
+      <p-button icon="pi pi-search" label="Rechercher" type="submit" [disabled]="searchForm.invalid"
+                rounded/>
     </div>
   </form>
 </div>
@@ -57,25 +51,39 @@
 
 @if (usersResults()!.length > 0 && usersResults(); as users) {
   <div class="mt-6 flex flex-col gap-2">
-    @for (user of users; track user.id) {
+    @for (user of users | sortBy: 'username' : 'asc'; track user.id) {
       <div [routerLink]="['/registry/user', user.username]"
-           class="p-4 bg-gray-100 rounded-lg cursor-pointer shadow-md">
-        <h3>{{ user.username }} ({{ user.characterClass }})</h3>
-        <p>Niveau : {{ user.characterLevel }}</p>
+           [style.border-color]="user.characterClass | characterColor"
+           class="relative h-20 flex items-center justify-between bg-gray-100 border-b rounded-lg cursor-pointer shadow-md overflow-hidden p-4">
+        <div [style.background-color]="(user.characterClass | characterColor) + '20'"
+             class="rotate-45 w-[11rem] h-[9rem] absolute top-[2rem] -left-[5rem] z-0"></div>
+
+        <div class="flex items-center gap-4 z-10">
+          <img [ngSrc]="user | characterIcon" alt="User avatar" class="object-cover rounded-full mr-4 z-10" height="50"
+               width="50"/>
+
+          <div class="flex flex-col">
+            <h3 class="font-semibold">{{ user.username }}</h3>
+            <p class="text-base text-gray-700">Niveau : {{ user.characterLevel }}</p>
+          </div>
+        </div>
+
+        <p-button label="Voir" icon="pi pi-eye"
+                  rounded text severity="secondary"/>
       </div>
+
+
     }
 
     @if (paginationData(); as paginationData) {
-      <mat-paginator
-        (page)="onPageChange($event)"
-        [length]="paginationData.total"
-        [pageIndex]="paginationData.currentPage - 1"
-        hidePageSize
-        [pageSize]="paginationData.perPage"
-        showFirstLastButtons
-      >
-      </mat-paginator>
+      <p-paginator
+        (onPageChange)="onPageChange($event)"
+        [first]="page"
+        [rows]="paginationData.perPage"
+        [totalRecords]="paginationData.total"
+      />
     }
+
   </div>
 } @else if (!searchForm.invalid) {
   <div class="mt-6 text-center text-gray-400">

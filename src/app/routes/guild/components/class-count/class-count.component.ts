@@ -1,20 +1,18 @@
 import {Component, input} from '@angular/core';
-import {KeyValuePipe, NgClass, NgForOf, NgOptimizedImage, NgStyle} from "@angular/common";
-import {MatTooltip} from "@angular/material/tooltip";
+import {KeyValuePipe, NgOptimizedImage, NgStyle} from "@angular/common";
 import {CharacterClassEnum} from "../../../profile/state/users/user.model";
 import {CharacterColorPipe} from "../../../../shared/pipes/character-icon.pipe";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'app-class-count',
   standalone: true,
   imports: [
-    NgForOf,
     KeyValuePipe,
     NgOptimizedImage,
-    MatTooltip,
     CharacterColorPipe,
     NgStyle,
-    NgClass
+    TooltipModule
   ],
   templateUrl: './class-count.component.html',
   styleUrl: './class-count.component.scss'

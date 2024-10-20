@@ -2,24 +2,25 @@ import {Component, effect, inject, signal, WritableSignal} from '@angular/core';
 import {ProfileFacade} from "../../profile.facade";
 import {tap} from "rxjs";
 import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatFormField} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {UserDto} from "../../state/users/user.model";
+import {ModalData} from "../../../../shared/interfaces/modal-data.interface";
+import {InputTextModule} from "primeng/inputtext";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-add-linked-account',
   standalone: true,
   imports: [
-    MatFormField,
-    MatInput,
     ReactiveFormsModule,
     AlertComponent,
+    InputTextModule,
+    ButtonModule
   ],
   templateUrl: './add-linked-account.component.html',
   styleUrl: './add-linked-account.component.scss'
 })
-export class AddLinkedAccountComponent {
+export class AddLinkedAccountComponent implements ModalData {
 
   accountFound: WritableSignal<UserDto | undefined> = signal(undefined)
   error: WritableSignal<string | undefined> = signal(undefined)

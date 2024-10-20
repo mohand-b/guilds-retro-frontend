@@ -1,7 +1,4 @@
 import {Component, DestroyRef, inject} from '@angular/core';
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {MatButton} from "@angular/material/button";
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AuthFacade} from "../../auth.facade";
 import {Router, RouterLink} from "@angular/router";
@@ -9,19 +6,25 @@ import {LoginDto} from "../../state/auth/auth.model";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {NgIf} from "@angular/common";
+import {ButtonModule} from "primeng/button";
+import {MessagesModule} from "primeng/messages";
+import {ChipModule} from "primeng/chip";
+import {Ripple} from "primeng/ripple";
+import {InputTextModule} from "primeng/inputtext";
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatButton,
     ReactiveFormsModule,
     RouterLink,
     AlertComponent,
-    NgIf
+    NgIf,
+    ButtonModule,
+    MessagesModule,
+    ChipModule,
+    Ripple,
+    InputTextModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

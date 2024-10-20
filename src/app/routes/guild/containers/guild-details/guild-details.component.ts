@@ -1,16 +1,12 @@
-import {Component, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
+import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
 import {GuildDto} from "../../state/guilds/guild.model";
 import {CommonModule, Location} from "@angular/common";
-import {MatCardModule} from "@angular/material/card";
-import {MatButtonModule} from "@angular/material/button";
 import {ActivatedRoute} from "@angular/router";
 import {EMPTY, forkJoin, of, switchMap, tap} from "rxjs";
-import {MatIconModule} from "@angular/material/icon";
 import {GuildHeaderComponent} from "../../components/guild-header/guild-header.component";
 import {GuildMembersTableComponent} from "../../components/guild-members-table/guild-members-table.component";
 import {AllianceCardComponent} from "../../components/alliance-card/alliance-card.component";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {UserDto} from "../../../profile/state/users/user.model";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
@@ -18,25 +14,26 @@ import {ClassCountComponent} from "../../components/class-count/class-count.comp
 import {GuildStatsComponent} from "../guild-stats/guild-stats.component";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
-import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {AllianceRequestDto} from "../../state/alliances/alliance.model";
+import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
+import {ButtonModule} from "primeng/button";
+import {BadgeModule} from "primeng/badge";
 
 @Component({
   selector: 'app-guild-details',
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
     GuildHeaderComponent,
     GuildMembersTableComponent,
     AllianceCardComponent,
     ClassCountComponent,
     GuildStatsComponent,
-    MatSlideToggle,
-    AlertComponent
+    AlertComponent,
+    PageBlockComponent,
+    ButtonModule,
+    BadgeModule
   ],
   templateUrl: './guild-details.component.html',
   styleUrls: ['./guild-details.component.scss']
@@ -53,6 +50,22 @@ export class GuildDetailsComponent implements OnInit {
   private readonly location = inject(Location);
   private readonly activatedRoute = inject(ActivatedRoute);
   private genericModalService = inject(GenericModalService);
+
+  receivedRequests = this.guildFacade.receivedPendingAllianceRequests;
+  hasReceivedRequest: Signal<boolean | undefined> = computed(() =>
+    this.receivedRequests()?.some(request =>
+      request.requesterGuild?.id === this.guild()!.id)
+  );
+  receivedRequestFromGuild: Signal<AllianceRequestDto | undefined> = computed(() =>
+    this.receivedRequests()?.find(request =>
+      request.requesterGuild?.id === this.guild()!.id)
+  );
+  private sentRequests = this.guildFacade.sentPendingAllianceRequests;
+  hasSentRequest: Signal<boolean | undefined> = computed(() =>
+    this.sentRequests()?.some(request =>
+      request.targetGuild?.id === this.guild()!.id)
+  );
+
 
   ngOnInit(): void {
     this.loading = true;
@@ -97,44 +110,46 @@ export class GuildDetailsComponent implements OnInit {
     this.location.back();
   }
 
-  onAcceptAllianceRequest(requestId: number) {
-    this.genericModalService.open(
+  onAcceptAllianceRequest() {
+    const requestId = this.receivedRequestFromGuild()!.id;
+
+    const ref = this.genericModalService.open(
       'Confirmation',
       {primary: 'Oui, accepter'},
       'sm',
       null,
       null,
       `Es-tu sûr de vouloir accepter la guilde ${this.guild()!.name} en tant qu'alliée ?`
-    ).pipe(
-      switchMap((result) => {
-        if (result) {
-          return this.guildFacade.acceptAllianceRequest(requestId).pipe(
-            tap(() => {
-              window.location.reload();
-            })
-          );
-        } else {
-          return EMPTY;
-        }
-      })
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) =>
+        result
+          ? this.guildFacade.acceptAllianceRequest(requestId).pipe(
+            tap(() => window.location.reload())
+          )
+          : EMPTY
+      )
     ).subscribe();
   }
 
-  onDeclineAllianceRequest(requestId: number) {
-    this.genericModalService.open(
+  onDeclineAllianceRequest() {
+    const requestId = this.receivedRequestFromGuild()!.id;
+
+    const ref = this.genericModalService.open(
       'Confirmation',
-      {warn: 'Oui, refuser'},
+      {danger: 'Oui, refuser'},
       'sm',
       null,
       null,
-      `Es-tu sûr de vouloir refuser la guilde ${this.guild()!.name} en tant qu'alliée ?`,
-    ).pipe(
-      switchMap((result) => {
-        if (result) return this.guildFacade.rejectAllianceRequest(requestId);
-        else return EMPTY
-      })
-    ).subscribe()
+      `Es-tu sûr de vouloir refuser la guilde ${this.guild()!.name} en tant qu'alliée ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.guildFacade.rejectAllianceRequest(requestId) : EMPTY)
+    ).subscribe();
   }
+
 
   onSendAllianceRequest(guildId: number) {
     this.guildFacade.createAllianceRequest(guildId).subscribe();
