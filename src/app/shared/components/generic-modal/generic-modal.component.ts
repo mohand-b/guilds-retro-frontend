@@ -33,6 +33,7 @@ export class GenericModalComponent implements AfterViewInit {
   public contentText?: string = this.config.data.contentText;
   public payload: any = this.config.data.payload;
   public contentComponent: any = this.config.data.contentComponent;
+  public overflowYvisible: boolean = this.config.data.overflowYvisible;
   public buttonDisabled: WritableSignal<boolean> = signal(this.config.data.disableButtonUntilConditionMet);
   private cdr = inject(ChangeDetectorRef);
   private contentComponentRef?: ComponentRef<any>;

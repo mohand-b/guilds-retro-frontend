@@ -1,19 +1,21 @@
-<div class="flex justify-center mb-4">
-  <p-selectButton
-    [options]="navOptions"
-    [formControl]="navigationControl"
-    optionLabel="label"
-    optionValue="route"
-    (onChange)="onChange($event.value)"
-    unselectable
-  >
-    <ng-template let-item pTemplate>
-      <div class="flex items-center gap-2 font-bold">
-        <i [class]="item.icon"></i>
-        <span>{{ item.label }}</span>
-      </div>
-    </ng-template>
-  </p-selectButton>
-</div>
+<div class="p-4 lg:px-10 lg:pt-10">
+  <div class="flex justify-center mb-4">
+    <p-selectButton
+      [options]="navOptions"
+      [formControl]="navigationControl"
+      optionLabel="label"
+      optionValue="route"
+      (onChange)="onChange($event.value)"
+      unselectable
+    >
+      <ng-template let-item pTemplate>
+        <div class="flex items-center gap-2 font-bold">
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </div>
+      </ng-template>
+    </p-selectButton>
+  </div>
 
-<router-outlet/>
+  <router-outlet/>
+</div>

@@ -54,7 +54,7 @@
 
   <div class="flex flex-col gap-2">
     @if (post.text) {
-      <div class="text-sm whitespace-pre-wrap" [appLineClamp]="showMore ? null : 5"
+      <div class="text-base whitespace-pre-wrap" [appLineClamp]="showMore ? null : 5"
            (contentClamped)="handleContentClamped($event)">
         {{ post.text }}
       </div>

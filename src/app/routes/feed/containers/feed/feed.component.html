@@ -1,5 +1,6 @@
 <div (scroll)="onScroll($event)"
-     class="w-full flex flex-col gap-6 h-full overflow-y-auto no-scrollbar">
+     class="p-4 lg:px-10 lg:pt-10 w-full flex max-w-[60rem] m-auto
+     flex-col gap-6 h-full overflow-y-auto no-scrollbar">
 
   <app-page-block title="Fil d'actualité">
     <ng-container header-action>
@@ -8,7 +9,7 @@
           label="Fil d'actualité fermé à sa guilde et alliés"
           icon="pi pi-lock"
           severity="warning"
-          outlined
+          text
           rounded
           (onClick)="toggleFeedClosingToGuildAndAllies(false)"
         />
@@ -17,7 +18,7 @@
           label="Fil d'actualité ouvert à tous"
           icon="pi pi-lock-open"
           severity="primary"
-          outlined
+          text
           rounded
           (onClick)="toggleFeedClosingToGuildAndAllies(true)"
         />
@@ -50,7 +51,7 @@
       @if (item.post) {
         <app-feed-post [@fadeIn] [currentUser]="currentUser" [post]="item.post"/>
       } @else if (item.event) {
-        <app-feed-event [currentUser]="currentUser" [event]="item.event"/>
+        <app-feed-event [@fadeIn] [currentUser]="currentUser" [event]="item.event"/>
       }
     } @empty {
       <div class="text-center text-gray-400">

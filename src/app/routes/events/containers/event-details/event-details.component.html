@@ -1,173 +1,177 @@
-<button (click)="goBack()" class="text-gray-600 hover:text-gray-800 mb-4">
-  <i class="pi pi-arrow-left" style="font-size: 1.5rem"></i>
-</button>
+<div class="p-4 lg:px-10 lg:pt-10">
+  <button (click)="goBack()" class="text-gray-600 hover:text-gray-800 mb-4">
+    <i class="pi pi-arrow-left" style="font-size: 1.5rem"></i>
+  </button>
 
-@if (event$(); as event) {
+  @if (event$(); as event) {
 
-  <div class="bg-white rounded-lg shadow-md">
+    <div class="bg-white rounded-lg shadow-md">
 
-    <div [style.background-color]="eventColor+20"
-         [style.border-color]="eventColor+60" class="custom-bg p-4 rounded-t-lg border-b border-extraLightSecondary">
+      <div [style.background-color]="eventColor+20"
+           [style.border-color]="eventColor+60" class="custom-bg p-4 rounded-t-lg border-b border-extraLightSecondary">
 
-      <div class="flex items-end justify-between">
-        <div class="flex items-center gap-2">
-          <img [src]="event | eventImage" alt="Event image"
-               [style.background-color]="eventColor+30"
-               class="w-16 h-16 object-cover rounded-md border border-gray-300">
-          <div class="flex flex-col gap-1">
-            <h2
-              class="text-xl font-bold text-gray-800">{{ (event.dungeonName || event.title || event.arenaTargets)! }}</h2>
-            <div class="flex items-center gap-4 text-base">
-              <div class="flex items-center gap-2">
-                <i class="pi pi-calendar"></i>
-                {{ event.date | date:'dd-MM-yyyy' }}
-              </div>
+        <div class="flex items-end justify-between">
+          <div class="flex items-center gap-2">
+            <img [src]="event | eventImage" alt="Event image"
+                 [style.background-color]="eventColor+30"
+                 class="w-16 h-16 object-cover rounded-md border border-gray-300">
+            <div class="flex flex-col gap-1">
+              <h2
+                class="text-xl font-bold text-gray-800">{{ (event.dungeonName || event.title || event.arenaTargets)! }}</h2>
+              <div class="flex items-center gap-4 text-base">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-calendar"></i>
+                  {{ event.date | date:'dd-MM-yyyy' }}
+                </div>
 
-              <div class="flex items-center gap-2">
-                <i class="pi pi-clock"></i>
-                {{ event.date | date:'HH:mm' }}
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-clock"></i>
+                  {{ event.date | date:'HH:mm' }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="flex items-center gap-2">
-          Créé par
-          <div class="flex items-center gap-1">
-            <div class="w-8 h-8 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
-              <img
-                [src]="event.creator | characterIcon"
-                alt="Creator avatar"
-                class="w-7 h-7 rounded-full object-cover no-select no-copy"
-              />
-            </div>
-            {{ event.creator.username }}
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="flex flex-col gap-4 p-4 text-base">
-
-      <div class="text-center text-xl font-semibold text-gray-800">
-        {{ timeRemaining() }}
-      </div>
-
-      <div class="flex justify-around items-center">
-        <div>
-          @if (!isCreator) {
-            @if (isParticipant) {
-              <p-button
-                label="Se retirer"
-                icon="pi pi-minus"
-                severity="warning"
-                rounded
-                (click)="onLeave()"
-              ></p-button>
-            } @else if (!isParticipant && !isFull) {
-              <p-button
-                label="Participer"
-                icon="pi pi-user-plus"
-                severity="primary"
-                rounded
-                [disabled]="!levelRequirementMet"
-                (click)="onJoin()"
-              ></p-button>
-            }
-          }
-        </div>
-      </div>
-
-
-      <div class="ml-2 text-gray-600">{{ event.description || "Aucune description" }}</div>
-
-
-      <p-fieldset legend="Accessibles aux guildes">
-        <div class="flex items-center gap-4">
-
-          @if (event.creator.guild; as guild) {
-            <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/guild', guild.id]">
-              <img
-                [src]="event.creator.guild.logo"
-                alt="Ally logo"
-                class="w-8 h-8 rounded-full object-cover"/>
-              {{ guild.name }}
-            </div>
-          }
-          @if (event.isAccessibleToAllies) {
-            @for (ally of event.creator.guild.allies; track ally.id) {
-              <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/guild', ally.id]">
-                <img
-                  [src]="ally.logo"
-                  alt="Ally logo"
-                  class="w-8 h-8 rounded-full object-cover"/>
-                {{ ally.name }}
-              </div>
-            }
-          }
-        </div>
-      </p-fieldset>
-
-      <p-fieldset [legend]="'Participants ('+event.participants.length+'/'+event.maxParticipants+')'">
-        <div class="flex flex-wrap gap-3 mb-2">
-          @for (participant of event.participants; track participant.id) {
-            <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/user', participant.username]">
+          <div class="flex items-center gap-2">
+            Créé par
+            <div class="flex items-center gap-1">
               <div class="w-8 h-8 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
                 <img
-                  [src]="participant | characterIcon"
+                  [src]="event.creator | characterIcon"
                   alt="Creator avatar"
                   class="w-7 h-7 rounded-full object-cover no-select no-copy"
                 />
               </div>
-              {{ participant.username }}
+              {{ event.creator.username }}
             </div>
-          }
+          </div>
         </div>
 
-        <div>Niveau moyen des participants : <span class="font-bold">{{ averageLevelOfParticipants }}</span></div>
-      </p-fieldset>
+      </div>
 
-      <p-fieldset legend="Conditions">
+      <div class="flex flex-col gap-4 p-4 text-base">
 
-        @if (event.minLevel || filteredRequiredClasses!.length > 0 || event.requiresOptimization) {
-          <div class="flex flex-col gap-1">
-            @if (event.minLevel) {
-              <div class="flex items-center gap-1" [ngClass]="levelRequirementMet ? 'text-green-500' : 'text-red-500'">
-                <span class="underline">Niveau minimum :</span> <span>{{ event.minLevel }}</span>
+        <div class="text-center text-xl font-semibold text-gray-800">
+          {{ timeRemaining() }}
+        </div>
+
+        <div class="flex justify-around items-center">
+          <div>
+            @if (!isCreator) {
+              @if (isParticipant) {
+                <p-button
+                  label="Se retirer"
+                  icon="pi pi-minus"
+                  severity="warning"
+                  rounded
+                  (click)="onLeave()"
+                ></p-button>
+              } @else if (!isParticipant && !isFull) {
+                <p-button
+                  label="Participer"
+                  icon="pi pi-user-plus"
+                  severity="primary"
+                  rounded
+                  [disabled]="!levelRequirementMet"
+                  (click)="onJoin()"
+                ></p-button>
+              }
+            }
+          </div>
+        </div>
+
+
+        <div class="ml-2 text-gray-600">{{ event.description || "Aucune description" }}</div>
+
+
+        <p-fieldset legend="Accessibles aux guildes">
+          <div class="flex items-center gap-4">
+
+            @if (event.creator.guild; as guild) {
+              <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/guild', guild.id]">
+                <img
+                  [src]="event.creator.guild.logo"
+                  alt="Ally logo"
+                  class="w-8 h-8 rounded-full object-cover"/>
+                {{ guild.name }}
               </div>
             }
-            @if (filteredRequiredClasses!.length > 0) {
-              <div class="flex items-center gap-1">
-                @if (!meetsClassRequirements && !isParticipant) {
-                  <span class="text-red-500">⚠️</span>
-                }
-                <span class="underline">Classes requises :</span>
-                <div>
-                  @for (requiredClass of filteredRequiredClasses; track requiredClass; let isLast = $last) {
-                    <span
-                      [ngClass]="{'text-green-500': currentUser$()!.characterClass === requiredClass}">{{ requiredClass }}</span>
-                    @if (!isLast) {
-                      <span>, </span>
-                    }
-                  }
+            @if (event.isAccessibleToAllies) {
+              @for (ally of event.creator.guild.allies; track ally.id) {
+                <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/guild', ally.id]">
+                  <img
+                    [src]="ally.logo"
+                    alt="Ally logo"
+                    class="w-8 h-8 rounded-full object-cover"/>
+                  {{ ally.name }}
                 </div>
-              </div>
+              }
             }
-            @if (event.requiresOptimization) {
-              <div class="flex items-center gap-1">
-                <i class="pi pi-sparkles text-yellow-500"></i>
-                <span class="font-bold">Optimisation requise</span>
+          </div>
+        </p-fieldset>
+
+        <p-fieldset [legend]="'Participants ('+event.participants.length+'/'+event.maxParticipants+')'">
+          <div class="flex flex-wrap gap-3 mb-2">
+            @for (participant of event.participants; track participant.id) {
+              <div class="flex items-center gap-1 cursor-pointer"
+                   [routerLink]="['/registry/user', participant.username]">
+                <div class="w-8 h-8 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
+                  <img
+                    [src]="participant | characterIcon"
+                    alt="Creator avatar"
+                    class="w-7 h-7 rounded-full object-cover no-select no-copy"
+                  />
+                </div>
+                {{ participant.username }}
               </div>
             }
           </div>
-        } @else {
-          <div class="text-gray-600">Aucune condition</div>
-        }
-      </p-fieldset>
+
+          <div>Niveau moyen des participants : <span class="font-bold">{{ averageLevelOfParticipants }}</span></div>
+        </p-fieldset>
+
+        <p-fieldset legend="Conditions">
+
+          @if (event.minLevel || filteredRequiredClasses!.length > 0 || event.requiresOptimization) {
+            <div class="flex flex-col gap-1">
+              @if (event.minLevel) {
+                <div class="flex items-center gap-1"
+                     [ngClass]="levelRequirementMet ? 'text-green-500' : 'text-red-500'">
+                  <span class="underline">Niveau minimum :</span> <span>{{ event.minLevel }}</span>
+                </div>
+              }
+              @if (filteredRequiredClasses!.length > 0) {
+                <div class="flex items-center gap-1">
+                  @if (!meetsClassRequirements && !isParticipant) {
+                    <span class="text-red-500">⚠️</span>
+                  }
+                  <span class="underline">Classes requises :</span>
+                  <div>
+                    @for (requiredClass of filteredRequiredClasses; track requiredClass; let isLast = $last) {
+                      <span
+                        [ngClass]="{'text-green-500': currentUser$()!.characterClass === requiredClass}">{{ requiredClass }}</span>
+                      @if (!isLast) {
+                        <span>, </span>
+                      }
+                    }
+                  </div>
+                </div>
+              }
+              @if (event.requiresOptimization) {
+                <div class="flex items-center gap-1">
+                  <i class="pi pi-sparkles text-yellow-500"></i>
+                  <span class="font-bold">Optimisation requise</span>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-gray-600">Aucune condition</div>
+          }
+        </p-fieldset>
+
+      </div>
 
     </div>
 
-  </div>
-
-}
+  }
+</div>

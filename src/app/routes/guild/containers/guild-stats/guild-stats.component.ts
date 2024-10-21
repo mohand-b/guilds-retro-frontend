@@ -7,6 +7,7 @@ import {EventTypesEnum} from "../../../events/state/events/event.model";
 import {PanelModule} from "primeng/panel";
 import {DividerModule} from "primeng/divider";
 import {CardModule} from "primeng/card";
+import {TitleCasePipe} from "@angular/common";
 
 @Component({
   selector: 'app-guild-stats',
@@ -15,7 +16,8 @@ import {CardModule} from "primeng/card";
     ClassCountComponent,
     PanelModule,
     DividerModule,
-    CardModule
+    CardModule,
+    TitleCasePipe
   ],
   templateUrl: './guild-stats.component.html',
   styleUrl: './guild-stats.component.scss'

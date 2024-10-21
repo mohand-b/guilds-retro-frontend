@@ -34,7 +34,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-{{ getEventTypesKeys().length }} gap-4">
       @for (eventTypeKey of getEventTypesKeys(); track eventTypeKey) {
         <div class="p-4 text-center border rounded-lg shadow-sm bg-gray-50">
-          <div class="text-sm text-gray-600">{{ eventTypeKey }}</div>
+          <div class="text-sm text-gray-600">{{ eventTypeKey | titlecase }}</div>
           <div class="text-gray-700 font-bold text-2xl">
             {{ eventStats.totalEventsByType[eventTypeKey] || 0 }}
           </div>

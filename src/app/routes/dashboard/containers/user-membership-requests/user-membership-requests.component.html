@@ -1,41 +1,43 @@
-<app-page-block [title]="'Vos demandes de candidature'">
-  <ng-container header-action>
-    @if (pendingRequestsCount() === 0 && !approvedRequest() && rejectedRequestsCount() < 5) {
-      <p-button
-        label="Faire une nouvelle demande"
-        icon="pi pi-plus"
-        (click)="onOpenGuildSelection()"
-        rounded
-      />
-    }
-  </ng-container>
-
-  <ng-container content>
-    <div class="flex flex-col gap-2">
-      @if (approvedRequest()) {
-        <p-progressBar [value]="progressValue" [showValue]="false"/>
-      }
-
-      @if (approvedRequest()) {
-        <app-alert message="Tu as une demande acceptée."/>
-      }
-
-      @if (rejectedRequestsCount() > 4) {
-        <app-alert
-          message="Tu as trop de demandes rejetées, tu ne peux pas en faire de nouvelles. Contacte un administrateur du site."
-          type="error"
+<div class="p-4 lg:px-10 lg:pt-10">
+  <app-page-block [title]="'Vos demandes de candidature'">
+    <ng-container header-action>
+      @if (pendingRequestsCount() === 0 && !approvedRequest() && rejectedRequestsCount() < 5) {
+        <p-button
+          label="Faire une nouvelle demande"
+          icon="pi pi-plus"
+          (click)="onOpenGuildSelection()"
+          rounded
         />
       }
+    </ng-container>
 
-      @if (pendingRequestsCount() === 0) {
-        <app-alert message="Aucune demande en cours." type="info"/>
-      }
-    </div>
+    <ng-container content>
+      <div class="flex flex-col gap-2">
+        @if (approvedRequest()) {
+          <p-progressBar [value]="progressValue" [showValue]="false"/>
+        }
 
-    <div class="flex flex-col gap-3 mt-4">
-      @for (request of requests(); track request.id) {
-        <app-user-membership-request [request]="request"/>
-      }
-    </div>
-  </ng-container>
-</app-page-block>
+        @if (approvedRequest()) {
+          <app-alert message="Tu as une demande acceptée."/>
+        }
+
+        @if (rejectedRequestsCount() > 4) {
+          <app-alert
+            message="Tu as trop de demandes rejetées, tu ne peux pas en faire de nouvelles. Contacte un administrateur du site."
+            type="error"
+          />
+        }
+
+        @if (pendingRequestsCount() === 0) {
+          <app-alert message="Aucune demande en cours." type="info"/>
+        }
+      </div>
+
+      <div class="flex flex-col gap-3 mt-4">
+        @for (request of requests(); track request.id) {
+          <app-user-membership-request [request]="request"/>
+        }
+      </div>
+    </ng-container>
+  </app-page-block>
+</div>

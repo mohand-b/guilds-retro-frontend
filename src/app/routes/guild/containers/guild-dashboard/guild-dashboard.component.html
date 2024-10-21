@@ -1,5 +1,5 @@
 @if (guild(); as guild) {
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 p-4 lg:px-10 lg:pt-10">
 
     @if (loading) {
       <p-progressSpinner class="mx-auto min-h-[11.75rem]" strokeWidth="5"/>
@@ -59,7 +59,7 @@
               (onClick)="toggleUpdateGuildHideStats(false)"
               severity="warning"
               rounded
-              outlined
+              text
             />
           } @else {
             <p-button
@@ -68,7 +68,7 @@
               (onClick)="toggleUpdateGuildHideStats(true)"
               severity="primary"
               rounded
-              outlined
+              text
             />
           }
         }
@@ -86,7 +86,7 @@
             <div class="relative">
               <p-button
                 label="Demandes d'alliance"
-                icon="pi pi-exclamation-circle"
+                icon="pi pi-shield"
                 severity="secondary"
                 rounded
                 (onClick)="onOpenPendingAllianceRequests()"

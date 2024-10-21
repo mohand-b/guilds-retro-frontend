@@ -16,7 +16,8 @@ export class GenericModalService {
     data: any,
     contentComponent?: any,
     contentText?: string,
-    disableButtonUntilConditionMet: boolean = false
+    disableButtonUntilConditionMet: boolean = false,
+    overflowYvisible: boolean = false
   ): DynamicDialogRef {
     const sizeMap = {
       xs: '30%',
@@ -41,9 +42,10 @@ export class GenericModalService {
         buttonIcon,
         payload: data,
         disableButtonUntilConditionMet,
+        overflowYvisible,
       },
       focusOnShow: false,
-      contentStyle: {'overflow-y': 'visible'},
+      contentStyle: {'overflow-y': overflowYvisible ? 'visible' : 'hidden'},
     });
   }
 }

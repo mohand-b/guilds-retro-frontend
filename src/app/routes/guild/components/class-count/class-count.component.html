@@ -1,17 +1,23 @@
 @if (classCount(); as classCount) {
   <div class="flex flex-wrap items-baseline gap-6">
-    @for (classKey of getCharacterClassKeys(); track classKey) {
-      <div [pTooltip]="classKey" tooltipPosition="top" class="flex flex-col items-center">
+    @for (classKey of getCharacterClassKeys(); track classKey; let first = $first; let index = $index) {
+      <div [pTooltip]="classKey" tooltipPosition="top"
+           class="relative flex flex-col items-center border-b-2 border-r-2 rounded-lg pr-2 w-[3rem]"
+           [style.border-bottom-color]="classKey | characterColor"
+           [style.border-right-color]="(classKey | characterColor)+'50'"
+      >
         <img
           [src]="'assets/characters/' + classKey.toLowerCase() + '_icon.svg'"
           [alt]="classKey + ' icon'"
           class="h-6"
         />
         <span
-          class="font-bold text-2xl drop-shadow-lg"
-          [ngStyle]="{ 'color': classKey | characterColor }">
+          class="font-bold drop-shadow-lg">
           {{ classCount[classKey] }}
         </span>
+        @if (first && classCount[classKey] > classCount[getCharacterClassKeys()[1]]) {
+          <i class="absolute pi pi-trophy -bottom-1 -right-1 bg-white text-amber-500"></i>
+        }
       </div>
     }
   </div>

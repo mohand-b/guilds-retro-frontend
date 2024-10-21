@@ -15,11 +15,11 @@ import {PostSummaryComponent} from "../../components/post-summary/post-summary.c
 import {QuestionnaireComponent} from "../questionnaire/questionnaire.component";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {UserDto} from "../../state/users/user.model";
-import {EditJobLevelComponent} from "../../components/edit-job-level/edit-job-level.component";
 import {AddJobComponent} from "../../components/add-job/add-job.component";
 import {AddLinkedAccountComponent} from "../../components/add-linked-account/add-linked-account.component";
 import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
 import {ButtonModule} from "primeng/button";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-profile',
@@ -59,6 +59,8 @@ export class ProfileComponent implements OnInit {
     const jobs = profile.jobs.filter(job => job.isForgemaging);
     return [...jobs, ...Array(3 - jobs.length).fill(null)].slice(0, 3);
   });
+
+  jobLevelControl = new FormControl();
 
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
   private readonly profileFacade = inject(ProfileFacade);
@@ -130,6 +132,7 @@ export class ProfileComponent implements OnInit {
       {isForgemaging, user},
       AddJobComponent,
       undefined,
+      true,
       true
     );
 
@@ -138,22 +141,8 @@ export class ProfileComponent implements OnInit {
     ).subscribe();
   }
 
-  onEditJobLevel(job: JobDto) {
-    const ref = this.genericModalService.open(
-      `Modifier le niveau de ${job.name}`,
-      {primary: 'Modifier'},
-      'sm',
-      {job},
-      EditJobLevelComponent,
-      undefined,
-      true
-    );
-
-    ref.onClose.pipe(
-      switchMap(updatedJob =>
-        updatedJob ? this.profileFacade.updateJobLevel(updatedJob.id, updatedJob.level) : EMPTY
-      )
-    ).subscribe();
+  onEditJobLevel(job: JobDto, newJobLevel: number) {
+    this.profileFacade.updateJobLevel(job.id, newJobLevel).subscribe();
   }
 
 
@@ -162,7 +151,21 @@ export class ProfileComponent implements OnInit {
   }
 
   onHideProfile(hideProfile: boolean) {
-    this.profileFacade.updateHideProfile(hideProfile).subscribe();
+    const hideProfileMessage: string = 'Les informations de ton profil ne seront plus visibles par les autres utilisateurs.';
+    const showProfileMessage: string = 'Les informations de ton profil seront visibles par les autres utilisateurs.';
+
+    const ref = this.genericModalService.open(
+      hideProfile ? 'Cacher mon profil' : 'Afficher mon profil',
+      {primary: 'Confirmer', icon: hideProfile ? 'pi pi-eye-slash' : 'pi pi-eye'},
+      'sm',
+      null,
+      null,
+      hideProfile ? hideProfileMessage : showProfileMessage,
+    );
+
+    ref.onClose.pipe(
+      switchMap(result => result ? this.profileFacade.updateHideProfile(hideProfile) : EMPTY)
+    ).subscribe();
   }
 
   onAddLinkedAccount() {

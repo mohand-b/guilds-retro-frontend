@@ -1,13 +1,13 @@
 <div class="bg-white rounded-lg shadow-md w-full">
 
-  <div class="h-[4.375rem] bg-lightGray p-4 rounded-t-lg border-b border-extraLightSecondary">
+  <div
+    class="flex items-center justify-between h-[4.375rem]
+    custom-header
+    bg-lightGray p-4 rounded-t-lg border-b border-extraLightSecondary">
 
-    <div class="flex items-center justify-between">
+    <h2 class="text-xl font-bold text-gray-800">{{ title }}</h2>
+    <ng-content select="[header-action]"/>
 
-      <h2 class="text-xl font-bold text-gray-800">{{ title }}</h2>
-      <ng-content select="[header-action]"/>
-
-    </div>
 
   </div>
 

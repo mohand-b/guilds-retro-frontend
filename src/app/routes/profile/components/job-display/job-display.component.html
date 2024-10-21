@@ -5,7 +5,7 @@
         [(ngModel)]="job.level"
         [min]="0"
         [max]="100"
-        [readonly]="true"
+        [readonly]="!isEditing"
         [size]="100"
         [strokeWidth]="10"
         [showValue]="false"
@@ -19,12 +19,17 @@
          [ngClass]="{'cursor-pointer': !job && isCurrentUser}"
          class="absolute w-[4rem] h-[4rem] rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
       @if (job) {
-        <img [src]="job.name | jobImage" alt="{{ job.name }}" class="object-cover w-full h-full">
-        <div class="absolute inset-0 flex items-center justify-center">
-          <span class="text-white text-xl font-bold opacity-75" style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);">
-            {{ job.level }}
-          </span>
-        </div>
+        @if (isEditing) {
+          <input type="number" [(ngModel)]="editedLevel" min="0" max="100"
+                 class="text-white text-xl font-bold text-center w-full h-full bg-black outline-none"/>
+        } @else {
+          <img [src]="job.name | jobImage" alt="{{ job.name }}" class="object-cover w-full h-full">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="text-white text-xl font-bold opacity-75" style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);">
+              {{ job.level }}
+            </span>
+          </div>
+        }
       } @else if (!job && isCurrentUser) {
         <i class="text-gray-400 pi pi-plus"></i>
       } @else {
@@ -33,19 +38,33 @@
     </div>
 
     @if (job && isCurrentUser) {
-      <button (click)="onEditJobLevel()"
-              matTooltip="Modifier le niveau"
-              class="absolute bottom-0 left-0 bg-orange-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
-        <i class="pi pi-pencil text-white text-[0.8rem] leading-[1.5rem]"></i>
-      </button>
-      <button (click)="onRemoveJob()"
-              matTooltip="Supprimer"
-              class="absolute bottom-0 right-0 bg-red-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
-        <i class="pi pi-trash text-white text-[0.8rem] leading-[1.5rem]"></i>
-      </button>
+      @if (isEditing) {
+        <button (click)="onCancelEdit()"
+                pTooltip="Annuler"
+                class="absolute bottom-0 left-0 bg-red-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
+          <i class="pi pi-times text-white text-[0.8rem] leading-[1.5rem]"></i>
+        </button>
+        <button (click)="onConfirmEdit()"
+                pTooltip="Confirmer"
+                class="absolute bottom-0 right-0 bg-green-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
+          <i class="pi pi-check text-white text-[0.8rem] leading-[1.5rem]"></i>
+        </button>
+      } @else {
+        <button (click)="onEditJobLevel()"
+                pTooltip="Modifier le niveau"
+                class="absolute bottom-0 left-0 bg-orange-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
+          <i class="pi pi-pencil text-white text-[0.8rem] leading-[1.5rem]"></i>
+        </button>
+        <button (click)="onRemoveJob()"
+                pTooltip="Supprimer"
+                class="absolute bottom-0 right-0 bg-red-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
+          <i class="pi pi-trash text-white text-[0.8rem] leading-[1.5rem]"></i>
+        </button>
+      }
     }
   </div>
 
+  <!-- Nom du métier ou Néant -->
   <div class="mt-2 text-center text-sm text-gray-700">
     @if (job) {
       {{ job.name }}
