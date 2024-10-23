@@ -1,39 +1,17 @@
-<div class="w-full flex flex-col bg-white relative rounded-lg shadow-md p-4">
+<div class="relative flex flex-col bg-white rounded-lg shadow-md">
+
   <div class="absolute right-4 top-2">
     <p-tag severity="info" value="Événement" class="text-sm"/>
   </div>
 
-  <div class="flex gap-4">
-    <div class="relative w-40 h-40 overflow-hidden rounded-lg">
-      <img [src]="event | eventImage" alt="Event image" class="w-full h-full object-cover opacity-20">
+  <div class="flex">
 
-      @if (isFinished) {
-        <div
-          class="absolute bottom-[1.25rem] -right-[3rem] transform -rotate-45
-          bg-red-500 text-white py-1 px-16 text-sm font-semibold overflow-hidden">
-          Terminé
-        </div>
-      } @else if (isFull && !isParticipant) {
-        <div
-          class="absolute bottom-[1.25rem] -right-[3rem] transform -rotate-45
-          bg-red-500 text-white py-1 px-16 text-sm font-semibold overflow-hidden">
-          Complet
-        </div>
-      } @else if (!isCreator) {
-        <div class="absolute bottom-0 w-full p-2 flex justify-center gap-2">
-          @if (isParticipant) {
-            <p-button label="Se retirer" icon="pi pi-minus" severity="warning" (click)="withdraw()"/>
-          } @else if (!isParticipant && !isFull) {
-            <p-button label="Participer" icon="pi pi-user-plus" severity="primary"
-                      [disabled]="!meetsClassRequirements || !levelRequirementMet" (click)="participate()"/>
-          }
-        </div>
-      }
-    </div>
+    <img [src]="event | eventImage" alt="Event image"
+         class="w-40 h-40 rounded-full object-cover border-r-2 border-r-gray-200">
 
-    <div class="flex flex-col flex-grow">
-      <div class="flex flex-col">
-        <div class="text-lg font-semibold text-gray-800">
+    <div class="p-4 flex flex-col gap-1">
+      <div class="flex items-baseline gap-2">
+        <div class="font-bold">
           @if (event.title) {
             {{ event.title }}
           } @else if (event.dungeonName) {
@@ -42,25 +20,26 @@
             {{ event.arenaTargets }}
           }
         </div>
-        <div class="text-sm text-gray-600">
-          <span>{{ isFinished ? 'Terminé' : 'Commence' }} {{ event.date | dateFormat }}</span>
-          <span class="text-xs"> ({{ event.date | date:'dd-MM-yyyy à HH:mm' }})</span>
+
+        <div class="text-xs text-gray-400">
+          {{ isFinished ? 'Terminé' : 'Commence' }} {{ event.date | dateFormat }}
         </div>
       </div>
 
-      <div class="text-base text-gray-700 mt-2">
-        {{ event.description || "Aucune description" }}
-      </div>
-
-      <div class="text-xs text-gray-400 mt-2">
+      @if (event.description) {
+        <div class="text-base text-gray-400 italic">
+          "{{ event.description }}"
+        </div>
+      }
+      <div class="text-base text-gray-700">
         Participants: {{ event.participants.length }} / {{ event.maxParticipants }}
       </div>
 
       <div class="flex flex-wrap mt-2 gap-1">
         @for (participant of event.participants; track participant.id; let isLast = $last) {
           <div class="flex items-center gap-1">
-            <div class="w-8 h-8 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center">
-              <img [src]="participant | characterIcon" alt="Avatar" class="w-7 h-7 rounded-full object-cover">
+            <div class="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center">
+              <img [src]="participant | characterIcon" alt="Avatar" class="w-5 h-5 rounded-full object-cover">
             </div>
             <div class="text-xs text-gray-600">
               {{ participant.username }}
@@ -72,34 +51,62 @@
         }
       </div>
 
-      <div class="flex flex-wrap gap-4 mt-4 text-xs text-gray-600">
-        @if (event.minLevel) {
-          <div class="flex items-center gap-1" [ngClass]="levelRequirementMet ? 'text-green-500' : 'text-red-500'">
-            <span class="underline">Niveau minimum :</span> <span>{{ event.minLevel }}</span>
-          </div>
-        }
-        @if (filteredRequiredClasses!.length > 0) {
-          <div class="flex items-center gap-1">
-            @if (!meetsClassRequirements && !isParticipant) {
-              <span class="text-red-500">⚠️</span>
-            }
-            <span class="underline">Classes requises :</span>
-            <div>
-              @for (requiredClass of filteredRequiredClasses; track requiredClass; let isLast = $last) {
-                <span [ngClass]="{'text-green-500': currentUser.characterClass === requiredClass}">{{ requiredClass }}</span>
-                @if (!isLast) {
-                  <span>, </span>
-                }
+    </div>
+  </div>
+
+  <p-divider/>
+
+  <div class="flex flex-wrap justify-between items-center gap-4 text-xs text-gray-600 py-2 px-4">
+    <div class="flex items-center gap-4">
+
+      @if (event.minLevel) {
+        <div class="flex items-center gap-1" [ngClass]="levelRequirementMet ? 'text-green-500' : 'text-red-500'">
+          <span class="underline">Niveau minimum :</span> <span>{{ event.minLevel }}</span>
+        </div>
+      }
+      @if (filteredRequiredClasses!.length > 0) {
+        <div class="flex items-center gap-1">
+          @if (!meetsClassRequirements && !isParticipant) {
+            <span class="text-red-500">⚠️</span>
+          }
+          <span class="underline">Classes requises :</span>
+          <div>
+            @for (requiredClass of filteredRequiredClasses; track requiredClass; let isLast = $last) {
+              <span
+                [ngClass]="{'text-green-500': currentUser.characterClass === requiredClass}">{{ requiredClass }}</span>
+              @if (!isLast) {
+                <span>, </span>
               }
-            </div>
+            }
           </div>
+        </div>
+      }
+      @if (event.requiresOptimization) {
+        <div class="flex items-center gap-1">
+          <i class="pi pi-sparkles text-yellow-500"></i>
+          <span class="font-bold">Optimisation requise</span>
+        </div>
+      }
+    </div>
+
+    <div class="flex items-center gap-2">
+      @if (isFinished) {
+        <div class="text-base text-red-500">Terminé</div>
+      } @else if (isFull && !isParticipant) {
+        <div class="text-base text-red-500">Complet</div>
+      } @else if (!isCreator) {
+        @if (isParticipant) {
+          <p-button label="Se retirer" icon="pi pi-minus" severity="warning" (click)="withdraw()" rounded text/>
+        } @else if (!isParticipant && !isFull) {
+          <p-button label="Participer" icon="pi pi-user-plus" (click)="participate()"
+                    severity="success" rounded text/>
         }
-        @if (event.requiresOptimization) {
-          <div class="flex items-center gap-1">
-            <i class="pi pi-sparkles text-yellow-500"></i>
-            <span class="font-bold">Optimisation requise</span>
-          </div>
-        }
-      </div>
+      }
+      <p-button label="Voir" icon="pi pi-eye" [routerLink]="['/events', event.id]"
+                severity="primary" rounded text/>
+
+    </div>
+
+
   </div>
 </div>

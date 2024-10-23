@@ -82,7 +82,8 @@ export class FeedComponent {
     );
 
     ref.onClose.pipe(
-      switchMap((post: CreatePost) => post ? this.feedFacade.createPost(toFormData(post)) : EMPTY)
+      switchMap((post: CreatePost) => post ?
+        this.feedFacade.createPost(toFormData(post)) : EMPTY)
     ).subscribe();
 
   }

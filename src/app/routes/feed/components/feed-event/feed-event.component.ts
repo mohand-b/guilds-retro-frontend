@@ -10,6 +10,7 @@ import {EventDto} from "../../../events/state/events/event.model";
 import {CharacterClassEnum, UserDto} from "../../../profile/state/users/user.model";
 import {TagModule} from "primeng/tag";
 import {ButtonModule} from "primeng/button";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-feed-event',
@@ -25,7 +26,8 @@ import {ButtonModule} from "primeng/button";
     DateFormatPipe,
     EventImagePipe,
     TagModule,
-    ButtonModule
+    ButtonModule,
+    DividerModule
   ],
   templateUrl: './feed-event.component.html',
   styleUrl: './feed-event.component.scss'
