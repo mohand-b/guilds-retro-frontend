@@ -1,45 +1,47 @@
-<div
-  [routerLink]="guild.id === currentUser()!.guild.id ? ['/guild'] : ['/registry/guild', guild.id]"
-  class="h-full flex flex-col items-center justify-between bg-white p-6 border border-info rounded-lg cursor-pointer
-         hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105"
->
-  <div class="flex flex-col items-center text-center mb-4">
-    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mb-3 shadow-sm">
-      <img [src]="guild.logo" alt="{{ guild.name }} Logo" class="w-full h-full object-cover"/>
-    </div>
-    <div class="text-xl font-semibold mb-1 text-primary">{{ guild.name }}</div>
-  </div>
+<div [routerLink]="['/registry/guild', guild.id]"
+     class="relative h-24 flex cursor-pointer
+       border-r border-t border-l-2 border-b-2 border-pink-100 border-l-pink-200 border-b-pink-500
+        items-center justify-between px-2 py-4 bg-white overflow-y-hidden rounded-lg shadow-md">
+  <img [src]="guild.logo" alt="Guild logo" class="w-24 h-24 object-cover absolute -left-[2rem] opacity-20 z-0"/>
 
-  <div class="flex flex-col items-center gap-2">
-    <div class="text-gray-500 flex items-center gap-2">
-      <i class="pi pi-shield text-green-500"></i>
-      <span>Niveau : {{ guild.level }}</span>
-    </div>
-    <div class="text-gray-600 mt-1 flex items-center gap-2">
-      <i class="pi pi-crown text-yellow-500"></i>
-      <span>Meneur : {{ guild.leaderUsername }}</span>
+  <div class="flex items-center gap-2 z-10">
+    <div class="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center">
+      <img [src]="guild.logo" alt="Guild Icon" class="w-14 h-14 rounded-full object-cover no-select no-copy">
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mt-3">
-      <div class="text-center">
-        <div class="text-gray-500">Membres</div>
-        <div class="font-semibold text-base">{{ guild.memberCount }}</div>
+    <div class="flex flex-col gap-1">
+      <div class="font-semibold">{{ guild.name }}</div>
+
+      <div class="flex items-center">
+        <i class="pi pi-crown text-yellow-500 mr-1"></i>
+        <div class="content-base text-base">{{ guild.leaderUsername }}</div>
       </div>
-      <div class="text-center">
-        <div class="text-gray-500">Niveau Moyen</div>
-        <div class="font-semibold text-base">{{ guild.averageLevelOfMembers }}</div>
-      </div>
+
     </div>
   </div>
+
+  <p-button
+    label="Détails"
+    icon="pi pi-eye"
+    [routerLink]="['/registry/guild', guild.id]"
+    rounded
+    text
+    severity="secondary"
+    styleClass="w-auto"
+    class="absolute bottom-2 right-2"
+  />
 
   @if (canDissolveAlliance) {
     <p-button
       (click)="$event.stopPropagation(); dissolveAlliance()"
-      label="Dissoudre l'alliance"
       icon="pi pi-times-circle"
-      class="mt-4"
       severity="danger"
       rounded
+      text
+      styleClass="w-auto"
+      class="absolute top-2 right-2"
     />
   }
+
 </div>
+

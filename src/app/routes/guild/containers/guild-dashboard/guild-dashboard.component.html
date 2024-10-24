@@ -3,117 +3,118 @@
 
     @if (loading) {
       <p-progressSpinner class="mx-auto min-h-[11.75rem]" strokeWidth="5"/>
-    }
-
-    <app-page-block [title]="guild.name!">
-      <ng-container header-action>
-        @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
-          @if (currentUser()?.guild!.id! === guild.id) {
-            <div class="relative">
-              <p-button
-                label="Demandes d'adhésion"
-                icon="pi pi-users"
-                (click)="onOpenPendingMembershipRequests()"
-                rounded
-                severity="secondary"
-              />
-              @if (pendingMembershipRequestsCount(); as pendingRequestsCount) {
-                @if (pendingRequestsCount > 0) {
-                  <p-badge [value]="pendingRequestsCount" severity="danger" class="absolute -top-2 -right-2"/>
-                }
-              }
-            </div>
-          }
-        }
-      </ng-container>
-
-      <ng-container content>
-        <app-guild-header
-          (updateGuildLevel)="updateGuildLevel($event)"
-          [currentUser]="currentUser()"
-          [guild]="guild"
-          [hidden]="loading"
-          [pendingMembershipRequestsCount]="pendingMembershipRequestsCount()"
-          [editMode]="editMode"
-        />
-
-        @if (guild.members) {
-          <app-guild-members-table
-            (memberRemoved)="removeMember($event)"
-            (roleUpdated)="updateRole($event)"
-            [guild]="guild"
-            [currentUser]="currentUser()!"
-            [hidden]="loading"
-          />
-        }
-      </ng-container>
-    </app-page-block>
-
-    <app-page-block title="Statistiques de Guilde">
-      <ng-container header-action>
-        @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.LEADER) && !loading) {
-          @if (guild.hideStats) {
-            <p-button
-              label="Statistiques masquées"
-              icon="pi pi-eye-slash"
-              (onClick)="toggleUpdateGuildHideStats(false)"
-              severity="warning"
-              rounded
-              text
-            />
-          } @else {
-            <p-button
-              label="Statistiques visibles"
-              icon="pi pi-eye"
-              (onClick)="toggleUpdateGuildHideStats(true)"
-              severity="primary"
-              rounded
-              text
-            />
-          }
-        }
-      </ng-container>
-
-      <ng-container content>
-        <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
-      </ng-container>
-    </app-page-block>
-
-    @if (!loading) {
-      <app-page-block title="Alliances">
+    } @else {
+      <app-page-block [title]="guild.name!">
         <ng-container header-action>
           @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
-            <div class="relative">
-              <p-button
-                label="Demandes d'alliance"
-                icon="pi pi-shield"
-                severity="secondary"
-                rounded
-                (onClick)="onOpenPendingAllianceRequests()"
-              />
-              @if (pendingAllianceRequestsCount(); as allianceRequestsCount) {
-                @if (allianceRequestsCount > 0) {
-                  <p-badge [value]="allianceRequestsCount" severity="danger" class="absolute -top-2 -right-2"/>
+            @if (currentUser()?.guild!.id! === guild.id) {
+              <div class="relative">
+                <p-button
+                  label="Demandes d'adhésion"
+                  icon="pi pi-users"
+                  (click)="onOpenPendingMembershipRequests()"
+                  rounded
+                  severity="secondary"
+                />
+                @if (pendingMembershipRequestsCount(); as pendingRequestsCount) {
+                  @if (pendingRequestsCount > 0) {
+                    <p-badge [value]="pendingRequestsCount" severity="danger" class="absolute -top-2 -right-2"/>
+                  }
                 }
-              }
-            </div>
+              </div>
+            }
           }
         </ng-container>
 
-        <ng-content content>
-          @if (guild.allies && guild.allies.length > 0) {
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              @for (ally of guild.allies; track ally.id) {
-                <app-alliance-card [guild]="ally"/>
-              }
-            </div>
-          } @else {
-            <div class="text-gray-500">
-              Aucune alliance
-            </div>
+        <ng-container content>
+          <app-guild-header
+            (updateGuildLevel)="updateGuildLevel($event)"
+            [currentUser]="currentUser()"
+            [guild]="guild"
+            [hidden]="loading"
+            [pendingMembershipRequestsCount]="pendingMembershipRequestsCount()"
+            [editMode]="editMode"
+          />
+
+          @if (guild.members) {
+            <app-guild-members-table
+              (memberRemoved)="removeMember($event)"
+              (roleUpdated)="updateRole($event)"
+              [guild]="guild"
+              [currentUser]="currentUser()!"
+              [hidden]="loading"
+            />
           }
-        </ng-content>
+        </ng-container>
       </app-page-block>
+
+      <div class="flex flex-col xl:flex-row gap-4">
+        <app-page-block [hidden]="statsLoading" class="max-w-[55rem]" title="Statistiques de Guilde">
+          <ng-container header-action>
+            @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.LEADER) && !loading) {
+              @if (guild.hideStats) {
+                <p-button
+                  label="Statistiques masquées"
+                  icon="pi pi-eye-slash"
+                  (onClick)="toggleUpdateGuildHideStats(false)"
+                  severity="warning"
+                  rounded
+                  text
+                />
+              } @else {
+                <p-button
+                  label="Statistiques visibles"
+                  icon="pi pi-eye"
+                  (onClick)="toggleUpdateGuildHideStats(true)"
+                  severity="primary"
+                  rounded
+                  text
+                />
+              }
+            }
+          </ng-container>
+
+          <ng-container content>
+            <app-guild-stats (loadingChange)="statsLoading = $event" [guildId]="guild.id"/>
+          </ng-container>
+        </app-page-block>
+
+
+        <app-page-block class="flex-1" title="Alliances">
+          <ng-container header-action>
+            @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
+              <div class="relative">
+                <p-button
+                  label="Demandes d'alliance"
+                  icon="pi pi-shield"
+                  severity="secondary"
+                  rounded
+                  (onClick)="onOpenPendingAllianceRequests()"
+                />
+                @if (pendingAllianceRequestsCount(); as allianceRequestsCount) {
+                  @if (allianceRequestsCount > 0) {
+                    <p-badge [value]="allianceRequestsCount" severity="danger" class="absolute -top-2 -right-2"/>
+                  }
+                }
+              </div>
+            }
+          </ng-container>
+
+          <ng-content content>
+            @if (guild.allies && guild.allies.length > 0) {
+              <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-1 gap-4">
+                @for (ally of guild.allies; track ally.id) {
+                  <app-alliance-card [guild]="ally"/>
+                }
+              </div>
+            } @else {
+              <div class="text-gray-500">
+                Aucune alliance
+              </div>
+            }
+          </ng-content>
+        </app-page-block>
+      </div>
     }
   </div>
 }

@@ -44,6 +44,7 @@ import {AlertComponent} from "../../../../shared/components/alert/alert.componen
 export class GuildDashboardComponent implements OnInit {
 
   public loading: boolean = false;
+  public statsLoading: boolean = true;
   public editMode: WritableSignal<boolean> = signal(false);
   protected readonly UserRoleEnum = UserRoleEnum;
   protected readonly hasRequiredRole = hasRequiredRole;
@@ -73,7 +74,7 @@ export class GuildDashboardComponent implements OnInit {
           this.guildFacade.getPaginatedMembers(guild.id!, 1, 200),
           this.guildFacade.getPendingMembershipRequests(guild.id!),
         ])
-      )
+      ),
     ).subscribe();
   }
 

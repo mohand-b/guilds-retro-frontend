@@ -1,4 +1,4 @@
-<div class="p-4 lg:px-10 lg:pt-10">
+<div class="p-4 lg:px-10 lg:pt-10 max-w-[60rem] m-auto">
   <app-page-block [title]="'Vos demandes de candidature'">
     <ng-container header-action>
       @if (pendingRequestsCount() === 0 && !approvedRequest() && rejectedRequestsCount() < 5) {

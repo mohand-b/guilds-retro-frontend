@@ -19,6 +19,7 @@ import {AllianceRequestDto} from "../../state/alliances/alliance.model";
 import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
 import {ButtonModule} from "primeng/button";
 import {BadgeModule} from "primeng/badge";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
 
 @Component({
   selector: 'app-guild-details',
@@ -33,7 +34,8 @@ import {BadgeModule} from "primeng/badge";
     AlertComponent,
     PageBlockComponent,
     ButtonModule,
-    BadgeModule
+    BadgeModule,
+    ProgressSpinnerModule
   ],
   templateUrl: './guild-details.component.html',
   styleUrls: ['./guild-details.component.scss']

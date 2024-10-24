@@ -1,6 +1,6 @@
-import {Component, effect, inject, input, signal, WritableSignal} from '@angular/core';
+import {Component, effect, EventEmitter, inject, input, Output, signal, WritableSignal} from '@angular/core';
 import {GuildEventStatsDto} from "../../state/guilds/guild.model";
-import {forkJoin, tap} from "rxjs";
+import {combineLatest, finalize, tap} from "rxjs";
 import {GuildFacade} from "../../guild.facade";
 import {ClassCountComponent} from "../../components/class-count/class-count.component";
 import {EventTypesEnum} from "../../../events/state/events/event.model";
@@ -30,15 +30,16 @@ export class GuildStatsComponent {
   public readonly guildId = input<number>();
   private guildFacade = inject(GuildFacade);
 
+  @Output() loadingChange = new EventEmitter<boolean>();
+
   constructor() {
     effect(() => {
-
       if (this.guildId()) {
         this.averageMemberLevel.set(undefined);
         this.classCount.set(undefined);
         this.eventStats.set(undefined);
 
-        forkJoin({
+        combineLatest({
           averageMemberLevel: this.guildFacade.getAverageMemberLevel(this.guildId()!),
           classCount: this.guildFacade.getMemberClassesCount(this.guildId()!),
           eventStats: this.guildFacade.getEventStats(this.guildId()!)
@@ -48,7 +49,8 @@ export class GuildStatsComponent {
               this.classCount.set(classCount);
               this.eventStats.set(eventStats);
             }
-          )
+          ),
+          finalize(() => this.loadingChange.emit(false)),
         ).subscribe();
       }
 

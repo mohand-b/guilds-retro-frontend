@@ -3,7 +3,7 @@ import {GuildSummaryDto} from "../../state/guilds/guild.model";
 import {GuildFacade} from "../../guild.facade";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
-import {NgStyle} from "@angular/common";
+import {NgOptimizedImage, NgStyle} from "@angular/common";
 import {hasRequiredRole} from "../../../authenticated/guards/role.guard";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {GenericModalService} from "../../../../shared/services/generic-modal.service";
@@ -20,7 +20,8 @@ import {ButtonModule} from "primeng/button";
     RouterLink,
     CardModule,
     NgStyle,
-    ButtonModule
+    ButtonModule,
+    NgOptimizedImage
   ],
   templateUrl: './alliance-card.component.html',
   styleUrl: './alliance-card.component.scss'
