@@ -9,7 +9,8 @@ import {
   GuildState,
   GuildSummaryDto,
   GuildWithPaginatedMembersDto,
-  PaginatedMemberResponseDto
+  PaginatedMemberResponseDto,
+  UpdateGuildDto
 } from "./state/guilds/guild.model";
 import {Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
@@ -337,14 +338,15 @@ export class GuildFacade {
     return this.guildsService.getAverageMemberLevel(guildId);
   }
 
-  updateGuildLevel(guildId: number, level: number): Observable<GuildDto> {
-    return this.guildsService.updateGuildLevel(guildId, level).pipe(
+  updateGuild(guildId: number, updateGuildDto: UpdateGuildDto): Observable<GuildDto> {
+    return this.guildsService.updateGuild(guildId, updateGuildDto).pipe(
       tap({
         next: (guild: GuildDto) => {
           guildStore.update(
             (state) => ({
               ...state,
               level: guild.level,
+              description: guild.description,
             }),
           );
         },

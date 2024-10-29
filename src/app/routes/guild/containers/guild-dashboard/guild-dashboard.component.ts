@@ -1,6 +1,6 @@
 import {Component, effect, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core';
 import {GuildFacade} from "../../guild.facade";
-import {GuildDto, MemberDto} from "../../state/guilds/guild.model";
+import {GuildDto, MemberDto, UpdateGuildDto} from "../../state/guilds/guild.model";
 import {EMPTY, forkJoin, switchMap, tap} from "rxjs";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
@@ -20,6 +20,7 @@ import {PageBlockComponent} from "../../../../shared/components/page-block/page-
 import {ButtonModule} from "primeng/button";
 import {BadgeModule} from "primeng/badge";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
+import {FormBuilder} from "@angular/forms";
 
 @Component({
   selector: 'app-guild-dashboard',
@@ -59,6 +60,14 @@ export class GuildDashboardComponent implements OnInit {
       this.guildFacade.getAllianceRequests(this.authenticatedFacade.currentUser()!.guild.id!).subscribe();
   })
   private genericModalService = inject(GenericModalService);
+
+  private fb = inject(FormBuilder);
+
+  public guildForm = this.fb.group({
+    level: this.fb.control<number>(0),
+    description: this.fb.control<string>(''),
+  });
+
 
   ngOnInit(): void {
     if (!this.guild()?.id) {
@@ -134,22 +143,6 @@ export class GuildDashboardComponent implements OnInit {
     ).subscribe();
   }
 
-  public updateGuildLevel(level: number): void {
-    const ref = this.genericModalService.open(
-      'Confirmation',
-      {primary: 'Oui'},
-      'sm',
-      null,
-      null,
-      `Confirmes-tu que la guilde est passée au niveau ${level} ?`
-    );
-
-    ref.onClose.pipe(
-      switchMap((result) => result ? this.guildFacade.updateGuildLevel(this.guild()!.id!, level) : EMPTY)
-    ).subscribe(() => this.editMode.set(false));
-  }
-
-
   public toggleUpdateGuildHideStats(hideStats: boolean): void {
     const messageForHide = "Les statistiques de la guilde ne seront visibles que par les membres de la guilde."
     const messageForShow = "Les statistiques de la guilde seront visibles par tout le monde."
@@ -165,5 +158,16 @@ export class GuildDashboardComponent implements OnInit {
     ref.onClose.pipe(
       switchMap((result) => result ? this.guildFacade.updateGuildHideStats(this.guild()!.id!, hideStats) : EMPTY)
     ).subscribe();
+  }
+
+  toggleEditMode() {
+    this.editMode.set(!this.editMode());
+  }
+
+  updateGuild() {
+    this.guildFacade.updateGuild(this.guild()!.id!, this.guildForm.value as UpdateGuildDto).subscribe(
+      () => this.editMode.set(false)
+    );
+
   }
 }

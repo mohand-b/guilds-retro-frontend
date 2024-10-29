@@ -1,14 +1,5 @@
 <div
   class="rounded-md shadow-sm border border-gray-200 h-52 w-[21.25rem] bg-white"
-  [@innerShadowPulse]="{
-    value: isToday ? animationState : 'initial',
-    params: {
-      eventShadowColor: eventShadowColor,
-      eventShadowColorSmall: eventShadowColorSmall,
-      eventShadowColorMedium: eventShadowColorMedium,
-      eventShadowColorLarge: eventShadowColorLarge
-    }
-  }"
 >
   <div
     class="flex flex-col justify-between h-full relative overflow-hidden">
@@ -86,10 +77,6 @@
           }
         }
       </div>
-
-      @if (isToday) {
-        <div class="text-[.6rem] uppercase font-extrabold">Aujourd'hui !</div>
-      }
 
       <p-button [routerLink]="['/events', event.id]" label="Voir" icon="pi pi-eye" severity="info" text/>
     </div>

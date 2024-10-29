@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
 import {EventsFacade} from "../../events.facade";
 import {CreateEventComponent} from "../create-event/create-event.component";
 import {EventItemComponent} from "../../components/event-item/event-item.component";
@@ -8,8 +8,9 @@ import {ButtonModule} from "primeng/button";
 import {DialogService} from "primeng/dynamicdialog";
 import {AccordionModule} from "primeng/accordion";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
-import {EventDto} from "../../state/events/event.model";
 import {SortByPipe} from "../../../../shared/pipes/sort-by.pipe";
+import {WeeklyCalendarComponent} from "../../components/weekly-calendar/weekly-calendar.component";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-events',
@@ -22,6 +23,7 @@ import {SortByPipe} from "../../../../shared/pipes/sort-by.pipe";
     ButtonModule,
     AccordionModule,
     SortByPipe,
+    WeeklyCalendarComponent,
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
@@ -38,6 +40,9 @@ export class EventsComponent implements OnInit {
   private dialogService = inject(DialogService);
   currentUser$ = this.authenticatedFacade.currentUser;
 
+  public currentDate$: WritableSignal<DateTime> = signal(DateTime.now());
+  public referenceDate$: WritableSignal<DateTime> = signal(DateTime.now());
+
   ngOnInit() {
     this.eventsFacade.setEvents().subscribe();
   }
@@ -50,12 +55,12 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  joinEvent(event: EventDto) {
-    this.eventsFacade.joinEvent(event.id).subscribe();
+  previousWeek() {
+    this.referenceDate$.update((current) => current.minus({week: 1}));
   }
 
-  leaveEvent(event: EventDto) {
-    this.eventsFacade.withdrawFromEvent(event.id).subscribe();
+  nextWeek() {
+    this.referenceDate$.update((current) => current.plus({week: 1}));
   }
 
 

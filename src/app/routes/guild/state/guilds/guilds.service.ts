@@ -1,12 +1,13 @@
 import {inject, Injectable} from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {
   GuildDto,
   GuildEventStatsDto,
   GuildSummaryDto,
   GuildWithPaginatedMembersDto,
-  PaginatedMemberResponseDto
+  PaginatedMemberResponseDto,
+  UpdateGuildDto
 } from "./guild.model";
 import {Observable} from "rxjs";
 import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
@@ -110,10 +111,10 @@ export class GuildsService {
     );
   }
 
-  updateGuildLevel(guildId: number, level: number): Observable<GuildDto> {
+  updateGuild(guildId: number, updateGuildDto: UpdateGuildDto): Observable<GuildDto> {
     return this.http.patch<GuildDto>(
-      `${this.guildsBaseUrl}/${guildId}/level`,
-      {level},
+      `${this.guildsBaseUrl}/${guildId}`,
+      updateGuildDto,
     );
   }
 

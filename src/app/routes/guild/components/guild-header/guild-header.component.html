@@ -1,40 +1,36 @@
 @if (currentUser(); as currentUser) {
   @if (guild(); as guild) {
-    <div class="flex justify-between items-center px-4 mb-4 text-base">
-      <div class="flex flex-col gap-2">
+    <form [formGroup]="guildForm()" class="flex justify-between items-start gap-6 p-4 bg-white rounded-lg shadow-md">
+
+      <div class="flex flex-col gap-3">
 
         <div class="flex items-center gap-4 text-gray-800">
-          <span>Niveau de guilde:</span>
+          <span class="font-semibold">Niveau de guilde:</span>
           @if (editMode()) {
-            <p-inputNumber [formControl]="guildLevelControl" [min]="1" [max]="200"
-                           variant="filled" showButtons/>
-            <div class="flex items-center gap-2">
-              <p-button icon="pi pi-check" (click)="onUpdateGuildLevel()" rounded outlined severity="success"/>
-              <p-button icon="pi pi-times" (click)="toggleEditMode()" rounded outlined severity="warning"/>
-            </div>
+            <p-inputNumber formControlName="level" placeholder="Niveau" [min]="1" [max]="200" variant="filled"
+                           showButtons inputStyleClass="max-w-[4rem]"/>
           } @else {
-            <span>{{ guild.level }}</span>
-            @if (isCurrentGuild && hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER)) {
-              <p-button icon="pi pi-pencil" (click)="toggleEditMode()" rounded text severity="primary"/>
-            }
+            <span>{{ guild?.level }}</span>
           }
         </div>
 
         <div class="text-gray-700 leading-relaxed">
-          @if (guild.description) {
-            {{ guild.description }}
+          @if (editMode()) {
+            <input pInputText formControlName="description" placeholder="Description" variant="filled"/>
+          } @else if (guild.description) {
+            <p class="text-gray-400 italic">{{ guild.description }}</p>
           } @else {
-            Aucune description disponible pour cette guilde.
+            <p class="text-gray-400 italic">Aucune description disponible pour cette guilde.</p>
           }
+
         </div>
 
-        @if (guild.leaderUsername) {
-          <div class="flex items-center gap-2 text-gray-800">
-            <i class="pi pi-crown text-yellow-500 mr-1"></i>
-            <span>Meneur: <a
-              [routerLink]="['/registry/user', guild.leaderUsername]">{{ guild.leaderUsername }}</a></span>
-          </div>
-        }
+        <div class="flex items-center gap-2 text-gray-800">
+          <i class="pi pi-crown text-yellow-500 mr-1"></i>
+          <span>Meneur:
+        <a [routerLink]="['/registry/user', guild.leaderUsername]" class="font-semibold">{{ guild.leaderUsername }}</a>
+          </span>
+        </div>
 
         <div class="text-gray-800">
           {{ guild.memberCount }} membres inscrits
@@ -46,6 +42,7 @@
           <img [src]="guild.logo" alt="Guild Logo" class="w-full h-full object-cover">
         </div>
       }
-    </div>
+
+    </form>
   }
 }

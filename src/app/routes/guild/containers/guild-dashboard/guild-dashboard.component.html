@@ -7,33 +7,46 @@
       <app-page-block [title]="guild.name!">
         <ng-container header-action>
           @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
-            @if (currentUser()?.guild!.id! === guild.id) {
-              <div class="relative">
-                <p-button
-                  label="Demandes d'adhésion"
-                  icon="pi pi-users"
-                  (click)="onOpenPendingMembershipRequests()"
-                  rounded
-                  severity="secondary"
-                />
-                @if (pendingMembershipRequestsCount(); as pendingRequestsCount) {
-                  @if (pendingRequestsCount > 0) {
-                    <p-badge [value]="pendingRequestsCount" severity="danger" class="absolute -top-2 -right-2"/>
+            <div class="flex items-center gap-4">
+
+              @if (editMode()) {
+                <div class="flex items-center gap-1">
+                  <p-button label="Annuler" icon="pi pi-times" (click)="toggleEditMode()"
+                            severity="danger" rounded text/>
+                  <p-button label="Enregistrer" icon="pi pi-check" (click)="updateGuild()"
+                            severity="primary" rounded text/>
+                </div>
+              } @else {
+                <p-button label="Modifier" icon="pi pi-pencil" (click)="toggleEditMode()"
+                          severity="secondary" rounded text/>
+              }
+
+              @if (currentUser()?.guild!.id! === guild.id) {
+                <div class="relative">
+                  <p-button
+                    label="Demandes d'adhésion"
+                    icon="pi pi-users"
+                    (click)="onOpenPendingMembershipRequests()"
+                    rounded
+                    severity="secondary"
+                  />
+                  @if (pendingMembershipRequestsCount(); as pendingRequestsCount) {
+                    @if (pendingRequestsCount > 0) {
+                      <p-badge [value]="pendingRequestsCount" severity="danger" class="absolute -top-2 -right-2"/>
+                    }
                   }
-                }
-              </div>
-            }
+                </div>
+              }
+            </div>
           }
         </ng-container>
 
         <ng-container content>
           <app-guild-header
-            (updateGuildLevel)="updateGuildLevel($event)"
             [currentUser]="currentUser()"
             [guild]="guild"
-            [hidden]="loading"
-            [pendingMembershipRequestsCount]="pendingMembershipRequestsCount()"
-            [editMode]="editMode"
+            [editMode]="editMode()"
+            [guildForm]="guildForm"
           />
 
           @if (guild.members) {
@@ -42,7 +55,6 @@
               (roleUpdated)="updateRole($event)"
               [guild]="guild"
               [currentUser]="currentUser()!"
-              [hidden]="loading"
             />
           }
         </ng-container>

@@ -5,7 +5,7 @@
 
   @if (event$(); as event) {
 
-    <div class="bg-white rounded-lg shadow-md">
+    <div class="bg-white rounded-lg shadow-md max-w-[55rem] m-auto">
 
       <div [style.background-color]="eventColor+20"
            [style.border-color]="eventColor+60" class="custom-bg p-4 rounded-t-lg border-b border-extraLightSecondary">
@@ -133,7 +133,7 @@
         <p-fieldset legend="Conditions">
 
           @if (event.minLevel || filteredRequiredClasses!.length > 0 || event.requiresOptimization) {
-            <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-3">
               @if (event.minLevel) {
                 <div class="flex items-center gap-1"
                      [ngClass]="levelRequirementMet ? 'text-green-500' : 'text-red-500'">

@@ -77,3 +77,8 @@ export interface GuildEventStatsDto {
   averageEventsPerMonth: number;
 }
 
+export interface UpdateGuildDto {
+  level?: number;
+  description?: string;
+}
+

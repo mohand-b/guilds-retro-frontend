@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EventDto} from "../../state/events/event.model";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
@@ -8,9 +8,9 @@ import {CardModule} from "primeng/card";
 import {TagModule} from "primeng/tag";
 import {Button} from "primeng/button";
 import {TagComponent} from "../../../../shared/components/tag/tag.component";
-import {UserDto} from "../../../profile/state/users/user.model";
-import {animate, keyframes, state, style, transition, trigger} from "@angular/animations";
 import {RouterLink} from "@angular/router";
+import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
+import {EventsFacade} from "../../events.facade";
 
 
 @Component({
@@ -19,51 +19,15 @@ import {RouterLink} from "@angular/router";
   imports: [CommonModule, DateFormatPipe, CharacterIconPipe, EventImagePipe, CardModule, TagModule, Button, TagComponent, RouterLink],
   templateUrl: './event-item.component.html',
   styleUrls: ['./event-item.component.scss'],
-  animations: [
-    trigger('innerShadowPulse', [
-      state('initial', style({
-        boxShadow: 'inset 0 0 0 rgba(0, 0, 0, 0)'
-      })),
-      state('animated', style({
-        boxShadow: '{{ eventShadowColor }}'
-      }), {params: {eventShadowColor: 'inset 0 0 20px rgba(0, 0, 0, 0.8)'}}),
-      transition('initial <=> animated', [
-        animate('1s ease-in-out', keyframes([
-          style({boxShadow: '{{ eventShadowColorSmall }}', offset: 0.3}),
-          style({boxShadow: '{{ eventShadowColorMedium }}', offset: 0.7}),
-          style({boxShadow: '{{ eventShadowColorLarge }}', offset: 1})
-        ]))
-      ], {
-        params: {
-          eventShadowColorSmall: 'inset 0 0 5px rgba(0, 0, 0, 0.4)',
-          eventShadowColorMedium: 'inset 0 0 15px rgba(0, 0, 0, 0.6)',
-          eventShadowColorLarge: 'inset 0 0 20px rgba(0, 0, 0, 0.8)'
-        }
-      })
-    ])
-  ]
 })
 
-export class EventItemComponent implements OnInit {
+export class EventItemComponent {
   @Input() event!: EventDto;
-  @Input() currentUser!: UserDto;
 
-  @Output() joinEvent = new EventEmitter<EventDto>();
-  @Output() leaveEvent = new EventEmitter<EventDto>();
+  private authenticatedFacade = inject(AuthenticatedFacade);
+  private eventsFacade = inject(EventsFacade);
 
-  animationState: string = 'initial';
-
-  ngOnInit() {
-    if (this.isToday) {
-      this.startShadowAnimation();
-    }
-  }
-
-  startShadowAnimation() {
-    setInterval(() => {
-      this.animationState = this.animationState === 'initial' ? 'animated' : 'initial';
-    }, 1000);
-  }
+  currentUser = this.authenticatedFacade.currentUser()!;
 
   get eventColor(): string {
     switch (this.event.type.toLowerCase()) {
@@ -76,13 +40,6 @@ export class EventItemComponent implements OnInit {
       default:
         return '#c9cbcf';
     }
-  }
-
-  get isToday(): boolean {
-    const now = new Date();
-    const eventDate = new Date(this.event.date);
-
-    return eventDate.toDateString() === now.toDateString() && eventDate.getTime() >= now.getTime();
   }
 
   get isParticipant(): boolean {
@@ -105,37 +62,12 @@ export class EventItemComponent implements OnInit {
     return !this.event.minLevel || this.currentUser.characterLevel >= this.event.minLevel;
   }
 
-
   onJoin() {
-    this.joinEvent.emit(this.event);
+    this.eventsFacade.joinEvent(this.event.id).subscribe();
   }
 
   onLeave() {
-    this.leaveEvent.emit(this.event);
+    this.eventsFacade.withdrawFromEvent(this.event.id).subscribe();
   }
-
-  get eventShadowColor(): string {
-    return `inset 0 0 20px ${this.hexToRgba(this.eventColor, 0.8)}`;
-  }
-
-  get eventShadowColorSmall(): string {
-    return `inset 0 0 5px ${this.hexToRgba(this.eventColor, 0.4)}`;
-  }
-
-  get eventShadowColorMedium(): string {
-    return `inset 0 0 15px ${this.hexToRgba(this.eventColor, 0.6)}`;
-  }
-
-  get eventShadowColorLarge(): string {
-    return `inset 0 0 20px ${this.hexToRgba(this.eventColor, 0.8)}`;
-  }
-
-  private hexToRgba(hex: string, alpha: number): string {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-
 
 }
