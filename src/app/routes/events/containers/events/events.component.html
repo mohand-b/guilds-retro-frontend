@@ -13,11 +13,20 @@
     </ng-container>
 
     <ng-container content>
-      <div class="flex justify-between items-center mb-4">
-        <button (click)="previousWeek()">Semaine précédente</button>
-        <button (click)="nextWeek()">Semaine suivante</button>
+
+      <div class="font-bold">{{ referenceDate$().toISODate() | date: 'MMMM' }}</div>
+
+      <div class="flex justify-between items-center mb-2">
+        <p-button (click)="previousWeek()" label="Semaine précédente" icon="pi pi-chevron-left"
+                  severity="secondary" rounded text iconPos="left"/>
+
+        @if (!isCurrentWeek()) {
+          <p-button (click)="resetToToday()" label="Revenir à aujourd'hui" icon="pi pi-calendar"
+                    severity="secondary" rounded text/>
+        }
+        <p-button (click)="nextWeek()" label="Semaine suivante" icon="pi pi-chevron-right"
+                  severity="secondary" rounded text iconPos="right"/>
       </div>
-      
 
       <app-weekly-calendar
         [referenceDate]="referenceDate$()"
@@ -25,6 +34,22 @@
         [futureEventsNotJoined]="futureEventsNotJoined$()"
         [pastEvents]="pastEvents$()"
       />
+
+      <div class="flex flex-col mt-2">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-2 bg-blue-300 rounded"></div>
+          <span class="text-sm text-gray-700">Non rejoint</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-2 bg-green-300 rounded"></div>
+          <span class="text-sm text-gray-700">Rejoint</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-2 bg-gray-400 rounded"></div>
+          <span class="text-sm text-gray-700">Terminé</span>
+        </div>
+      </div>
+
     </ng-container>
 
   </app-page-block>

@@ -7,7 +7,6 @@ import {PageBlockComponent} from "../../../../shared/components/page-block/page-
 import {ButtonModule} from "primeng/button";
 import {DialogService} from "primeng/dynamicdialog";
 import {AccordionModule} from "primeng/accordion";
-import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {SortByPipe} from "../../../../shared/pipes/sort-by.pipe";
 import {WeeklyCalendarComponent} from "../../components/weekly-calendar/weekly-calendar.component";
 import {DateTime} from "luxon";
@@ -31,16 +30,13 @@ import {DateTime} from "luxon";
 })
 export class EventsComponent implements OnInit {
 
-  protected readonly length = length;
-  private readonly eventsFacade = inject(EventsFacade);
-  private readonly authenticatedFacade = inject(AuthenticatedFacade);
+  private eventsFacade = inject(EventsFacade);
+  private dialogService = inject(DialogService);
+
   futureEventsNotJoined$ = this.eventsFacade.futureEventsNotJoined$;
   futureEventsJoined$ = this.eventsFacade.futureEventsJoined$;
   pastEvents$ = this.eventsFacade.pastEvents$;
-  private dialogService = inject(DialogService);
-  currentUser$ = this.authenticatedFacade.currentUser;
 
-  public currentDate$: WritableSignal<DateTime> = signal(DateTime.now());
   public referenceDate$: WritableSignal<DateTime> = signal(DateTime.now());
 
   ngOnInit() {
@@ -63,5 +59,13 @@ export class EventsComponent implements OnInit {
     this.referenceDate$.update((current) => current.plus({week: 1}));
   }
 
-
+  resetToToday() {
+    this.referenceDate$.set(DateTime.now());
+  }
+  
+  isCurrentWeek(): boolean {
+    const startOfCurrentWeek = DateTime.now().startOf('week');
+    const startOfReferenceWeek = this.referenceDate$().startOf('week');
+    return startOfReferenceWeek.hasSame(startOfCurrentWeek, 'week');
+  }
 }

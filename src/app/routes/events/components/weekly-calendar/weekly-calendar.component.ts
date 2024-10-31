@@ -1,33 +1,36 @@
-import {Component, computed, effect, input, Signal} from '@angular/core';
+import {Component, computed, input, Signal, signal} from '@angular/core';
 import {DateTime} from "luxon";
-import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {EventDto} from "../../state/events/event.model";
-import {RouterLink} from "@angular/router";
-import {ChipsModule} from "primeng/chips";
-import {Button} from "primeng/button";
-import {InputGroupAddonModule} from "primeng/inputgroupaddon";
-import {InputGroupModule} from "primeng/inputgroup";
+import {DatePipe, NgClass} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {EventItemComponent} from "../event-item/event-item.component";
+import {animate, style, transition, trigger} from "@angular/animations";
+import {BadgeModule} from "primeng/badge";
 
 @Component({
-  selector: 'app-weekly-calendar',
   standalone: true,
-  imports: [
-    NgIf,
-    NgForOf,
-    DatePipe,
-    NgClass,
-    RouterLink,
-    ChipsModule,
-    Button,
-    InputGroupAddonModule,
-    InputGroupModule,
-    OverlayPanelModule,
-    EventItemComponent
-  ],
+  selector: 'app-weekly-calendar',
   templateUrl: './weekly-calendar.component.html',
-  styleUrl: './weekly-calendar.component.scss'
+  styleUrls: ['./weekly-calendar.component.scss'],
+  imports: [
+    NgClass,
+    DatePipe,
+    OverlayPanelModule,
+    EventItemComponent,
+    BadgeModule
+  ],
+  animations: [
+    trigger('weekSlide', [
+      transition(':increment', [
+        style({transform: 'translateX(100%)', opacity: 0}),
+        animate('500ms ease-out', style({transform: 'translateX(0)', opacity: 1}))
+      ]),
+      transition(':decrement', [
+        style({transform: 'translateX(-100%)', opacity: 0}),
+        animate('500ms ease-out', style({transform: 'translateX(0)', opacity: 1}))
+      ])
+    ])
+  ]
 })
 export class WeeklyCalendarComponent {
 
@@ -36,17 +39,15 @@ export class WeeklyCalendarComponent {
   futureEventsJoined = input<EventDto[]>([]);
   pastEvents = input<EventDto[]>([]);
 
-  constructor() {
-    effect(() => {
-      console.log('referenceDate', this.referenceDate());
-      console.log('futureEventsNotJoined', this.futureEventsNotJoined());
-    });
-  }
+  public expandedDays: Set<string> = new Set();
 
-  public weekDays: Signal<DateTime[]> = computed((): DateTime[] => {
-    const startOfWeek = this.referenceDate().startOf('week');
+  public currentWeekIndex = signal(0);
+
+  public weekDays: Signal<DateTime[]> = computed(() => {
+    const startOfWeek = this.referenceDate().plus({weeks: this.currentWeekIndex()}).startOf('week');
     return Array.from({length: 7}, (_, i) => startOfWeek.plus({days: i}));
   });
+
 
   public getEventsForDay(day: DateTime): { type: string, event: EventDto }[] {
     const allEvents = [
@@ -55,11 +56,14 @@ export class WeeklyCalendarComponent {
       ...this.pastEvents().map(event => ({type: 'past', event})),
     ];
 
-    return allEvents.filter(({event}) => {
-      const eventDate = DateTime.fromISO(event.date);
-      return eventDate.hasSame(day, 'day');
-    });
+    return allEvents
+      .filter(({event}) => {
+        const eventDate = DateTime.fromISO(event.date);
+        return eventDate.hasSame(day, 'day');
+      })
+      .sort((a, b) => DateTime.fromISO(a.event.date).toMillis() - DateTime.fromISO(b.event.date).toMillis());
   }
+
 
   public formatDateTime(date: DateTime): string {
     return date.toFormat('cccc d');
@@ -69,7 +73,16 @@ export class WeeklyCalendarComponent {
     return day.hasSame(DateTime.now(), 'day');
   }
 
-  showMoreEvents(eventsForDay: { type: string; event: EventDto }[], day: DateTime) {
+  toggleDayExpansion(day: DateTime): void {
+    const dayKey = day.toISODate();
+    if (this.expandedDays.has(dayKey!)) {
+      this.expandedDays.delete(dayKey!);
+    } else {
+      this.expandedDays.add(dayKey!);
+    }
+  }
 
+  isDayExpanded(day: DateTime): boolean {
+    return this.expandedDays.has(day.toISODate()!);
   }
 }

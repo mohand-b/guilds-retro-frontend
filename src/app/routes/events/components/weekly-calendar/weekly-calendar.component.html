@@ -1,49 +1,48 @@
-<div class="grid grid-cols-7 gap-0 w-full border-t border-l">
+<div class="overflow-hidden w-full h-full">
+  <div class="grid grid-cols-7 gap-0 w-full border-t border-l" [@weekSlide]="referenceDate().toMillis()">
 
-  <div *ngFor="let day of weekDays()" class="border-r border-b h-[12rem] pr-1 relative">
-    <div class="text-center font-semibold text-sm p-1"
-         [ngClass]="{
-            'text-red-600': isToday(day),
-          }"
-    >
-      {{ formatDateTime(day) }}
-    </div>
-
-
-    @for (eventObj of getEventsForDay(day); let i = $index; track eventObj.event.id) {
-      @if (i < 3) {
-        <div *ngIf="i < 3" class="text-xs p-1 bg-blue-100 rounded mt-1"
-             (click)="op.toggle($event)"
-             [ngClass]="{
-             'bg-blue-100': eventObj.type === 'notJoined',
-             'bg-green-100': eventObj.type === 'joined',
-             'bg-gray-300': eventObj.type === 'past'
-           }">
-          <div class="flex items-center gap-1 text-[.625rem]">
-            <div class="mr-2">{{ eventObj.event.date | date: 'HH:mm' }}</div>
-            <i class="pi pi-users !text-[.8rem]"></i> {{ eventObj.event.participants.length }}
-            /{{ eventObj.event.maxParticipants }}
-          </div>
-          <div
-            class="font-semibold truncate">{{ eventObj.event.title || eventObj.event.dungeonName || eventObj.event.arenaTargets }}
-          </div>
+    @for (day of weekDays(); track day.toISO()) {
+      <div class="border-r border-b min-h-[12rem] pr-1 pb-1 relative">
+        <div class="text-center font-semibold text-sm p-1"
+             [ngClass]="{ 'text-red-600': isToday(day) }">
+          {{ formatDateTime(day) }}
         </div>
-        <p-overlayPanel #op>
-          <app-event-item [event]="eventObj.event"/>
-        </p-overlayPanel>
-      }
+
+        @for (eventObj of getEventsForDay(day); let i = $index; track eventObj.event.id) {
+          @if (isDayExpanded(day) || i < 3) {
+            <div class="text-xs p-1 rounded mt-1 cursor-pointer"
+                 (click)="op.toggle($event)"
+                 [ngClass]="{
+                 'bg-blue-100': eventObj.type === 'notJoined',
+                 'bg-green-100': eventObj.type === 'joined',
+                 'bg-gray-300': eventObj.type === 'past'
+               }">
+              <div class="flex items-center gap-1 text-[.625rem]">
+                <div class="mr-2">{{ eventObj.event.date | date: 'HH:mm' }}</div>
+                <i class="pi pi-users !text-[.8rem]"></i> {{ eventObj.event.participants.length }}
+                /{{ eventObj.event.maxParticipants }}
+              </div>
+              <div class="font-semibold truncate">
+                {{ eventObj.event.title || eventObj.event.dungeonName || eventObj.event.arenaTargets }}
+              </div>
+            </div>
+            <p-overlayPanel #op>
+              <app-event-item [event]="eventObj.event"/>
+            </p-overlayPanel>
+          }
+        }
+
+        @if (getEventsForDay(day).length > 3 && !isDayExpanded(day)) {
+          <div class="flex justify-center mt-1 ">
+            <p-badge (click)="toggleDayExpansion(day)" value="+{{ getEventsForDay(day).length - 3 }}"
+                     severity="warning" styleClass="cursor-pointer"/>
+          </div>
+        }
+
+        @if (getEventsForDay(day).length === 0) {
+          <div class="text-gray-400 text-xs p-1 truncate">Pas d'événements</div>
+        }
+      </div>
     }
-
-    <!-- +X more events button if there are more than 3 events -->
-    <div *ngIf="getEventsForDay(day).length > 3" class="text-xs text-blue-500 mt-1 cursor-pointer"
-         (click)="showMoreEvents(getEventsForDay(day), day)">
-      +{{ getEventsForDay(day).length - 3 }} événements
-    </div>
-
-    <div *ngIf="getEventsForDay(day).length === 0" class="text-gray-400 text-xs p-1 truncate">
-      Pas d'événements
-    </div>
-
-
   </div>
 </div>

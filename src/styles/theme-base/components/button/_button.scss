@@ -7,6 +7,9 @@
   transition: $formElementTransition;
   border-radius: $borderRadius;
   outline-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:not(:disabled):hover {
     background: $buttonHoverBg;
@@ -84,6 +87,7 @@
   }
 
   .p-button-label {
+    order: 0;
     transition-duration: $transitionDuration;
   }
 
@@ -92,7 +96,8 @@
   }
 
   .p-button-icon-right {
-    margin-left: $inlineSpacing;
+    order: 1;
+    margin-left: $inlineSpacing !important;
   }
 
   .p-button-icon-bottom {
