@@ -8,7 +8,7 @@ import {
   updateEntities,
   withEntities
 } from "@ngneat/elf-entities";
-import {CreateEventDto, EventDto} from "./state/events/event.model";
+import {EventDto} from "./state/events/event.model";
 import {EventsService} from "./state/events/events.service";
 import {map, Observable, tap} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
@@ -78,8 +78,8 @@ export class EventsFacade {
     );
   }
 
-  createEvent(event: CreateEventDto): Observable<EventDto> {
-    return this.eventsService.createEvent(event).pipe(
+  createEvent(eventFormData: FormData): Observable<EventDto> {
+    return this.eventsService.createEvent(eventFormData).pipe(
       tap({
         next: (event: EventDto) => {
           eventsStore.update(addEntities(event))

@@ -85,4 +85,6 @@ export class WeeklyCalendarComponent {
   isDayExpanded(day: DateTime): boolean {
     return this.expandedDays.has(day.toISODate()!);
   }
+
+  protected readonly DateTime = DateTime;
 }

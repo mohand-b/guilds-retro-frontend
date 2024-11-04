@@ -30,6 +30,8 @@ import {eventTypeFieldsValidator} from "../../../../shared/validators/event-type
 import {EventSummaryPreviewComponent} from "../../components/event-summary-preview/event-summary-preview.component";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
+import {FileUploadModule} from "primeng/fileupload";
+import {toFormData} from "../../../../shared/extensions/object.extension";
 
 @Component({
   selector: 'app-create-event',
@@ -57,6 +59,7 @@ import {InputIconModule} from "primeng/inputicon";
     EventSummaryPreviewComponent,
     IconFieldModule,
     InputIconModule,
+    FileUploadModule,
   ],
   templateUrl: './create-event.component.html',
   styleUrl: './create-event.component.scss',
@@ -71,6 +74,8 @@ export class CreateEventComponent {
   protected readonly EventTypes = EventTypesEnum;
   public readonly minDate = new Date();
 
+  selectedImage: string | ArrayBuffer | null = null;
+
   private dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
   private eventsFacade = inject(EventsFacade);
 
@@ -80,6 +85,7 @@ export class CreateEventComponent {
       title: [''],
       dungeonName: [''],
       arenaTargets: [''],
+      image: [null],
       description: [''],
       isAccessibleToAllies: [false],
       date: ['', Validators.required],
@@ -109,7 +115,7 @@ export class CreateEventComponent {
   onSubmit() {
     if (this.eventDetailsFormGroup.valid && this.participationRequirementsFormGroup.valid) {
       const createEventDto = this.createEventDto();
-      this.eventsFacade.createEvent(createEventDto).subscribe((event) => this.dialogRef.close(event));
+      this.eventsFacade.createEvent(toFormData(createEventDto)).subscribe((event) => this.dialogRef.close(event));
     }
   }
 
@@ -128,6 +134,18 @@ export class CreateEventComponent {
       ...formValues,
       date: combinedDateTime,
     };
+  }
+
+  onFileSelect(event: any) {
+    const file = event.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedImage = reader.result;
+        this.eventDetailsFormGroup.patchValue({image: file});
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   onChangeIsAccessibleToAllies(isAccessibleToAllies: boolean) {
@@ -203,10 +221,12 @@ export class CreateEventComponent {
         delete formValues.arenaTargets;
         break;
       case EventTypesEnum.DUNGEON:
+        delete formValues.image;
         delete formValues.arenaTargets;
         delete formValues.title;
         break;
       case EventTypesEnum.ARENA:
+        delete formValues.image;
         delete formValues.dungeonName;
         delete formValues.title;
         formValues.arenaTargets = `Capture de ${formValues.arenaTargets}`;
@@ -214,5 +234,9 @@ export class CreateEventComponent {
     }
 
     return formValues;
+  }
+
+  resetImage() {
+    this.selectedImage = null;
   }
 }

@@ -49,6 +49,7 @@ export class EventsComponent implements OnInit {
       width: '800px',
       contentStyle: {'overflow-y': 'visible'},
     });
+
   }
 
   previousWeek() {
@@ -62,7 +63,7 @@ export class EventsComponent implements OnInit {
   resetToToday() {
     this.referenceDate$.set(DateTime.now());
   }
-  
+
   isCurrentWeek(): boolean {
     const startOfCurrentWeek = DateTime.now().startOf('week');
     const startOfReferenceWeek = this.referenceDate$().startOf('week');

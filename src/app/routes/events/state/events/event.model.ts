@@ -6,7 +6,8 @@ export interface EventDto {
   title?: string;
   dungeonName?: string;
   arenaTargets?: string;
-  description: string;
+  image?: string;
+  description?: string;
   date: string;
   maxParticipants: number;
   minLevel?: number;
@@ -23,6 +24,7 @@ export interface CreateEventDto {
   title?: string;
   dungeonName?: string;
   arenaTargets?: string;
+  image?: string;
   description: string;
   isAccessibleToAllies?: boolean;
   date: string;

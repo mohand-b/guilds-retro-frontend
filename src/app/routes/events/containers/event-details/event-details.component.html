@@ -12,7 +12,7 @@
 
         <div class="flex items-end justify-between">
           <div class="flex items-center gap-2">
-            <img [src]="event | eventImage" alt="Event image"
+            <img [src]="(event.image ? event.image : event | eventImage)" alt="Event image"
                  [style.background-color]="eventColor+30"
                  class="w-16 h-16 object-cover rounded-md border border-gray-300">
             <div class="flex flex-col gap-1">

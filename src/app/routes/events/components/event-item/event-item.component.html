@@ -8,7 +8,7 @@
       <div [style.background-color]="eventColor+20"
            [style.border-color]="eventColor+60"
            class="flex items-start border-b gap-2 p-3">
-        <img [src]="event | eventImage" alt="Event image"
+        <img [src]="(event.image ? event.image : event | eventImage)" alt="Event image"
              [style.background-color]="eventColor+30"
              class="w-16 h-16 object-cover rounded-md border border-gray-300">
         <div class="flex-1 flex flex-col gap-1">

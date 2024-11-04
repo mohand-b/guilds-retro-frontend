@@ -79,12 +79,31 @@
 
             } @else {
 
-              <input
-                pInputText
-                formControlName="title"
-                placeholder="Titre de l'événement"
-                class="w-full"
-              />
+              <div class="flex gap-2 items-center">
+                <input pInputText formControlName="title" placeholder="Titre de l'événement" class="w-1/2"/>
+
+                <div class="w-1/2 relative">
+                  @if (!selectedImage) {
+                    <p-fileUpload
+                      mode="basic"
+                      accept="image/*"
+                      (onSelect)="onFileSelect($event)"
+                      [auto]="false"
+                      chooseLabel="Choisir une image"
+                    ></p-fileUpload>
+                  } @else {
+                    <div class="relative">
+                      <img [src]="selectedImage" alt="Aperçu de l'image" class="w-full h-10 object-cover rounded"/>
+                      <button (click)="resetImage()"
+                              class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full">
+                        <i class="pi pi-times"></i>
+                      </button>
+                    </div>
+                  }
+
+                </div>
+              </div>
+
             }
           </div>
 
