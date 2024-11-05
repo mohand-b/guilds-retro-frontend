@@ -12,6 +12,7 @@ import {ModalData} from "../../../../shared/interfaces/modal-data.interface";
 import {AutoCompleteCompleteEvent, AutoCompleteModule} from "primeng/autocomplete";
 import {PrimeTemplate} from "primeng/api";
 import {InputNumberModule} from "primeng/inputnumber";
+import {FloatLabelModule} from "primeng/floatlabel";
 
 @Component({
   selector: 'app-add-job',
@@ -28,7 +29,8 @@ import {InputNumberModule} from "primeng/inputnumber";
     SortAlphabeticallyPipe,
     AutoCompleteModule,
     PrimeTemplate,
-    InputNumberModule
+    InputNumberModule,
+    FloatLabelModule
   ],
   templateUrl: './add-job.component.html',
   styleUrl: './add-job.component.scss'

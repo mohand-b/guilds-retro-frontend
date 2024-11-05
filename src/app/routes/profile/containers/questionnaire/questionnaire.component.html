@@ -1,6 +1,8 @@
 <app-page-block title="Questionnaire, en 1 mot !" class="flex-1">
   <ng-container header-action>
-    <p-button icon="pi pi-pencil" severity="secondary" label="Modifier" text rounded (click)="onEdit()"/>
+    @if (isCurrentUser) {
+      <p-button icon="pi pi-pencil" severity="secondary" label="Modifier" text rounded (click)="onEdit()"/>
+    }
   </ng-container>
 
   <ng-container content>

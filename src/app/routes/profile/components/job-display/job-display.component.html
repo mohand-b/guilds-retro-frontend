@@ -1,23 +1,22 @@
 <div class="flex flex-col items-center min-h-[7.5rem] w-[5.5rem]">
   <div class="relative flex items-center justify-center h-[4.5rem] w-[4.5rem]">
-    @if (job) {
-      <p-knob
-        [(ngModel)]="job.level"
-        [min]="0"
-        [max]="100"
-        [readonly]="!isEditing"
-        [size]="100"
-        [strokeWidth]="10"
-        [showValue]="false"
-        class="absolute">
-      </p-knob>
-    } @else {
-      <div class="w-[4.5rem] h-[4.5rem]"></div>
+
+    @if ((job && job.level) || job?.level === 0) {
+      <svg class="absolute h-full w-full" viewBox="0 0 36 36">
+        <circle class="progress-bg" cx="18" cy="18" r="15"></circle>
+        <circle
+          class="progress"
+          [attr.stroke-dasharray]="progressDasharray"
+          cx="18" cy="18" r="15"
+        ></circle>
+      </svg>
     }
 
-    <div (click)="(!job && isCurrentUser) ? onAddJob() : null"
-         [ngClass]="{'cursor-pointer': !job && isCurrentUser}"
-         class="absolute w-[4rem] h-[4rem] rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+    <div
+      (click)="(!job && isCurrentUser) ? onAddJob() : null"
+      [ngClass]="{'cursor-pointer': !job && isCurrentUser}"
+      class="absolute w-[4rem] h-[4rem] rounded-full bg-gray-200 flex items-center justify-center overflow-hidden"
+    >
       @if (job) {
         @if (isEditing) {
           <input type="number" [(ngModel)]="editedLevel" min="0" max="100"
@@ -39,32 +38,28 @@
 
     @if (job && isCurrentUser) {
       @if (isEditing) {
-        <button (click)="onCancelEdit()"
-                pTooltip="Annuler"
+        <button (click)="onCancelEdit()" pTooltip="Annuler"
                 class="absolute bottom-0 left-0 bg-red-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
           <i class="pi pi-times text-white text-[0.8rem] leading-[1.5rem]"></i>
         </button>
-        <button (click)="onConfirmEdit()"
-                pTooltip="Confirmer"
+        <button (click)="onConfirmEdit()" pTooltip="Confirmer"
                 class="absolute bottom-0 right-0 bg-green-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
           <i class="pi pi-check text-white text-[0.8rem] leading-[1.5rem]"></i>
         </button>
       } @else {
-        <button (click)="onEditJobLevel()"
-                pTooltip="Modifier le niveau"
+        <button (click)="onEditJobLevel()" pTooltip="Modifier le niveau"
                 class="absolute bottom-0 left-0 bg-orange-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
           <i class="pi pi-pencil text-white text-[0.8rem] leading-[1.5rem]"></i>
         </button>
-        <button (click)="onRemoveJob()"
-                pTooltip="Supprimer"
+        <button (click)="onRemoveJob()" pTooltip="Supprimer"
                 class="absolute bottom-0 right-0 bg-red-500 bg-opacity-80 rounded-full w-[1.5rem] h-[1.5rem] flex items-center justify-center p-0">
           <i class="pi pi-trash text-white text-[0.8rem] leading-[1.5rem]"></i>
         </button>
       }
     }
+
   </div>
 
-  <!-- Nom du métier ou Néant -->
   <div class="mt-2 text-center text-sm text-gray-700">
     @if (job) {
       {{ job.name }}

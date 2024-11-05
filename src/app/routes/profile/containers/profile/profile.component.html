@@ -11,25 +11,40 @@
       <app-page-block [title]="user.username" [contentPadding]="false">
         <ng-container header-action>
           @if (isCurrentUser) {
-            @if (user.hideProfile) {
-              <p-button
-                label="Profil masqué"
-                icon="pi pi-eye-slash"
-                severity="warning"
-                rounded
-                text
-                (click)="onHideProfile(false)"
-              />
-            } @else {
-              <p-button
-                label="Profil visible"
-                icon="pi pi-eye"
-                severity="primary"
-                rounded
-                text
-                (click)="onHideProfile(true)"
-              />
-            }
+            <div class="flex items-center gap-4">
+
+              @if (editMode()) {
+                <div class="flex items-center gap-1">
+                  <p-button label="Annuler" icon="pi pi-times" (click)="toggleEditMode()"
+                            severity="danger" rounded text/>
+                  <p-button label="Enregistrer" icon="pi pi-check" (click)="updateProfile()"
+                            severity="primary" rounded text/>
+                </div>
+              } @else {
+                <p-button label="Modifier" icon="pi pi-pencil" (click)="toggleEditMode()"
+                          severity="secondary" rounded text/>
+              }
+              @if (user.hideProfile) {
+                <p-button
+                  label="Profil masqué"
+                  icon="pi pi-eye-slash"
+                  severity="warning"
+                  rounded
+                  text
+                  (click)="onHideProfile(false)"
+                />
+              } @else {
+                <p-button
+                  label="Profil visible"
+                  icon="pi pi-eye"
+                  severity="primary"
+                  rounded
+                  text
+                  (click)="onHideProfile(true)"
+                />
+              }
+
+            </div>
           }
         </ng-container>
 
@@ -65,7 +80,14 @@
                 </div>
 
                 <div>
-                  <div class="text-lg text-gray-600">{{ user.characterClass }} - Niveau {{ user.characterLevel }}
+                  <div class="text-lg text-gray-600">{{ user.characterClass }} - Niveau
+                    @if (editMode()) {
+                      <p-inputNumber [formControl]="characterLevelControl" placeholder="Niveau" [min]="1" [max]="200"
+                                     variant="filled"
+                                     showButtons inputStyleClass="max-w-[4rem]"/>
+                    } @else {
+                      <span>{{ user.characterLevel }}</span>
+                    }
                   </div>
                   @if (user.guild) {
                     <div class="text-md text-gray-500 mt-2">Membre de la guilde <span

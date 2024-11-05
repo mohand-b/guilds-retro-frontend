@@ -42,7 +42,6 @@ export class GuildHeaderComponent {
   protected readonly UserRoleEnum = UserRoleEnum;
   protected readonly hasRequiredRole = hasRequiredRole;
 
-
   private updateGuildForm = effect(() => {
     if (this.guild()) {
       this.guildForm().patchValue(
@@ -50,9 +49,5 @@ export class GuildHeaderComponent {
       );
     }
   });
-
-  get isCurrentGuild() {
-    return this.currentUser()?.guild.id === this.guild()!.id;
-  }
 
 }

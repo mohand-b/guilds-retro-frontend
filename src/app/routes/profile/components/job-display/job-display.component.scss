@@ -1,21 +1,15 @@
-.circular-progress {
-  position: relative;
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  background: conic-gradient(
-      var(--primary-color) calc(var(--value) * 1%),
-      #e6e6e6 calc(var(--value) * 1%)
-  );
+.progress-bg {
+  fill: none;
+  stroke: #e6e6e6;
+  stroke-width: 6;
 }
 
-.image-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  background-color: gray;
-  overflow: hidden;
+.progress {
+  fill: none;
+  stroke: #29863e;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.3s ease;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
 }

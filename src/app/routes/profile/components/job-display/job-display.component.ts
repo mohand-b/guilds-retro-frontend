@@ -3,7 +3,7 @@ import {JobDto} from "../../state/jobs/job.model";
 import {JobImagePipe} from "../../../../shared/pipes/job-image.pipe";
 import {KnobModule} from "primeng/knob";
 import {FormsModule} from "@angular/forms";
-import {NgClass} from "@angular/common";
+import {NgClass, NgStyle} from "@angular/common";
 
 @Component({
   selector: 'app-job-display',
@@ -12,7 +12,8 @@ import {NgClass} from "@angular/common";
     JobImagePipe,
     NgClass,
     KnobModule,
-    FormsModule
+    FormsModule,
+    NgStyle
   ],
   templateUrl: './job-display.component.html',
   styleUrl: './job-display.component.scss'
@@ -28,6 +29,11 @@ export class JobDisplayComponent {
 
   isEditing: boolean = false;
   editedLevel: number | null = null;
+
+  get progressDasharray(): string {
+    const percentage = this.job ? (this.job.level / 100) * 94.2 : 0;
+    return `${percentage} 94.2`;
+  }
 
   onRemoveJob() {
     this.removeJob.emit();

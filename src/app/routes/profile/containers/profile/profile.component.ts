@@ -19,7 +19,8 @@ import {AddJobComponent} from "../../components/add-job/add-job.component";
 import {AddLinkedAccountComponent} from "../../components/add-linked-account/add-linked-account.component";
 import {PageBlockComponent} from "../../../../shared/components/page-block/page-block.component";
 import {ButtonModule} from "primeng/button";
-import {FormControl} from "@angular/forms";
+import {FormControl, ReactiveFormsModule} from "@angular/forms";
+import {InputNumberModule} from "primeng/inputnumber";
 
 @Component({
   selector: 'app-profile',
@@ -34,7 +35,9 @@ import {FormControl} from "@angular/forms";
     AlertComponent,
     PageBlockComponent,
     ButtonModule,
-    CharacterColorPipe
+    CharacterColorPipe,
+    InputNumberModule,
+    ReactiveFormsModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -45,6 +48,8 @@ export class ProfileComponent implements OnInit {
   public currentUser: Signal<UserDto | undefined> | null = null;
   public profileToUse = computed(() => this.currentUser ? this.currentUser() : this.profile());
   public posts: WritableSignal<PostDto[]> = signal<PostDto[]>([]);
+
+  public editMode: WritableSignal<boolean> = signal(false);
 
   nonForgemagingJobs: Signal<(JobDto | null)[]> = computed(() => {
     const profile = this.profileToUse();
@@ -60,7 +65,7 @@ export class ProfileComponent implements OnInit {
     return [...jobs, ...Array(3 - jobs.length).fill(null)].slice(0, 3);
   });
 
-  jobLevelControl = new FormControl();
+  characterLevelControl = new FormControl(0);
 
   private readonly authenticatedFacade = inject(AuthenticatedFacade);
   private readonly profileFacade = inject(ProfileFacade);
@@ -95,6 +100,7 @@ export class ProfileComponent implements OnInit {
           }
         } else {
           this.currentUser = this.authenticatedFacade.currentUser;
+          this.characterLevelControl.setValue(this.currentUser()!.characterLevel);
           return forkJoin({
             posts: this.profileFacade.getLastPosts(this.authenticatedFacade.currentUser()!.id),
             linkedAccounts: this.profileFacade.getLinkedAccounts()
@@ -186,9 +192,17 @@ export class ProfileComponent implements OnInit {
     ).subscribe();
   }
 
+  toggleEditMode() {
+    this.editMode.set(!this.editMode());
+  }
 
   goBack() {
     this.location.back();
   }
 
+  updateProfile() {
+    this.profileFacade.updateLevel(this.characterLevelControl.value as number).subscribe(
+      () => this.editMode.set(false)
+    );
+  }
 }

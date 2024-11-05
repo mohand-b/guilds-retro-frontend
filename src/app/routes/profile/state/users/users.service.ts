@@ -1,5 +1,5 @@
 import {inject, Injectable} from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {Observable} from "rxjs";
 import {OneWordQuestionnaireDto} from "../questionnaire/questionnaire.model";
@@ -18,6 +18,10 @@ export class UsersService {
 
   findUserForAccountLinking(username: string): Observable<UserDto> {
     return this.http.get<UserDto>(`${this.usersBaseUrl}/find-for-link/${username}`);
+  }
+
+  updateLevel(newLevel: number): Observable<void> {
+    return this.http.patch<void>(`${this.usersBaseUrl}/level`, {newLevel});
   }
 
   updateHideProfile(hideProfile: boolean): Observable<void> {

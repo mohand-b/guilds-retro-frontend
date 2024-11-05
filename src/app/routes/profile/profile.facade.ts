@@ -87,6 +87,23 @@ export class ProfileFacade {
     )
   }
 
+  updateLevel(newLevel: number): Observable<void> {
+    return this.usersService.updateLevel(newLevel).pipe(
+      tap({
+        next: (user) => {
+          authenticatedStore.update(
+            (state) => (
+              {...state, user: {...state.user, characterLevel: newLevel} as UserDto}
+            ),
+            updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
+          );
+        },
+        error: (error) => console.log(error),
+      }),
+      trackAuthedRequestsStatus(AUTHENTICATED_STORE_NAME),
+    )
+  }
+
   updateHideProfile(hideProfile: boolean): Observable<void> {
     return this.usersService.updateHideProfile(hideProfile).pipe(
       tap({
