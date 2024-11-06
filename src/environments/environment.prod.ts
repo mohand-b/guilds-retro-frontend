@@ -1,7 +1,7 @@
 const baseUrl = 'https://guilds-retro-3c47aa60ebbb.herokuapp.com';
 
 export const environment = {
-  production: false,
+  production: true,
   baseUrl,
-  apiUrl: baseUrl + '/api',
+  apiUrl: `${baseUrl}/api`,
 };
