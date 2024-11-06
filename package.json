@@ -27,6 +27,7 @@
     "@ngneat/elf-persist-state": "^1.2.1",
     "@ngneat/elf-requests": "^1.9.2",
     "bootstrap": "^5.3.3",
+    "express": "^4.21.1",
     "luxon": "^3.5.0",
     "ngx-infinite-scroll": "^18.0.0",
     "primeicons": "^7.0.0",
