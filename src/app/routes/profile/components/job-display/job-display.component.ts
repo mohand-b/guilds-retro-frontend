@@ -4,6 +4,7 @@ import {JobImagePipe} from "../../../../shared/pipes/job-image.pipe";
 import {KnobModule} from "primeng/knob";
 import {FormsModule} from "@angular/forms";
 import {NgClass, NgStyle} from "@angular/common";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'app-job-display',
@@ -13,7 +14,8 @@ import {NgClass, NgStyle} from "@angular/common";
     NgClass,
     KnobModule,
     FormsModule,
-    NgStyle
+    NgStyle,
+    TooltipModule
   ],
   templateUrl: './job-display.component.html',
   styleUrl: './job-display.component.scss'

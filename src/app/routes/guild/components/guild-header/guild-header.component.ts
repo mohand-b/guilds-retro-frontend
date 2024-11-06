@@ -42,7 +42,7 @@ export class GuildHeaderComponent {
   protected readonly UserRoleEnum = UserRoleEnum;
   protected readonly hasRequiredRole = hasRequiredRole;
 
-  private updateGuildForm = effect(() => {
+  updateGuildForm = effect(() => {
     if (this.guild()) {
       this.guildForm().patchValue(
         {level: this.guild()!.level, description: this.guild()!.description}
