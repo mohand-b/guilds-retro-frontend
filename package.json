@@ -44,6 +44,7 @@
     "@angular/compiler-cli": "^18.2.7",
     "@types/jasmine": "~5.1.0",
     "@types/luxon": "^3.4.2",
+    "@types/node": "^22.9.0",
     "css-loader": "^7.1.1",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
