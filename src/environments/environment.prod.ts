@@ -1,4 +1,4 @@
-const baseUrl = 'https://guilds-retro-3c47aa60ebbb.herokuapp.com';
+const baseUrl = 'https://guilds-boune-08a92061a94f.herokuapp.com';
 
 export const environment = {
   production: true,
