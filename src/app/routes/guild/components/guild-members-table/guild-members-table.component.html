@@ -38,7 +38,7 @@
         {{ member.role }}
       </td>
       @if (isCurrentGuild && hasRequiredRole(currentUser.role, UserRoleEnum.OFFICER)) {
-        <td class="space-x-2">
+        <td class="flex items-center space-x-1 justify-center" style="min-height: 36px;">
           @if (enableUpGradeAction(member)) {
             <p-button
               icon="pi pi-arrow-up"
@@ -46,7 +46,8 @@
               severity="success"
               text
               rounded
-            />
+              styleClass="p-button-sm p-button-icon-only"
+            ></p-button>
           }
           @if (enableDownGradeAction(member)) {
             <p-button
@@ -55,7 +56,8 @@
               severity="warning"
               text
               rounded
-            />
+              styleClass="p-button-sm p-button-icon-only"
+            ></p-button>
           }
           @if (enableRemoveMemberAction(member)) {
             <p-button
@@ -64,7 +66,8 @@
               severity="danger"
               text
               rounded
-            />
+              styleClass="p-button-sm p-button-icon-only"
+            ></p-button>
           }
         </td>
       }

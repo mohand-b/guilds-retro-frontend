@@ -2,6 +2,7 @@ import {createStore} from "@ngneat/elf";
 import {inject, Injectable, Signal} from "@angular/core";
 import {
   addEntities,
+  deleteEntities,
   getAllEntities,
   selectAllEntities,
   setEntities,
@@ -83,6 +84,22 @@ export class EventsFacade {
       tap({
         next: (event: EventDto) => {
           eventsStore.update(addEntities(event))
+        },
+        error: (error) => console.error(error),
+      }),
+    );
+  }
+
+  cancelEvent(eventId: number): Observable<void> {
+    return this.eventsService.cancelEvent(eventId).pipe(
+      tap({
+        next: () => {
+          eventsStore.update(deleteEntities(eventId))
+          const feedItem = feedStore.query(getAllEntities())
+            .find(entity => entity.event && entity.event.id === eventId);
+          if (feedItem) {
+            feedStore.update(deleteEntities(feedItem.id))
+          }
         },
         error: (error) => console.error(error),
       }),

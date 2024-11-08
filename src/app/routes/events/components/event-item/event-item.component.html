@@ -75,6 +75,8 @@
             <p-button text label="Participer" icon="pi pi-user-plus" severity="primary"
                       [disabled]="!levelRequirementMet" (click)="onJoin()"/>
           }
+        } @else {
+          <p-button text label="Annuler" icon="pi pi-times" severity="danger" (click)="onCancel()"/>
         }
       </div>
 

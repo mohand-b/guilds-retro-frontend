@@ -13,6 +13,7 @@ import {TagComponent} from "../../../../shared/components/tag/tag.component";
 import {CharacterClassEnum} from "../../../profile/state/users/user.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {DateTime} from "luxon";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 
 @Component({
   selector: 'app-event-details',
@@ -36,6 +37,7 @@ export class EventDetailsComponent implements OnInit {
 
   private eventsFacade = inject(EventsFacade);
   private authenticatedFacade = inject(AuthenticatedFacade);
+  private genericModalService = inject(GenericModalService);
 
   public event$: WritableSignal<EventDto | undefined> = signal(undefined);
   public currentUser$ = this.authenticatedFacade.currentUser;
@@ -105,6 +107,10 @@ export class EventDetailsComponent implements OnInit {
       participant.id === this.currentUser$()!.id);
   }
 
+  get isFinished(): boolean {
+    return new Date(this.event$()!.date) < new Date();
+  }
+
   get isCreator(): boolean {
     return this.event$()!.creator.id === this.currentUser$()!.id;
   }
@@ -165,7 +171,25 @@ export class EventDetailsComponent implements OnInit {
       this.event$.set(event));
   }
 
+  onCancel() {
+    const eventTitle = this.event$()!.title || this.event$()!.dungeonName || this.event$()!.arenaTargets;
+
+    const ref = this.genericModalService.open(
+      'Confirmation',
+      {danger: 'Oui'},
+      'sm',
+      null,
+      null,
+      `Es-tu sûr de vouloir annuler l'événement ${eventTitle} ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.eventsFacade.cancelEvent(this.event$()!.id) : EMPTY)
+    ).subscribe(() => this.router.navigate(['/events']));
+  }
+
   goBack() {
     this.location.back();
   }
+
 }

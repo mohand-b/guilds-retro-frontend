@@ -11,6 +11,8 @@ import {TagComponent} from "../../../../shared/components/tag/tag.component";
 import {RouterLink} from "@angular/router";
 import {AuthenticatedFacade} from "../../../authenticated/authenticated.facade";
 import {EventsFacade} from "../../events.facade";
+import {EMPTY, switchMap} from "rxjs";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
 
 
 @Component({
@@ -26,6 +28,7 @@ export class EventItemComponent {
 
   private authenticatedFacade = inject(AuthenticatedFacade);
   private eventsFacade = inject(EventsFacade);
+  private genericModalService = inject(GenericModalService);
 
   currentUser = this.authenticatedFacade.currentUser()!;
 
@@ -70,4 +73,20 @@ export class EventItemComponent {
     this.eventsFacade.withdrawFromEvent(this.event.id).subscribe();
   }
 
+  onCancel() {
+    const eventTitle = this.event.title || this.event.dungeonName || this.event.arenaTargets;
+
+    const ref = this.genericModalService.open(
+      'Confirmation',
+      {danger: 'Oui'},
+      'sm',
+      null,
+      null,
+      `Es-tu sûr de vouloir annuler l'événement ${eventTitle} ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.eventsFacade.cancelEvent(this.event.id) : EMPTY)
+    ).subscribe();
+  }
 }

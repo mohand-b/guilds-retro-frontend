@@ -101,6 +101,8 @@
           <p-button label="Participer" icon="pi pi-user-plus" (click)="participate()"
                     severity="success" rounded text/>
         }
+      } @else {
+        <p-button label="Annuler" icon="pi pi-times" (click)="cancel()" severity="danger" rounded text/>
       }
       <p-button label="Voir" icon="pi pi-eye" [routerLink]="['/events', event.id]"
                 severity="primary" rounded text/>

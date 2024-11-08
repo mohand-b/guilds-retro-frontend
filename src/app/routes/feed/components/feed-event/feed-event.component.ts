@@ -11,6 +11,8 @@ import {CharacterClassEnum, UserDto} from "../../../profile/state/users/user.mod
 import {TagModule} from "primeng/tag";
 import {ButtonModule} from "primeng/button";
 import {DividerModule} from "primeng/divider";
+import {GenericModalService} from "../../../../shared/services/generic-modal.service";
+import {EMPTY, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-feed-event',
@@ -35,7 +37,9 @@ import {DividerModule} from "primeng/divider";
 export class FeedEventComponent {
   @Input() event!: EventDto;
   @Input() currentUser!: UserDto;
-  private eventFacade = inject(EventsFacade);
+
+  private eventsFacade = inject(EventsFacade);
+  private genericModalService = inject(GenericModalService);
 
   get isParticipant(): boolean {
     return this.event.participants.some(participant => participant.id === this.currentUser.id);
@@ -88,10 +92,27 @@ export class FeedEventComponent {
 
 
   participate(): void {
-    this.eventFacade.joinEvent(this.event.id).subscribe();
+    this.eventsFacade.joinEvent(this.event.id).subscribe();
   }
 
   withdraw(): void {
-    this.eventFacade.withdrawFromEvent(this.event.id).subscribe();
+    this.eventsFacade.withdrawFromEvent(this.event.id).subscribe();
+  }
+
+  cancel() {
+    const eventTitle = this.event.title || this.event.dungeonName || this.event.arenaTargets;
+
+    const ref = this.genericModalService.open(
+      'Confirmation',
+      {danger: 'Oui'},
+      'sm',
+      null,
+      null,
+      `Es-tu sûr de vouloir annuler l'événement ${eventTitle} ?`
+    );
+
+    ref.onClose.pipe(
+      switchMap((result) => result ? this.eventsFacade.cancelEvent(this.event.id) : EMPTY)
+    ).subscribe();
   }
 }

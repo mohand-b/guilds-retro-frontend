@@ -76,6 +76,9 @@
                   (click)="onJoin()"
                 ></p-button>
               }
+            } @else if (!isFinished) {
+              <p-button label="Annuler l'événement"
+                        icon="pi pi-times" severity="danger" rounded outlined (click)="onCancel()"/>
             }
           </div>
         </div>

@@ -18,6 +18,12 @@ export class EventsService {
     );
   }
 
+  cancelEvent(eventId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.eventsBaseUrl}/${eventId}`,
+    );
+  }
+
   getEventById(eventId: number): Observable<EventDto> {
     return this.http.get<EventDto>(
       `${this.eventsBaseUrl}/${eventId}`,
