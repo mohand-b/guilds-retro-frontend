@@ -16,7 +16,14 @@
       <input formControlName="password" pInputText placeholder="Mot de passe" type="password"/>
     </div>
 
-    <button [disabled]="!loginForm.valid" class="w-full" pButton pRipple rounded>Se connecter</button>
+    <p-button
+      label="Se connecter"
+      [disabled]="!loginForm.valid || isLoading"
+      styleClass="w-full"
+      rounded
+      [icon]="isLoading ? 'pi pi-spin pi-spinner' : ''"
+      type="submit"
+    />
     <div class="text-center mt-4">
       Pas encore inscrit ?
       <a [routerLink]="['/auth/register']" class="text-accent underline">S'enregistrer</a>

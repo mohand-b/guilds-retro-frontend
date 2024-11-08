@@ -11,6 +11,7 @@ import {MessagesModule} from "primeng/messages";
 import {ChipModule} from "primeng/chip";
 import {Ripple} from "primeng/ripple";
 import {InputTextModule} from "primeng/inputtext";
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -40,21 +41,26 @@ export class LoginComponent {
   private authFacade: AuthFacade = inject(AuthFacade);
   private router: Router = inject(Router);
 
+  public isLoading = false;
+
   login() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
+
+    this.isLoading = true;
+
     this.authFacade
       .login(this.loginForm.value as LoginDto)
       .pipe(
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.isLoading = false)
       )
       .subscribe({
         next: () => this.router.navigate(['/dashboard']),
-        error: () => {
-          this.loginForm.setErrors({invalidCredentials: true});
-        }
+        error: () => this.loginForm.setErrors({invalidCredentials: true}),
       });
   }
+
 }

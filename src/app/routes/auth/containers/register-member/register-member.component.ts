@@ -19,6 +19,7 @@ import {SliderModule} from "primeng/slider";
 import {ButtonDirective, ButtonModule} from "primeng/button";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-register-member',
@@ -101,15 +102,20 @@ export class RegisterMemberComponent implements OnInit {
 
   public onSubmit(): void {
     if (this.registerAsMemberForm.invalid) return;
+    this.isLoading = true;
     this.authFacade.registerAsMember(this.registerAsMemberForm.value as RegisterMemberDto)
+      .pipe(
+        finalize(() => this.isLoading = false)
+      )
       .subscribe({
         next: () => this.router.navigate(['/']),
         error: (error) => {
           if (error.status === 409) {
             this.registerAsMemberForm.get('username')?.setErrors({usernameAlreadyTaken: true});
           }
-        },
+        }
       });
+
   }
 
   public selectGender(gender: GenderEnum): void {

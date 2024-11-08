@@ -1,6 +1,6 @@
 import {Component, effect, inject, signal, WritableSignal} from '@angular/core';
 import {ProfileFacade} from "../../profile.facade";
-import {tap} from "rxjs";
+import {finalize, tap} from "rxjs";
 import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {UserDto} from "../../state/users/user.model";
@@ -45,17 +45,12 @@ export class AddLinkedAccountComponent implements ModalData {
     this.isLoading = true;
     this.error.set(undefined);
     this.profileFacade.findUserForAccountLinking(this.searchAccountControl.value!).pipe(
+      finalize(() => this.isLoading = false),
       tap({
-        next: (user) => {
-          this.accountFound.set(user);
-        },
-        error: (error) => {
-          this.error.set(error.error.message);
-        },
-        complete: () => {
-          this.isLoading = false
+          next: user => this.accountFound.set(user),
+          error: (err) => this.error.set(err.error.message),
         }
-      })).subscribe()
+      )).subscribe();
   }
 
   getData(): UserDto | undefined {

@@ -32,6 +32,7 @@ import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {FileUploadModule} from "primeng/fileupload";
 import {toFormData} from "../../../../shared/extensions/object.extension";
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-create-event',
@@ -74,6 +75,8 @@ export class CreateEventComponent {
   protected readonly EventTypes = EventTypesEnum;
   public readonly minDate = new Date();
 
+  public isLoading = false;
+
   selectedImage: string | ArrayBuffer | null = null;
 
   private dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
@@ -114,8 +117,13 @@ export class CreateEventComponent {
 
   onSubmit() {
     if (this.eventDetailsFormGroup.valid && this.participationRequirementsFormGroup.valid) {
+      this.isLoading = true;
       const createEventDto = this.createEventDto();
-      this.eventsFacade.createEvent(toFormData(createEventDto)).subscribe((event) => this.dialogRef.close(event));
+      this.eventsFacade.createEvent(toFormData(createEventDto)).pipe(
+        finalize(() => this.isLoading = false),
+      ).subscribe({
+        next: () => this.dialogRef.close(),
+      });
     }
   }
 

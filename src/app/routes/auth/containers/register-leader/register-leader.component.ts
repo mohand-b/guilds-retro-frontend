@@ -6,7 +6,7 @@ import {AuthFacade} from "../../auth.facade";
 import {GuildFacade} from "../../../guild/guild.facade";
 import {toFormData} from "../../../../shared/extensions/object.extension";
 import {Router} from "@angular/router";
-import {distinctUntilChanged} from "rxjs";
+import {distinctUntilChanged, finalize} from "rxjs";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
 import {InputTextModule} from "primeng/inputtext";
@@ -85,14 +85,16 @@ export class RegisterLeaderComponent implements OnInit {
     if (this.registerAsLeaderForm.invalid) return;
     this.isLoading = true;
     this.authFacade.registerAsLeader(toFormData(this.registerAsLeaderForm.value))
+      .pipe(
+        finalize(() => this.isLoading = false)
+      )
       .subscribe({
         next: () => this.router.navigate(['/']),
         error: (error) => {
           if (error.status === 409) {
             this.registerAsLeaderForm.get('username')?.setErrors({usernameAlreadyTaken: true});
           }
-        },
-        complete: () => this.isLoading = false
+        }
       });
   }
 

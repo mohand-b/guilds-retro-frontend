@@ -225,7 +225,9 @@
       <div class="flex justify-between my-4">
         <p-button icon="pi pi-arrow-left" label="Précédent" rounded outlined severity="warning"
                   (onClick)="prevCallback.emit()"/>
-        <p-button label="Créer l'événément" (click)="onSubmit()" icon="pi pi-plus" rounded/>
+        <p-button label="Créer l'événément" (click)="onSubmit()"
+                  [disabled]="isLoading"
+                  [icon]="isLoading ? 'pi pi-spin pi-spinner' : 'pi pi-plus'" rounded/>
       </div>
     </ng-template>
   </p-stepperPanel>
