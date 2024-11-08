@@ -219,7 +219,7 @@
     <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">
 
       <div class="my-4 p-4 border border-dashed">
-        <app-event-summary-preview [createEvent]="createEventDto()"/>
+        <app-event-summary-preview [createEvent]="createEventDto()" [selectedImage]="selectedImage"/>
       </div>
 
       <div class="flex justify-between my-4">

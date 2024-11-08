@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-6">
 
   @if (averageMemberLevel(); as averageMemberLevel) {
     <div class="text-lg text-gray-800">
@@ -14,33 +14,32 @@
   @if (eventStats(); as eventStats) {
     <p-divider/>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="p-4 text-center border rounded-lg shadow-sm bg-amber-50">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+      <div class="p-4 border rounded-lg shadow-sm bg-amber-50">
         <div class="text-sm text-gray-600">Événements / Semaine</div>
         <div class="text-amber-600 font-bold text-2xl">{{ eventStats.averageEventsPerWeek }}</div>
       </div>
 
-      <div class="p-4 text-center border rounded-lg shadow-sm bg-indigo-50">
+      <div class="p-4 border rounded-lg shadow-sm bg-indigo-50">
         <div class="text-sm text-gray-600">Événements / Mois</div>
         <div class="text-indigo-600 font-bold text-2xl">{{ eventStats.averageEventsPerMonth }}</div>
       </div>
 
-      <div class="p-4 text-center border rounded-lg shadow-sm bg-emerald-50">
-        <div class="text-sm text-gray-600">Total Événements</div>
-        <div class="text-emerald-600 font-bold text-2xl">{{ eventStats.totalEvents }}</div>
+      <div class="p-4 border rounded-lg shadow-sm bg-emerald-50">
+        <div class="text-sm text-gray-600">Total des Événements</div>
+        <div class="text-emerald-600 font-bold text-2xl mb-2">{{ eventStats.totalEvents }}</div>
+
+        <div class="mt-2 text-gray-500 text-xs font-semibold">Répartition par type d'événements</div>
+        <div class="flex justify-center gap-2 mt-1">
+          @for (eventTypeKey of getEventTypesKeys(); track eventTypeKey) {
+            <div class="px-3 py-2 border rounded-md bg-white shadow-sm">
+              <div class="text-xs text-gray-600">{{ eventTypeKey | titlecase }}</div>
+              <div class="text-gray-700 font-bold">{{ eventStats.totalEventsByType[eventTypeKey] || 0 }}</div>
+            </div>
+          }
+        </div>
       </div>
     </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-{{ getEventTypesKeys().length }} gap-4">
-      @for (eventTypeKey of getEventTypesKeys(); track eventTypeKey) {
-        <div class="p-4 text-center border rounded-lg shadow-sm bg-gray-50">
-          <div class="text-sm text-gray-600">{{ eventTypeKey | titlecase }}</div>
-          <div class="text-gray-700 font-bold text-2xl">
-            {{ eventStats.totalEventsByType[eventTypeKey] || 0 }}
-          </div>
-        </div>
-      }
-    </div>
   }
-
 </div>
+

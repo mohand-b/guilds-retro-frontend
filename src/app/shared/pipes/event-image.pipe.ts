@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from "@angular/core";
-import {EventDto, EventTypesEnum} from "../../routes/events/state/events/event.model";
+import {CreateEventDto, EventDto, EventTypesEnum} from "../../routes/events/state/events/event.model";
 import {DUNGEONS} from "../../routes/events/state/dungeons/dungeons.data";
 
 @Pipe({
@@ -7,7 +7,7 @@ import {DUNGEONS} from "../../routes/events/state/dungeons/dungeons.data";
   standalone: true
 })
 export class EventImagePipe implements PipeTransform {
-  transform(event: EventDto): string {
+  transform(event: EventDto | CreateEventDto): string {
     switch (event.type) {
       case EventTypesEnum.DUNGEON:
         const dungeon = DUNGEONS.find(d => d.dungeonName === event.dungeonName);

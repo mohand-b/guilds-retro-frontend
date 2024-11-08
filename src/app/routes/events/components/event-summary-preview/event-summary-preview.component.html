@@ -1,9 +1,15 @@
 <div class="flex flex-col gap-4 relative">
-  <div class="absolute top-0 right-0 space-x-2">
-    <p-tag [value]="createEvent.type" severity="secondary"/>
+  <div class="absolute top-0 right-0 flex items-center gap-2">
+    <app-tag [label]="createEvent.type | titlecase"/>
     @if (createEvent.isAccessibleToAllies) {
-      <p-tag value="Ouvert aux guildes alliées" severity="info"/>
+      <app-tag label="Ouvert aux guildes alliées"/>
     }
+  </div>
+
+  <div class="absolute bottom-0 right-0 h-40 w-40 overflow-hidden">
+    <img [src]="(createEvent.image && selectedImage ? selectedImage : createEvent | eventImage)"
+         alt="Event image" class="w-full h-full object-cover"
+    />
   </div>
 
 
