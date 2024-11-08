@@ -1,4 +1,4 @@
-import {ApplicationConfig, importProvidersFrom} from '@angular/core';
+import {ApplicationConfig, importProvidersFrom, LOCALE_ID} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -11,6 +11,7 @@ import {DialogService, DynamicDialogModule} from "primeng/dynamicdialog";
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {provide: LOCALE_ID, useValue: 'fr-FR'},
     provideHttpClient(withInterceptorsFromDi()),
     TokenInterceptorProvider,
     provideRouter(routes),
@@ -20,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom([
       BrowserModule,
       BrowserAnimationsModule,
+
     ])]
 };
