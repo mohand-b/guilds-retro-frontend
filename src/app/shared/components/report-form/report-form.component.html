@@ -1,0 +1,18 @@
+<div class="flex flex-wrap gap-2">
+
+  <p-dropdown placeholder="Sélectionne la raison de ton signalement"
+              [options]="reasons"
+              optionLabel="label"
+              optionValue="value"
+              [formControl]="reasonControl"/>
+
+  @if (reasonControl.value === 'other') {
+    <textarea rows="3"
+              autoResize
+              pInputTextarea
+              [formControl]="otherReasonControl"
+              class="w-full p-3 focus:outline-none resize-none"
+              placeholder="Merci de bien vouloir saisir la raison"
+    ></textarea>
+  }
+</div>

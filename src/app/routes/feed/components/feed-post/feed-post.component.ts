@@ -16,6 +16,9 @@ import {EMPTY, switchMap} from "rxjs";
 import {ButtonModule} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {ImageModule} from "primeng/image";
+import {ReportsService} from "../../../console/state/reports/reports.service";
+import {ReportFormComponent} from "../../../../shared/components/report-form/report-form.component";
+import {CreateReportDto} from "../../../console/state/reports/report.model";
 
 @Component({
   selector: 'app-feed-post',
@@ -83,6 +86,7 @@ export class FeedPostComponent {
   );
   private feedFacade = inject(FeedFacade);
   private genericModalService = inject(GenericModalService);
+  private reportsService = inject(ReportsService);
 
   get isLiked(): boolean {
     return this.post.likes.some(like => like.user.id === this.currentUser.id);
@@ -146,6 +150,31 @@ export class FeedPostComponent {
 
 
   reportPost() {
+    const dialogRef = this.genericModalService.open(
+      'Signaler',
+      {primary: 'Signaler'},
+      'sm',
+      null,
+      ReportFormComponent,
+      undefined,
+      true,
+      true
+    );
+
+    dialogRef.onClose.pipe(
+      switchMap((report: Pick<CreateReportDto, 'reason' | 'reasonText'>) => {
+        if (report) {
+          const createReportDto: CreateReportDto = {
+            entityId: this.post.id,
+            entityType: 'post',
+            reason: report.reason,
+            reasonText: report.reasonText,
+          };
+          return this.reportsService.report(createReportDto);
+        }
+        return EMPTY;
+      })
+    ).subscribe();
   }
 
   loadComments() {

@@ -10,7 +10,7 @@
       @if ((post.user | guildMembership: currentUser) === 'currentUser') {
         <p-button severity="danger" label="Supprimer" (onClick)="deletePost()" text/>
       } @else {
-        <p-button severity="warning" label="Signaler" (onClick)="reportPost()" text [disabled]="true"/>
+        <p-button severity="warning" label="Signaler" (onClick)="reportPost()" text/>
       }
     </p-overlayPanel>
   </div>
