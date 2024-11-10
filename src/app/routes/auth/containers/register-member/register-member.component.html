@@ -3,108 +3,159 @@
     <i class="pi pi-arrow-left" style="font-size: 1.5rem"></i>
   </button>
 
-  <form (ngSubmit)="onSubmit()"
-        [formGroup]="registerAsMemberForm"
-        class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl grid grid-cols-2 gap-[1.5rem]">
+  <div class="bg-white p-8 rounded-lg shadow-md max-w-[36rem] flex flex-col gap-[1rem]">
+    <h2 class="text-2xl font-bold">Inscription pour rejoindre une guilde</h2>
 
-    <h2 class="col-span-2 text-2xl font-bold">Inscription pour rejoindre une guilde</h2>
-
-    <div class="col-span-2 flex flex-col gap-2">
-      @if (registerAsMemberForm.get('username')?.hasError('usernameAlreadyTaken')) {
-        <app-alert class="col-span-2"
-                   message="Ce nom de personnage est déjà pris."
-                   type="error"/>
+    <div class="flex flex-col gap-2">
+      @if (characterInfoForm.get('username')?.hasError('usernameAlreadyTaken')) {
+        <app-alert message="Ce nom de personnage est déjà pris." type="error"/>
       }
     </div>
 
-    <div class="col-span-2 md:col-span-1 flex flex-col gap-4">
+    <p-stepper [linear]="true">
+      <p-stepperPanel>
+        <ng-template pTemplate="header">
+          <p-button label="Personnage" icon="pi pi-user" text rounded outlined/>
+        </ng-template>
 
-      <h3 class="text-lg">Informations du personnage</h3>
+        <ng-template pTemplate="content" let-nextCallback="nextCallback">
 
-      <input formControlName="username" pInputText placeholder="Nom du personnage">
+          <form [formGroup]="characterInfoForm" class="mt-2 flex flex-col gap-3" (submit)="nextCallback.emit()">
+            <div class="flex flex-col gap-3 sm:flex-row sm:gap-3">
+              <input pInputText formControlName="username" placeholder="Nom du personnage" class="flex-1"/>
+              <input pPassword formControlName="password" type="password" placeholder="Choisis un mot de passe"
+                     styleClass="flex-1" class="flex-1"/>
+            </div>
 
-      <p-password [feedback]="false" [inputStyle]="{'width': '100%'}" formControlName="password"
-                  placeholder="Mot de passe" styleClass="w-full"
-                  toggleMask/>
+            <div class="flex gap-3 items-center">
+              <p-dropdown [options]="characterClasses" class="w-full" formControlName="characterClass"
+                          placeholder="Classe" styleClass="w-full"/>
+              <div class="flex items-center gap-2 h-full">
+                <div (click)="selectGender(GenderEnum.MALE)"
+                     [ngClass]="{'text-accent': characterInfoForm.get('gender')?.value === 'M', 'text-gray-400': characterInfoForm.get('gender')?.value !== 'M'}"
+                     class="w-11 h-11 flex items-center justify-center border-gray-300 border rounded-[.5rem] cursor-pointer transition-colors">
+                  <i class="pi pi-mars"></i>
+                </div>
+                <div (click)="selectGender(GenderEnum.FEMALE)"
+                     [ngClass]="{'text-accent': characterInfoForm.get('gender')?.value === 'F', 'text-gray-400': characterInfoForm.get('gender')?.value !== 'F'}"
+                     class="w-11 h-11 flex items-center justify-center border-gray-300 border rounded-[.5rem] cursor-pointer transition-colors">
+                  <i class="pi pi-venus"></i>
+                </div>
+              </div>
+            </div>
 
-      <div class="flex gap-4 items-center">
+            <div class="flex flex-col gap-3">
+              <div class="w-full flex gap-4">
+                <label>Niveau du personnage</label>
+                <label class="font-bold">{{ characterLevel.value }}</label>
+              </div>
+              <p-slider #characterLevel animate formControlName="characterLevel" max="200" min="0"/>
+            </div>
 
-        <p-dropdown
-          [options]="characterClasses"
-          class="w-full"
-          formControlName="characterClass"
-          placeholder="Classe"
-          styleClass="w-full"/>
+            <div class="flex items-center justify-end mt-3">
+              <p-button [disabled]="characterInfoForm.invalid" iconPos="right" icon="pi pi-arrow-right" label="Suivant"
+                        rounded text severity="secondary" type="submit"/>
+            </div>
+          </form>
 
-        <div class="flex items-center gap-2 h-full">
-          <div
-            (click)="selectGender(GenderEnum.MALE)"
-            [ngClass]="{
-              'text-accent': registerAsMemberForm.get('gender')?.value === 'M',
-              'text-gray-400': registerAsMemberForm.get('gender')?.value !== 'M'
-            }"
-            class="w-11 h-11 flex items-center justify-center border-gray-300 border rounded-[.5rem] cursor-pointer transition-colors">
-            <i class="pi pi-mars"></i>
+        </ng-template>
+      </p-stepperPanel>
+
+      <p-stepperPanel>
+        <ng-template pTemplate="header">
+          <p-button label="Guilde" icon="pi pi-shield" text rounded outlined/>
+        </ng-template>
+
+        <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
+          <div class="flex flex-col gap-3">
+            <button (click)="onOpenGuildSelection()" [disabled]="loadingGuilds"
+                    class="mb-4 w-full text-white flex items-center justify-center gap-2"
+                    pButton rounded severity="secondary" type="button">
+              @if (loadingGuilds) {
+                <i class="pi pi-spin pi-spinner"></i>
+                <span>Chargement des guildes...</span>
+              } @else {
+                <i class="pi pi-search"></i>
+                <span>Sélectionner une guilde</span>
+              }
+            </button>
+
+            @if (guildSelected) {
+              <app-guild-selected-card [guild]="guildSelected" class="w-full"/>
+            }
           </div>
-          <div
-            (click)="selectGender(GenderEnum.FEMALE)"
-            [ngClass]="{
-              'text-accent': registerAsMemberForm.get('gender')?.value === 'F',
-              'text-gray-400': registerAsMemberForm.get('gender')?.value !== 'F'
-            }"
-            class="w-11 h-11 flex items-center justify-center border-gray-300 border rounded-[.5rem] cursor-pointer transition-colors">
-            <i class="pi pi-venus"></i>
+
+          <div class="flex justify-between mt-4">
+            <p-button icon="pi pi-arrow-left" label="Précédent" rounded text severity="secondary"
+                      (onClick)="prevCallback.emit()"/>
+            <p-button [disabled]="guildIdControl.invalid" icon="pi pi-arrow-right" iconPos="right" label="Suivant"
+                      rounded text severity="secondary" (onClick)="nextCallback.emit()"/>
           </div>
-        </div>
-      </div>
+        </ng-template>
+      </p-stepperPanel>
 
-      <div class="flex flex-col gap-4">
+      <p-stepperPanel>
+        <ng-template pTemplate="header">
+          <p-button label="Récap" icon="pi pi-list" text rounded outlined/>
+        </ng-template>
 
-        <div class="w-full flex gap-4">
-          <label>Niveau du personnage</label>
-          <label class="font-bold">{{ characterLevel.value }}</label>
-        </div>
+        <ng-template pTemplate="content" let-prevCallback="prevCallback">
+          <div class="w-full">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                @if (characterInfoForm.get('characterClass')?.value && characterInfoForm.get('gender')?.value) {
+                  <div class="w-10 h-10 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
+                    <img [src]="previewCharacterClass | characterIcon" alt="Avatar du personnage"
+                         class="w-8 h-8 object-cover rounded-full">
+                  </div>
+                }
+                <div class="flex flex-col gap-1">
+                  @if (characterInfoForm.get('username')?.value && characterInfoForm.get('characterLevel')?.value) {
+                    <span class="text-gray-500 text-xs">{{ characterInfoForm.get('username')?.value }}
+                      niv. {{ characterInfoForm.get('characterLevel')?.value }}</span>
+                  }
+                  @if (guildSelected) {
+                    <span class="text-gray-500 text-xs">Membre de <span
+                      class="font-bold">{{ guildSelected.name }}</span></span>
+                  }
+                </div>
+              </div>
+              <div class="relative flex items-center justify-center w-20 h-20 rounded-full">
+                @if (guildSelected && guildSelected.logo) {
+                  <img [src]="guildSelected.logo" alt="Aperçu du logo de guilde"
+                       class="w-full h-full object-cover rounded-full">
+                }
+              </div>
+            </div>
 
-        <p-slider #characterLevel animate formControlName="characterLevel" max="200" min="0"/>
-      </div>
+            <form [formGroup]="confirmationForm" class="flex flex-col gap-2">
+              <div class="flex items-start gap-2">
+                <p-checkbox formControlName="confirmInfoAccuracy" binary="true"
+                            inputId="confirmInfoAccuracy"></p-checkbox>
+                <label id="confirmInfoAccuracy">Je confirme qu'il s'agit bien de mon personnage sur Boune.</label>
+              </div>
+              <div class="flex items-start gap-2">
+                <p-checkbox formControlName="acceptCgu" binary="true" inputId="acceptCgu"
+                            [disabled]="true"></p-checkbox>
+                <label id="acceptCgu">J'ai lu et j'accepte les <a class="cursor-pointer underline text-secondary"
+                                                                  (click)="onOpenCgu()">conditions générales
+                  d'utilisation</a>.</label>
+              </div>
+            </form>
 
-    </div>
+            <div class="flex justify-between mt-4">
+              <p-button icon="pi pi-arrow-left" label="Précédent" rounded text severity="secondary"
+                        (onClick)="prevCallback.emit()"/>
+              <p-button [icon]="isLoading ? 'pi pi-spin pi-spinner' : ''"
+                        [disabled]="characterInfoForm.invalid || guildIdControl.invalid || confirmationForm.invalid || isLoading"
+                        (onClick)="onSubmit()" label="S'inscrire" rounded severity="primary"
+                        styleClass="min-w-[12rem]"/>
+            </div>
+          </div>
+        </ng-template>
+      </p-stepperPanel>
 
-    <div class="col-span-2 md:col-span-1 flex flex-col gap-4">
+    </p-stepper>
 
-      <h3 class="text-lg">Sélection de la guilde</h3>
-
-      <div class="flex flex-col gap-2">
-
-        <button (click)="onOpenGuildSelection()" [disabled]="loadingGuilds"
-                class="mb-4 w-full text-white flex items-center justify-center gap-2"
-                pButton rounded severity="secondary" type="button">
-          @if (loadingGuilds) {
-            <i class="pi pi-spin pi-spinner"></i>
-            <span>Chargement des guildes...</span>
-          } @else {
-            <i class="pi pi-search"></i>
-            <span>Sélectionner une guilde</span>
-          }
-        </button>
-
-        @if (guildSelected) {
-          <app-guild-selected-card [guild]="guildSelected" class="w-full"/>
-        }
-
-      </div>
-
-    </div>
-
-    <p-button
-      [disabled]="registerAsMemberForm.invalid || isLoading"
-      [icon]="isLoading ? 'pi pi-spin pi-spinner' : ''"
-      class="col-span-2 flex"
-      label="S'inscrire"
-      rounded
-      styleClass="w-full md:w-auto min-w-[15rem] ml-auto"
-      type="submit"
-    />
-
-  </form>
+  </div>
 </div>

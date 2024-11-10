@@ -1,6 +1,15 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {Router, RouterOutlet} from "@angular/router";
-import {FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {GuildSelectionCardComponent} from "../../components/guild-selection-card/guild-selection-card.component";
 import {GuildFacade} from "../../../guild/guild.facade";
@@ -11,7 +20,7 @@ import {GenericModalService} from "../../../../shared/services/generic-modal.ser
 import {CommonModule, Location} from "@angular/common";
 import {GuildSelectedCardComponent} from "../../components/guild-selected-card/guild-selected-card.component";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
-import {CharacterClassEnum, GenderEnum} from "../../../profile/state/users/user.model";
+import {CharacterClassEnum, GenderEnum, UserDto} from "../../../profile/state/users/user.model";
 import {InputTextModule} from "primeng/inputtext";
 import {PasswordModule} from "primeng/password";
 import {DropdownModule} from "primeng/dropdown";
@@ -20,6 +29,19 @@ import {ButtonDirective, ButtonModule} from "primeng/button";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
 import {finalize} from "rxjs";
+import {StepperModule} from "primeng/stepper";
+import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
+import {CheckboxModule} from "primeng/checkbox";
+import {CguContentComponent} from "../../../terms/components/cgu-content/cgu-content.component";
+
+function bothCheckboxesChecked(): ValidatorFn {
+  return (form: AbstractControl): ValidationErrors | null => {
+    const acceptCgu = form.get('acceptCgu')?.value;
+    const confirmInfoAccuracy = form.get('confirmInfoAccuracy')?.value;
+
+    return acceptCgu && confirmInfoAccuracy ? null : {bothRequired: true};
+  };
+}
 
 @Component({
   selector: 'app-register-member',
@@ -37,15 +59,22 @@ import {finalize} from "rxjs";
     SliderModule,
     ButtonModule,
     ProgressSpinnerModule,
-    ButtonDirective
+    ButtonDirective,
+    StepperModule,
+    CharacterIconPipe,
+    CheckboxModule
   ],
   templateUrl: './register-member.component.html',
   styleUrls: ['./register-member.component.scss']
 })
 export class RegisterMemberComponent implements OnInit {
+
+  public characterInfoForm: FormGroup;
+  public guildIdControl: FormControl;
+  public confirmationForm: FormGroup;
+
   public guilds: GuildSummaryDto[] = [];
   public guildSelected: GuildSummaryDto | null = null;
-  public registerAsMemberForm: FormGroup;
   public loadingGuilds = true;
   public isLoading = false;
   protected readonly characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
@@ -59,17 +88,23 @@ export class RegisterMemberComponent implements OnInit {
   private genericModalService = inject(GenericModalService);
 
   constructor() {
-    this.registerAsMemberForm = this.fb.group({
-      username: this.fb.control<string>('', [
-        Validators.required,
-        Validators.minLength(4),
-      ]),
-      password: this.fb.control<string>('', [Validators.required, Validators.minLength(4)]),
-      characterClass: this.fb.control<CharacterClassEnum | null>(null, [Validators.required]),
-      characterLevel: this.fb.control<number>(1, [Validators.required]),
-      gender: this.fb.control<GenderEnum>(GenderEnum.MALE, [Validators.required]),
-      guildId: this.fb.control<number | null>(null, [Validators.required]),
+    this.characterInfoForm = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(4)]],
+      password: ['', [Validators.required, Validators.minLength(4)]],
+      characterClass: [null, Validators.required],
+      characterLevel: [1, Validators.required],
+      gender: [GenderEnum.MALE, Validators.required]
     });
+
+    this.guildIdControl = this.fb.control(null, Validators.required);
+
+    this.confirmationForm = this.fb.group(
+      {
+        acceptCgu: [{value: false, disabled: true}, Validators.requiredTrue],
+        confirmInfoAccuracy: [false, Validators.requiredTrue]
+      },
+      {validators: bothCheckboxesChecked()}
+    );
   }
 
   ngOnInit(): void {
@@ -94,16 +129,22 @@ export class RegisterMemberComponent implements OnInit {
 
     ref.onClose.subscribe((selectedGuild: any) => {
       if (selectedGuild) {
-        this.registerAsMemberForm.patchValue({guildId: selectedGuild.id});
+        this.guildIdControl.patchValue(selectedGuild.id);
         this.guildSelected = selectedGuild;
       }
     });
   }
 
   public onSubmit(): void {
-    if (this.registerAsMemberForm.invalid) return;
+    if (this.characterInfoForm.invalid || this.guildIdControl.invalid || this.confirmationForm.invalid) return;
     this.isLoading = true;
-    this.authFacade.registerAsMember(this.registerAsMemberForm.value as RegisterMemberDto)
+
+    const data: RegisterMemberDto = {
+      ...this.characterInfoForm.value,
+      guildId: this.guildIdControl.value
+    };
+
+    this.authFacade.registerAsMember(data)
       .pipe(
         finalize(() => this.isLoading = false)
       )
@@ -111,7 +152,7 @@ export class RegisterMemberComponent implements OnInit {
         next: () => this.router.navigate(['/']),
         error: (error) => {
           if (error.status === 409) {
-            this.registerAsMemberForm.get('username')?.setErrors({usernameAlreadyTaken: true});
+            this.characterInfoForm.get('username')?.setErrors({usernameAlreadyTaken: true});
           }
         }
       });
@@ -119,7 +160,34 @@ export class RegisterMemberComponent implements OnInit {
   }
 
   public selectGender(gender: GenderEnum): void {
-    this.registerAsMemberForm.patchValue({gender});
+    this.characterInfoForm.patchValue({gender});
+  }
+
+  get previewCharacterClass(): Pick<UserDto, 'characterClass' | 'gender'> {
+    return {
+      characterClass: this.characterInfoForm.value.characterClass,
+      gender: this.characterInfoForm.value.gender
+    }
+  }
+
+  onOpenCgu() {
+    const dialogRef = this.genericModalService.open(
+      "Conditions générales d'utilisation",
+      {'primary': "J'ai lu et j'accepte"},
+      'md',
+      null,
+      CguContentComponent,
+      undefined,
+      false,
+      false
+    )
+
+    dialogRef.onClose.subscribe((read) => {
+      if (read) {
+        this.confirmationForm.get('acceptCgu')?.setValue(true);
+        this.confirmationForm.get('acceptCgu')?.enable();
+      }
+    })
   }
 
   goBack() {
