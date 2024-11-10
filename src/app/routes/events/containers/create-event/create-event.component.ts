@@ -33,6 +33,7 @@ import {InputIconModule} from "primeng/inputicon";
 import {FileUploadModule} from "primeng/fileupload";
 import {toFormData} from "../../../../shared/extensions/object.extension";
 import {finalize} from "rxjs";
+import {PrimeNGConfig} from "primeng/api";
 
 @Component({
   selector: 'app-create-event',
@@ -81,6 +82,7 @@ export class CreateEventComponent {
 
   private dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
   private eventsFacade = inject(EventsFacade);
+  private primengConfig = inject(PrimeNGConfig);
 
   constructor(private fb: FormBuilder) {
     this.eventDetailsFormGroup = this.fb.group({
@@ -112,6 +114,19 @@ export class CreateEventComponent {
     this.eventDetailsFormGroup.get('dungeonName')?.valueChanges.subscribe((dungeonName) => {
       const dungeonLevel = this.getDungeonLevel(dungeonName);
       this.participationRequirementsFormGroup.patchValue({minLevel: dungeonLevel});
+    });
+
+    this.primengConfig.setTranslation({
+      dayNames: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
+      dayNamesShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+      dayNamesMin: ["D", "L", "M", "M", "J", "V", "S"],
+      monthNames: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+      monthNamesShort: ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"],
+      today: "Aujourd'hui",
+      clear: "Effacer",
+      dateFormat: "dd/mm/yy",
+      weekHeader: "Sem",
+      firstDayOfWeek: 1,
     });
   }
 

@@ -1,12 +1,12 @@
 <div class="h-screen flex flex-col body-background">
-  <div class="flex-grow overflow-auto">
-    <router-outlet></router-outlet>
-  </div>
+  <body class="flex-grow overflow-auto no-scrollbar">
+  <router-outlet/>
+  </body>
   <footer class="w-full bg-primaryDark text-white text-sm py-1 flex justify-center items-center space-x-4">
-    <a href="/terms" class="hover:underline">Conditions générales d'utilisation</a>
+    <a [routerLink]="['/terms']" class="hover:underline">Conditions générales d'utilisation</a>
     <span>|</span>
     <span>&copy; 2024 Guilds Boune</span>
     <span>|</span>
-    <a href="https://yourpoweredbylink.com" class="hover:underline">Powered by Mohand</a>
+    <span>Powered by Mohand</span>
   </footer>
 </div>
