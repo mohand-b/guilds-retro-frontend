@@ -1,14 +1,17 @@
 import {Component, inject} from '@angular/core';
 import {Location} from "@angular/common";
+import {CguContentComponent} from "../cgu-content/cgu-content.component";
 
 @Component({
   selector: 'app-cgu',
   standalone: true,
-  imports: [],
-  templateUrl: './cgu.component.html',
-  styleUrl: './cgu.component.scss'
+  imports: [
+    CguContentComponent
+  ],
+  templateUrl: './cgu-page.component.html',
+  styleUrl: './cgu-page.component.scss'
 })
-export class CguComponent {
+export class CguPageComponent {
 
   private location: Location = inject(Location);
 

@@ -5,7 +5,7 @@ import {loginGuard} from "./routes/auth/guards/login.guard";
 export const routes: Routes = [
   {
     path: 'terms',
-    loadComponent: () => import('./routes/terms/components/cgu/cgu.component').then((m) => m.CguComponent),
+    loadComponent: () => import('./routes/terms/components/cgu-page/cgu-page.component').then((m) => m.CguPageComponent),
   },
   {
     path: 'auth',
