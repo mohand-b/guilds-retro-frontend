@@ -93,25 +93,25 @@
         <input #importInput (change)="onImportLogo($event)" accept=".png, .jpg" hidden type="file">
         <div (click)="importInput.click()"
              class="flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 cursor-pointer overflow-hidden">
-          <ng-container *ngIf="logoPreview; else noLogo">
+          @if (logoPreview) {
             <img [src]="logoPreview" alt="Aperçu du logo de guilde" class="w-full h-full object-cover">
-          </ng-container>
-          <ng-template #noLogo>
+          } @else {
             <div class="flex flex-col items-center text-gray-500">
               <i class="pi pi-camera" style="font-size: 1.5rem"></i>
             </div>
-          </ng-template>
+          }
         </div>
 
         <div class="ml-4">
-          <div *ngIf="registerAsLeaderForm.get('guildName')?.value; else noGuildName" class="font-bold text-lg">
-            {{ registerAsLeaderForm.get('guildName')?.value }}
-          </div>
-          <ng-template #noGuildName>
+          @if (registerAsLeaderForm.get('guildName')?.value) {
+            <div class="font-bold text-lg">
+              {{ registerAsLeaderForm.get('guildName')?.value }}
+            </div>
+          } @else {
             <div class="text-gray-500 text-xs border border-gray-300 border-dotted rounded p-2">
               Renseigner un code d'autorisation ci-dessus
             </div>
-          </ng-template>
+          }
         </div>
       </div>
 

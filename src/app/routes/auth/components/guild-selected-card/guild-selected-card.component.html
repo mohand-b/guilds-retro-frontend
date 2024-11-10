@@ -1,7 +1,9 @@
 <div class="w-full p-4 border rounded-lg bg-white shadow-md">
   <div class="flex items-center mb-4">
     <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
-      <img [src]="guild.logo" alt="{{ guild.name }} Logo" class="w-14 h-14 rounded-full">
+      @if (guild.logo) {
+        <img [src]="guild.logo" alt="{{ guild.name }} Logo" class="w-14 h-14 rounded-full object-cover">
+      }
     </div>
     <div class="ml-4">
       <div class="flex gap-2 items-center">

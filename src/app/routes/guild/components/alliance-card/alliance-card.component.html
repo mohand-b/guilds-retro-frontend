@@ -2,11 +2,14 @@
      class="relative h-24 flex cursor-pointer
        border-r border-t border-l-2 border-b-2 border-pink-100 border-l-pink-200 border-b-pink-500
         items-center justify-between px-2 py-4 bg-white overflow-y-hidden rounded-lg shadow-md">
-  <img [src]="guild.logo" alt="Guild logo" class="w-24 h-24 object-cover absolute -left-[2rem] opacity-20 z-0"/>
-
+  @if (guild.logo) {
+    <img [src]="guild.logo" alt="Guild logo" class="w-24 h-24 object-cover absolute -left-[2rem] opacity-20 z-0"/>
+  }
   <div class="flex items-center gap-2 z-10">
     <div class="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center">
-      <img [src]="guild.logo" alt="Guild Icon" class="w-14 h-14 rounded-full object-cover no-select no-copy">
+      @if (guild.logo) {
+        <img [src]="guild.logo" alt="Guild Icon" class="w-14 h-14 rounded-full object-cover no-select no-copy">
+      }
     </div>
 
     <div class="flex flex-col gap-1">

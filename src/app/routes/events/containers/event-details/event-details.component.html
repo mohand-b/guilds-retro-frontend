@@ -92,20 +92,18 @@
 
             @if (event.creator.guild; as guild) {
               <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/guild', guild.id]">
-                <img
-                  [src]="event.creator.guild.logo"
-                  alt="Ally logo"
-                  class="w-8 h-8 rounded-full object-cover"/>
+                @if (event.creator.guild.logo) {
+                  <img [src]="event.creator.guild.logo" alt="Ally logo" class="w-8 h-8 rounded-full object-cover"/>
+                }
                 {{ guild.name }}
               </div>
             }
             @if (event.isAccessibleToAllies) {
               @for (ally of event.creator.guild.allies; track ally.id) {
                 <div class="flex items-center gap-1 cursor-pointer" [routerLink]="['/registry/guild', ally.id]">
-                  <img
-                    [src]="ally.logo"
-                    alt="Ally logo"
-                    class="w-8 h-8 rounded-full object-cover"/>
+                  @if (ally.logo) {
+                    <img [src]="ally.logo" alt="Ally logo" class="w-8 h-8 rounded-full object-cover"/>
+                  }
                   {{ ally.name }}
                 </div>
               }

@@ -1,8 +1,10 @@
 <div class="flex items-center justify-between p-4 bg-white shadow mb-4">
   <div class="flex items-center">
     <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mr-4">
-      <img [src]="allianceRequest.requesterGuild?.logo" alt="{{ allianceRequest.requesterGuild?.name }} Logo"
-           class="w-full h-full object-cover">
+      @if (allianceRequest.requesterGuild?.logo) {
+        <img [src]="allianceRequest.requesterGuild?.logo" alt="{{ allianceRequest.requesterGuild?.name }} Logo"
+             class="w-full h-full object-cover">
+      }
     </div>
     <div>
       <div class="text-xl font-bold">{{ allianceRequest.requesterGuild?.name }}</div>

@@ -39,7 +39,9 @@
 
       @if (guild.logo) {
         <div class="flex justify-center items-center w-24 h-24 overflow-hidden rounded-full">
-          <img [src]="guild.logo" alt="Guild Logo" class="w-full h-full object-cover">
+          @if (guild.logo) {
+            <img [src]="guild.logo" alt="Guild Logo" class="w-full h-full object-cover">
+          }
         </div>
       }
 

@@ -2,7 +2,9 @@
   class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
   <div class="flex items-center gap-4">
     <div class="w-16 h-16 rounded-full border-2 border-gray flex items-center justify-center shadow-sm">
-      <img [src]="request.guild.logo" alt="{{ request.guild.name }} Logo" class="w-14 h-14 rounded-full">
+      @if (request.guild.logo) {
+        <img [src]="request.guild.logo" alt="{{ request.guild.name }} Logo" class="w-14 h-14 rounded-full object-cover">
+      }
     </div>
     <div>
       <div class="text-lg font-semibold">{{ request.guild.name }}</div>
