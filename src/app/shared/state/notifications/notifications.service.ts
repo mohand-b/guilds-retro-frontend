@@ -19,6 +19,8 @@ export class NotificationsService {
         userId: this.authenticatedFacade.userId,
       },
     });
+
+    this.requestPermission();
   }
 
   listen(eventName: string): Observable<any> {
@@ -49,6 +51,19 @@ export class NotificationsService {
       new Notification('Guilds Boune', {
         body: notification.message,
         tag: `notification-${notification.id}`
+      });
+    }
+  }
+
+  requestPermission(): void {
+    console.log('Notification.permission', Notification.permission);
+    if (Notification.permission === 'default') {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('Notifications autorisées par l’utilisateur.');
+        } else if (permission === 'denied') {
+          console.log('Notifications refusées par l’utilisateur.');
+        }
       });
     }
   }

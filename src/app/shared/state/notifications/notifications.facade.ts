@@ -51,10 +51,7 @@ export class NotificationsFacade {
         })
       ),
       this.notificationsService.listen('cancel-notification').pipe(
-        tap((notificationId: number) => {
-          this.removeNotification(notificationId)
-          console.log(`Notification ${notificationId} has been cancelled`);
-        })
+        tap((notificationId: number) => this.removeNotification(notificationId))
       ),
     ]).subscribe();
   }
@@ -83,5 +80,9 @@ export class NotificationsFacade {
 
   removeNotification(notificationId: number): void {
     notificationsStore.update(deleteEntities(notificationId));
+  }
+
+  requestPermission(): void {
+    this.notificationsService.requestPermission();
   }
 }
