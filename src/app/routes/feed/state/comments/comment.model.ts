@@ -1,4 +1,5 @@
 import {UserDto} from "../../../profile/state/users/user.model";
+import {PostDto} from "../posts/post.model";
 
 export interface CommentDto {
   id: number;
@@ -6,6 +7,7 @@ export interface CommentDto {
   createdAt: Date;
   postId: number;
   user: UserDto;
+  post?: PostDto;
 }
 
 export interface CreateCommentDto {

@@ -25,7 +25,6 @@ const notificationsStore = createStore(
 @Injectable({providedIn: 'root'})
 export class NotificationsFacade {
 
-
   notifications: Signal<NotificationDto[]> = toSignal(
     notificationsStore.pipe(
       selectAllEntities(),
@@ -46,10 +45,13 @@ export class NotificationsFacade {
   constructor() {
     forkJoin([
       this.notificationsService.listen('notification').pipe(
-        tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
+        tap((notification: NotificationDto) => {
+          notificationsStore.update(addEntities(notification));
+          this.notificationsService.showBrowserNotification(notification);
+        })
       ),
       this.notificationsService.listen('cancel-notification').pipe(
-        tap((notificationId: number) => notificationsStore.update(deleteEntities(notificationId)))
+        tap((notificationId: number) => this.removeNotification(notificationId))
       ),
       this.notificationsService.listen('link_account').pipe(
         tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
@@ -58,10 +60,7 @@ export class NotificationsFacade {
         tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
       ),
       this.notificationsService.listen('membership_request').pipe(
-        tap((notificationId: number) => {
-
-          notificationsStore.update(deleteEntities(notificationId))
-        })
+        tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
       ),
     ]).subscribe();
   }
@@ -69,7 +68,9 @@ export class NotificationsFacade {
   loadNotifications(): Observable<NotificationDto[]> {
     return this.notificationsService.getNotifications().pipe(
       tap({
-        next: (notifications: NotificationDto[]) => notificationsStore.update(setEntities(notifications)),
+        next: (notifications: NotificationDto[]) => {
+          notificationsStore.update(setEntities(notifications))
+        },
         error: (error) => console.error(error),
       }),
     );

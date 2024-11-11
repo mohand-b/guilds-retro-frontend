@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, inject, OnDestroy, QueryList, Signal, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnDestroy,
+  QueryList,
+  Signal,
+  ViewChildren
+} from '@angular/core';
 import {NotificationsFacade} from "../../../../shared/state/notifications/notifications.facade";
 import {NotificationDto} from "../../../../shared/state/notifications/notification.model";
 import {NotificationItemComponent} from "../../components/notification-item/notification-item.component";
@@ -10,7 +20,7 @@ import {NotificationItemComponent} from "../../components/notification-item/noti
     NotificationItemComponent
   ],
   templateUrl: './notifications.component.html',
-  styleUrl: './notifications.component.scss'
+  styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements AfterViewInit, OnDestroy {
   @ViewChildren('notificationItem', {read: ElementRef}) notificationItems!: QueryList<ElementRef>;
@@ -19,6 +29,47 @@ export class NotificationsComponent implements AfterViewInit, OnDestroy {
   private visibleNotifications: Set<number> = new Set();
   private notificationsFacade = inject(NotificationsFacade);
   notifications: Signal<NotificationDto[]> = this.notificationsFacade.notifications;
+
+  groupedNotifications = computed(() => {
+    const grouped: { [postId: number]: NotificationDto[] } = {};
+
+    this.notifications().forEach((notification) => {
+      if (notification.type === 'like' && notification.like?.post?.id) {
+        const postId = notification.like.post.id;
+        grouped[postId] = grouped[postId] || [];
+        grouped[postId].push(notification);
+      } else {
+        grouped[notification.id] = [notification];
+      }
+    });
+
+    const transformedNotifications: NotificationDto[] = Object.values(grouped).map((group) => {
+      if (group.length === 1) {
+        return {
+          ...group[0],
+          groupedNotificationIds: [group[0].id]
+        };
+      }
+
+      const latestNotification = group.reduce((latest, notif) =>
+        new Date(notif.createdAt) > new Date(latest.createdAt) ? notif : latest, group[0]
+      );
+      const latestDate = group.reduce((max, notif) =>
+        new Date(notif.createdAt) > max ? new Date(notif.createdAt) : max, new Date(0)
+      );
+
+      return {
+        ...latestNotification,
+        message: `${latestNotification.emitter?.username} et ${group.length - 1} autre${group.length > 2 ? 's' : ''} ont liké ton post`,
+        createdAt: latestDate,
+        groupedNotificationIds: group.map(notif => notif.id)
+      };
+    });
+
+    return transformedNotifications.sort((a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  });
 
   ngAfterViewInit() {
     this.observer = new IntersectionObserver(entries => {
@@ -70,8 +121,14 @@ export class NotificationsComponent implements AfterViewInit, OnDestroy {
   }
 
   private markNotificationsAsRead() {
-    const ids = Array.from(this.visibleNotifications);
+    const ids: number[] = Array.from(this.visibleNotifications).flatMap(visibleId => {
+      const group = this.groupedNotifications().find(notification => notification.id === visibleId);
+      return group?.groupedNotificationIds ? group.groupedNotificationIds : [visibleId];
+    });
+
     this.notificationsFacade.markNotificationsAsRead(ids).subscribe();
     this.visibleNotifications.clear();
   }
+
+
 }

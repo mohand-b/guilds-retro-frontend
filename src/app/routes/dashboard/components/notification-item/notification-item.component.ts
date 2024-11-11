@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
-import {NotificationDto} from "../../../../shared/state/notifications/notification.model";
+import {NotificationDto, NotificationTypeEnum} from "../../../../shared/state/notifications/notification.model";
 import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {NgClass} from "@angular/common";
 import {GuildFacade} from "../../../guild/guild.facade";
@@ -30,23 +30,28 @@ export class NotificationItemComponent {
   private guildFacade = inject(GuildFacade);
 
   onAcceptMembershipRequest() {
-    this.guildFacade.acceptMembershipRequest(this.notification.membershipRequest!.id).subscribe(
-      () => this.notificationsFacade.removeNotification(this.notification.id)
-    );
+    this.guildFacade.acceptMembershipRequest(this.notification.membershipRequest!.id).subscribe();
   }
 
   onDeclineMembershipRequest() {
-    this.guildFacade.declineMembershipRequest(this.notification.membershipRequest!.id).subscribe(
-      () => this.notificationsFacade.removeNotification(this.notification.id)
-    );
+    this.guildFacade.declineMembershipRequest(this.notification.membershipRequest!.id).subscribe();
   }
 
-  onAcceptRequest() {
+  onAcceptAllianceRequest() {
+    this.guildFacade.acceptAllianceRequest(this.notification.alliance!.id).subscribe();
+  }
+
+  onDeclineAllianceRequest() {
+    this.guildFacade.rejectAllianceRequest(this.notification.alliance!.id).subscribe();
+  }
+
+  onAcceptAccountlinkRequest() {
     this.profileFacade.acceptAccountlinkRequest(this.notification.accountLinkRequest.id).subscribe();
   }
 
-  onDeclineRequest() {
+  onDeclineAccountlinkRequest() {
     this.profileFacade.rejectAccountlinkRequest(this.notification.accountLinkRequest.id).subscribe();
   }
 
+  protected readonly NotificationTypeEnum = NotificationTypeEnum;
 }

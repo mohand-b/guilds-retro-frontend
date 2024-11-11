@@ -6,15 +6,19 @@
     type="text"
   />
 </div>
-<div *ngIf="filteredGuilds.length === 0" class="text-center">
+@if (filteredGuilds.length === 0) {
   <app-alert message="Aucune guilde trouvée." type="info"/>
-</div>
-<div *ngIf="filteredGuilds.length > 0" class="flex flex-wrap gap-4 justify-center">
-  <div *ngFor="let guild of filteredGuilds" class="flex-1 min-w-[300px] max-w-[400px]">
-    <app-guild-selection-card
-      (selectGuild)="onGuildSelect($event)"
-      [guild]="guild"
-      [selected]="guild === selectedGuild"
-    />
+
+} @else {
+  <div class="flex flex-wrap gap-4 justify-center">
+    @for (guild of filteredGuilds; track guild.id) {
+      <div class="flex-1 min-w-[300px] max-w-[400px]">
+        <app-guild-selection-card
+          (selectGuild)="onGuildSelect($event)"
+          [guild]="guild"
+          [selected]="guild === selectedGuild"
+        />
+      </div>
+    }
   </div>
-</div>
+}

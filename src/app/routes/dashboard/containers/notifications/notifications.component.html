@@ -1,13 +1,11 @@
 <div class="flex flex-col bg-white">
-
-  @for (notification of notifications(); track notification.id) {
+  @for (notification of groupedNotifications(); track notification.id) {
     <div #notificationItem [attr.data-id]="notification.id">
-      <app-notification-item [notification]="notification"></app-notification-item>
+      <app-notification-item [notification]="notification"/>
     </div>
   } @empty {
     <div class="text-center text-gray-400 p-4">
       Aucune notification
     </div>
   }
-  
 </div>
