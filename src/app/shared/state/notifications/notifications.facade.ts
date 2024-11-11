@@ -51,16 +51,10 @@ export class NotificationsFacade {
         })
       ),
       this.notificationsService.listen('cancel-notification').pipe(
-        tap((notificationId: number) => this.removeNotification(notificationId))
-      ),
-      this.notificationsService.listen('link_account').pipe(
-        tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
-      ),
-      this.notificationsService.listen('alliance_request').pipe(
-        tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
-      ),
-      this.notificationsService.listen('membership_request').pipe(
-        tap((notification: NotificationDto) => notificationsStore.update(addEntities(notification)))
+        tap((notificationId: number) => {
+          this.removeNotification(notificationId)
+          console.log(`Notification ${notificationId} has been cancelled`);
+        })
       ),
     ]).subscribe();
   }

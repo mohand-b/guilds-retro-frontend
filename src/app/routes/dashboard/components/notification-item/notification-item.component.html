@@ -40,11 +40,20 @@
     <div class="text-xs text-gray-500 italic truncate">&#8220;{{ notification.comment?.text }}&#8221;</div>
   }
 
+  @if (notification.type === NotificationTypeEnum.new_event || notification.type === NotificationTypeEnum.join_event) {
+    <div class="text-xs text-gray-500 truncate">
+      {{ notification.event?.arenaTargets || notification.event?.dungeonName || notification.event?.title }}
+    </div>
+  }
+
   <div class="flex justify-between items-center gap-2 mt-1">
     <div class="text-xs text-gray-500">{{ notification.createdAt | dateFormat }}</div>
     @if (notification.like || notification.comment) {
       <a [routerLink]="['/feed/post', notification.like ? notification.like.post.id : notification.comment?.post?.id]"
          class="text-xs text-secondary">Voir le post</a>
+    }
+    @if (notification.type === NotificationTypeEnum.new_event || notification.type === NotificationTypeEnum.join_event) {
+      <a [routerLink]="['/events', notification.event?.id]" class="text-xs text-secondary">Voir l'événement</a>
     }
   </div>
 </div>

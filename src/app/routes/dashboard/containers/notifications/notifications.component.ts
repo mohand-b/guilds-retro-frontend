@@ -10,7 +10,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import {NotificationsFacade} from "../../../../shared/state/notifications/notifications.facade";
-import {NotificationDto} from "../../../../shared/state/notifications/notification.model";
+import {NotificationDto, NotificationTypeEnum} from "../../../../shared/state/notifications/notification.model";
 import {NotificationItemComponent} from "../../components/notification-item/notification-item.component";
 
 @Component({
@@ -31,16 +31,20 @@ export class NotificationsComponent implements AfterViewInit, OnDestroy {
   notifications: Signal<NotificationDto[]> = this.notificationsFacade.notifications;
 
   groupedNotifications = computed(() => {
-    const grouped: { [postId: number]: NotificationDto[] } = {};
+    const grouped: { [key: string]: NotificationDto[] } = {};
 
     this.notifications().forEach((notification) => {
-      if (notification.type === 'like' && notification.like?.post?.id) {
-        const postId = notification.like.post.id;
-        grouped[postId] = grouped[postId] || [];
-        grouped[postId].push(notification);
+      let key;
+      if (notification.type === NotificationTypeEnum.like && notification.like?.post?.id) {
+        key = `${NotificationTypeEnum.like}_${notification.like.post.id}`;
+      } else if (notification.type === NotificationTypeEnum.join_event && notification.event?.id) {
+        key = `${NotificationTypeEnum.join_event}_${notification.event.id}`;
       } else {
-        grouped[notification.id] = [notification];
+        key = `${notification.type}_${notification.id}`;
       }
+
+      grouped[key] = grouped[key] || [];
+      grouped[key].push(notification);
     });
 
     const transformedNotifications: NotificationDto[] = Object.values(grouped).map((group) => {
@@ -58,9 +62,18 @@ export class NotificationsComponent implements AfterViewInit, OnDestroy {
         new Date(notif.createdAt) > max ? new Date(notif.createdAt) : max, new Date(0)
       );
 
+      let message = '';
+      if (latestNotification.type === NotificationTypeEnum.like) {
+        message = `${latestNotification.emitter?.username} et ${group.length - 1} autre${group.length > 2 ? 's' : ''} ont liké ton post`;
+      } else if (latestNotification.type === NotificationTypeEnum.join_event) {
+        message = `${latestNotification.emitter?.username} et ${group.length - 1} autre${group.length > 2 ? 's' : ''} ont rejoint l'événement ${latestNotification.event?.title}`;
+      } else {
+        message = latestNotification.message;
+      }
+
       return {
         ...latestNotification,
-        message: `${latestNotification.emitter?.username} et ${group.length - 1} autre${group.length > 2 ? 's' : ''} ont liké ton post`,
+        message,
         createdAt: latestDate,
         groupedNotificationIds: group.map(notif => notif.id)
       };
