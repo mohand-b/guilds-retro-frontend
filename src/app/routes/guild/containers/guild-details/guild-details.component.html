@@ -11,7 +11,8 @@
       @if (guild(); as guild) {
         <app-page-block [title]="guild.name!">
           <ng-container header-action>
-            @if (hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
+
+            @if (currentUser()?.guild?.id !== guild.id && hasRequiredRole(currentUser()!.role, UserRoleEnum.OFFICER)) {
 
               @if (!guild.isAlly && hasSentRequest() === false && !hasReceivedRequest() && currentUser()!.guildAlliesIds!.length < 3) {
                 <p-button

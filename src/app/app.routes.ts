@@ -1,6 +1,8 @@
 import {Routes} from '@angular/router';
 import {authenticatedGuard} from "./routes/authenticated/guards/authenticated.guard";
 import {loginGuard} from "./routes/auth/guards/login.guard";
+import {AppRankEnum} from "./routes/authenticated/state/authed/authed.model";
+import {rankGuard} from "./routes/authenticated/guards/rank.guard";
 
 export const routes: Routes = [
   {
@@ -9,23 +11,20 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () =>
-      import('./routes/auth/auth.routes').then((m) => m.authRoutes),
     canActivate: [loginGuard],
+    loadChildren: () => import('./routes/auth/auth.routes').then((m) => m.authRoutes),
   },
   {
     path: 'console',
-    loadChildren: () => import('./routes/console/console.routes').then(c => c.consoleRoutes)
+    canActivate: [rankGuard],
+    data: {appRank: AppRankEnum.MODERATOR},
+    loadChildren: () => import('./routes/console/console.routes').then(c => c.consoleRoutes),
   },
   {
     path: '',
-    loadChildren: () =>
-      import('./routes/authenticated/authenticated.routes').then(
-        (c) => c.authenticatedRoutes,
-      ),
     canActivate: [authenticatedGuard],
+    loadChildren: () => import('./routes/authenticated/authenticated.routes').then((c) => c.authenticatedRoutes),
   },
-
   {
     path: '**',
     redirectTo: '',

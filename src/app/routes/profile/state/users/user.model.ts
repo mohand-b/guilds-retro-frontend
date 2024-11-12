@@ -1,13 +1,14 @@
 import {GuildDto} from "../../../guild/state/guilds/guild.model";
 import {JobDto} from "../jobs/job.model";
 import {OneWordQuestionnaireDto} from "../questionnaire/questionnaire.model";
-import {UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
+import {AppRankEnum, UserRoleEnum} from "../../../authenticated/state/authed/authed.model";
 
 export interface UserDto {
   id: number;
   username: string;
   characterClass: CharacterClassEnum;
   role: UserRoleEnum;
+  appRank: AppRankEnum;
   guild: GuildDto;
   gender: GenderEnum;
   characterLevel: number;
