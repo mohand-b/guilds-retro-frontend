@@ -73,14 +73,14 @@
             <p-button text label="Se retirer" icon="pi pi-minus" severity="warning" (click)="onLeave()"/>
           } @else if (!isParticipant && !isFull) {
             <p-button text label="Participer" icon="pi pi-user-plus" severity="primary"
-                      [disabled]="!levelRequirementMet" (click)="onJoin()"/>
+                      [disabled]="!levelRequirementMet || !levelRequirementMet" (click)="onJoin()"/>
           }
         } @else {
           <p-button text label="Annuler" icon="pi pi-times" severity="danger" (click)="onCancel()"/>
         }
       </div>
 
-      <p-button [routerLink]="['/events', event.id]" label="Voir" icon="pi pi-eye" severity="info" text/>
+      <p-button [routerLink]="['/events', event.id]" label="Voir" icon="pi pi-eye" severity="secondary" text/>
     </div>
 
 

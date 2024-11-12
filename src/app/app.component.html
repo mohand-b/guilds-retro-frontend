@@ -2,11 +2,13 @@
   <body class="flex-grow overflow-auto no-scrollbar">
   <router-outlet/>
   </body>
-  <footer class="w-full bg-primaryDark text-white text-sm py-1 flex justify-center items-center space-x-4">
-    <a [routerLink]="['/terms']" class="hover:underline">Conditions générales d'utilisation</a>
-    <span>|</span>
-    <span>&copy; 2024 Guilds Boune</span>
-    <span>|</span>
-    <span>Powered by Mohand</span>
-  </footer>
+  @if (showFooter) {
+    <footer class="w-full bg-primaryDark text-white text-sm py-1 flex justify-center items-center space-x-4">
+      <a [routerLink]="['/terms']" class="hover:underline">Conditions générales d'utilisation</a>
+      <span>|</span>
+      <span>&copy; 2024 Guilds Boune</span>
+      <span>|</span>
+      <span>Powered by Mohand</span>
+    </footer>
+  }
 </div>

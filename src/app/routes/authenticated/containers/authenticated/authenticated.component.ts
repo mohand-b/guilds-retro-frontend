@@ -1,4 +1,15 @@
-import {Component, DestroyRef, inject, OnInit, signal, WritableSignal} from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  HostListener,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+  WritableSignal
+} from '@angular/core';
 import {MainMenuComponent} from "../../../../shared/components/main-menu/main-menu.component";
 import {HeaderComponent} from "../../../../shared/components/header/header.component";
 import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
@@ -29,7 +40,31 @@ export class AuthenticatedComponent implements OnInit {
   private routeOrder = ['dashboard', 'guild', 'events', 'registry', 'eternal-harvest', 'profile'];
   private currentRouteIndex = 0;
 
-  constructor(private router: Router) {
+
+  protected readonly scroll = scroll;
+  private notificationsFacade = inject(NotificationsFacade);
+  public readonly unreadNotificationsCount = this.notificationsFacade.unreadNotificationsCount;
+  private readonly destroyRef = inject(DestroyRef);
+  private router = inject(Router);
+  private _elementRef = inject(ElementRef);
+
+  @ViewChild('sidebarContainer', {static: false}) sidebarContainer!: ElementRef;
+
+  showNotifications: WritableSignal<boolean> = signal(false);
+  private skipClickOutside = false;
+
+  isClickOutside = computed(() => {
+    return (event: MouseEvent) => {
+      return (
+        this.showNotifications() &&
+        this.sidebarContainer &&
+        !this.sidebarContainer.nativeElement.contains(event.target) &&
+        !this.skipClickOutside
+      );
+    };
+  });
+
+  constructor() {
     this.notificationsFacade.loadNotifications().pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe();
@@ -42,6 +77,24 @@ export class AuthenticatedComponent implements OnInit {
       }
     });
   }
+
+
+  toggleNotifications() {
+    this.showNotifications.update((show) => !show);
+
+    if (this.showNotifications()) {
+      this.skipClickOutside = true;
+      setTimeout(() => (this.skipClickOutside = false), 0);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    if (this.isClickOutside()(event)) {
+      this.toggleNotifications();
+    }
+  }
+
 
   prepareRoute(outlet: RouterOutlet) {
     if (this.isFirstNavigation) {
@@ -64,19 +117,6 @@ export class AuthenticatedComponent implements OnInit {
     }
 
     return null;
-  }
-
-
-  showNotifications: WritableSignal<boolean> = signal(false);
-
-  protected readonly scroll = scroll;
-  private notificationsFacade = inject(NotificationsFacade);
-  public readonly unreadNotificationsCount = this.notificationsFacade.unreadNotificationsCount;
-  private readonly destroyRef = inject(DestroyRef);
-
-
-  toggleNotifications(): void {
-    this.showNotifications.set(!this.showNotifications());
   }
 
 

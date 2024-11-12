@@ -14,6 +14,10 @@ export const routes: Routes = [
     canActivate: [loginGuard],
   },
   {
+    path: 'console',
+    loadChildren: () => import('./routes/console/console.routes').then(c => c.consoleRoutes)
+  },
+  {
     path: '',
     loadChildren: () =>
       import('./routes/authenticated/authenticated.routes').then(
@@ -21,6 +25,7 @@ export const routes: Routes = [
       ),
     canActivate: [authenticatedGuard],
   },
+
   {
     path: '**',
     redirectTo: '',

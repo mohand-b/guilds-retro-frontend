@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {PrimeNGConfig} from "primeng/api";
 
 @Component({
@@ -11,10 +11,15 @@ import {PrimeNGConfig} from "primeng/api";
 })
 export class AppComponent implements OnInit {
   title = 'Guilds Boune';
+  showFooter = true;
 
   private primengConfig = inject(PrimeNGConfig);
+  private router = inject(Router);
 
   ngOnInit() {
     this.primengConfig.ripple = false;
+    this.router.events.subscribe(() => {
+      this.showFooter = !this.router.url.includes('/console');
+    });
   }
 }

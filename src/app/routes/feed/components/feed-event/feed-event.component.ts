@@ -65,6 +65,11 @@ export class FeedEventComponent {
     ) || [];
   }
 
+  get levelRequirementMet(): boolean {
+    return !this.event.minLevel ||
+      this.currentUser.characterLevel >= this.event.minLevel!;
+  }
+
   get meetsClassRequirements(): boolean {
     if (!this.event.requiredClasses || this.event.requiredClasses.length === 0) {
       return true;
@@ -85,11 +90,6 @@ export class FeedEventComponent {
 
     return true;
   }
-
-  get levelRequirementMet(): boolean {
-    return !this.event.minLevel || this.currentUser.characterLevel >= this.event.minLevel;
-  }
-
 
   participate(): void {
     this.eventsFacade.joinEvent(this.event.id).subscribe();

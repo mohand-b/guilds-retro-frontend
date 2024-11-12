@@ -14,15 +14,20 @@
         <router-outlet #outlet="outlet"/>
       </div>
 
-      <p-sidebar
-        (onHide)="toggleNotifications()"
-        [visible]="showNotifications()"
-        position="right">
-        <ng-template pTemplate="header">
-          <span class="font-semibold text-xl">Notifications</span>
-        </ng-template>
-        <app-notifications/>
-      </p-sidebar>
+      <div #sidebarContainer>
+
+        <p-sidebar
+          #notificationsSidebar
+          (onHide)="toggleNotifications()"
+          [visible]="showNotifications()"
+          [dismissible]="true"
+          position="right">
+          <ng-template pTemplate="header">
+            <span class="font-semibold text-xl">Notifications</span>
+          </ng-template>
+          <app-notifications/>
+        </p-sidebar>
+      </div>
 
     </div>
   </div>

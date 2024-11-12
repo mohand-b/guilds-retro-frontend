@@ -72,7 +72,7 @@
                   icon="pi pi-user-plus"
                   severity="primary"
                   rounded
-                  [disabled]="!levelRequirementMet"
+                  [disabled]="!levelRequirementMet || !meetsClassRequirements"
                   (click)="onJoin()"
                 ></p-button>
               }

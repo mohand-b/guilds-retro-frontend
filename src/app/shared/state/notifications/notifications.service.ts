@@ -56,7 +56,6 @@ export class NotificationsService {
   }
 
   requestPermission(): void {
-    console.log('Notification.permission', Notification.permission);
     if (Notification.permission === 'default') {
       Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
