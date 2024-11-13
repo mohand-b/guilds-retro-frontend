@@ -20,10 +20,10 @@ export class GenericModalService {
     overflowYvisible: boolean = false
   ): DynamicDialogRef {
     const sizeMap = {
-      xs: '30%',
-      sm: '40%',
-      md: '50%',
-      xl: '80%',
+      xs: '20rem',
+      sm: '24rem',
+      md: '32rem',
+      xl: '48rem',
     };
 
     const buttonText = button.primary || button.danger;

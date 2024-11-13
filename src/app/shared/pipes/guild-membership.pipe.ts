@@ -11,7 +11,7 @@ export class GuildMembershipPipe implements PipeTransform {
   private authenticatedFacade = inject(AuthenticatedFacade);
   currentUser = this.authenticatedFacade.currentUser;
 
-  transform(user: UserDto, currentUser: UserDto): string {
+  transform(user: UserDto): string {
     if (user.id === this.currentUser()!.id) {
       return 'currentUser';
     }

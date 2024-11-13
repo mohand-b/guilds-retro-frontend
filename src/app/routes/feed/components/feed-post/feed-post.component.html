@@ -7,7 +7,7 @@
       rounded text
     />
     <p-overlayPanel #menu>
-      @if ((post.user | guildMembership: currentUser) === 'currentUser') {
+      @if ((post.user | guildMembership) === 'currentUser') {
         <p-button severity="danger" label="Supprimer" (onClick)="deletePost()" text/>
       } @else {
         <p-button severity="warning" label="Signaler" (onClick)="reportPost()" text/>
@@ -27,7 +27,7 @@
         </a>
       </div>
       <div class="text-xs text-gray-500">
-        @switch ((post.user | guildMembership: currentUser)) {
+        @switch (post.user | guildMembership) {
           @case ('currentUser') {
             Moi
           }
@@ -114,10 +114,23 @@
             </div>
             <div class="text-gray-700 mt-1">{{ comment.text }}</div>
           </div>
+
+          <div>
+            <div class="cursor-pointer p-1" (click)="menu.toggle($event)">
+              <i class="pi pi-ellipsis-v text-gray-500" style="font-size: .7rem"></i>
+            </div>
+            <p-overlayPanel #menu>
+              @if ((comment.user | guildMembership) === 'currentUser') {
+                <p-button severity="danger" label="Supprimer" (onClick)="deleteComment(comment.id)" text/>
+              } @else {
+                <p-button severity="warning" label="Signaler" (onClick)="reportComment(comment.id)" text/>
+              }
+            </p-overlayPanel>
+          </div>
         </div>
       }
     </div>
-    
+
     @if (shouldShowLoadComments() && hasMoreComments) {
       <div class="text-sm cursor-pointer" (click)="loadComments()">
         Voir plus

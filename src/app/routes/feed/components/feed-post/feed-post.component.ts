@@ -18,7 +18,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {ImageModule} from "primeng/image";
 import {ReportsService} from "../../../console/state/reports/reports.service";
 import {ReportFormComponent} from "../../../../shared/components/report-form/report-form.component";
-import {CreateReportDto} from "../../../console/state/reports/report.model";
+import {CreateReportDto, ReportTypeEnum} from "../../../console/state/reports/report.model";
 
 @Component({
   selector: 'app-feed-post',
@@ -140,7 +140,7 @@ export class FeedPostComponent {
       error: (error) => console.error(error),
     });
   }
-  
+
   toggleShowMore() {
     this.showMore = !this.showMore;
   }
@@ -166,7 +166,7 @@ export class FeedPostComponent {
 
   reportPost() {
     const dialogRef = this.genericModalService.open(
-      'Signaler',
+      'Signaler le post',
       {primary: 'Signaler'},
       'sm',
       null,
@@ -181,7 +181,35 @@ export class FeedPostComponent {
         if (report) {
           const createReportDto: CreateReportDto = {
             entityId: this.post.id,
-            entityType: 'post',
+            entityType: ReportTypeEnum.POST,
+            reason: report.reason,
+            reasonText: report.reasonText,
+          };
+          return this.reportsService.report(createReportDto);
+        }
+        return EMPTY;
+      })
+    ).subscribe();
+  }
+
+  reportComment(commentId: number) {
+    const dialogRef = this.genericModalService.open(
+      'Signaler le commentaire',
+      {primary: 'Signaler'},
+      'sm',
+      null,
+      ReportFormComponent,
+      undefined,
+      true,
+      true
+    );
+
+    dialogRef.onClose.pipe(
+      switchMap((report: Pick<CreateReportDto, 'reason' | 'reasonText'>) => {
+        if (report) {
+          const createReportDto: CreateReportDto = {
+            entityId: commentId,
+            entityType: ReportTypeEnum.COMMENT,
             reason: report.reason,
             reasonText: report.reasonText,
           };
@@ -207,6 +235,5 @@ export class FeedPostComponent {
   unlikePost() {
     this.feedFacade.unlikePost(this.post.id).subscribe();
   }
-
 
 }

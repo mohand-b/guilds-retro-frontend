@@ -13,7 +13,7 @@
             rounded text
           />
           <p-overlayPanel #menu>
-            @if ((post.user | guildMembership: currentUser) === 'currentUser') {
+            @if ((post.user | guildMembership) === 'currentUser') {
               <p-button severity="danger" label="Supprimer" (onClick)="deletePost()" text/>
             } @else {
               <p-button severity="warning" label="Signaler" (onClick)="reportPost()" text [disabled]="true"/>
@@ -34,7 +34,7 @@
               </a>
             </div>
             <div class="text-xs text-gray-500">
-              @switch ((post.user | guildMembership: currentUser)) {
+              @switch (post.user | guildMembership) {
                 @case ('currentUser') {
                   Moi
                 }

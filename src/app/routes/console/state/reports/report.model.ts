@@ -4,7 +4,7 @@ import {PostDto} from "../../../feed/state/posts/post.model";
 
 export interface ReportDto {
   id: number;
-  reportType: ReportType;
+  reportType: ReportTypeEnum;
   reason: string;
   createdAt: Date;
   status: ReportStatusEnum;
@@ -16,7 +16,7 @@ export interface ReportDto {
 
 export interface CreateReportDto {
   entityId: number;
-  entityType: ReportType;
+  entityType: ReportTypeEnum;
   reason: string;
   reasonText: string;
 }
@@ -26,7 +26,12 @@ export enum ReportStatusEnum {
   PROCESSED = 'processed',
 }
 
-export type ReportType = 'post' | 'user' | 'event';
+export enum ReportTypeEnum {
+  POST = 'post',
+  USER = 'user',
+  EVENT = 'event',
+  COMMENT = 'comment',
+}
 
 export enum ReportReasonEnum {
   INAPPROPRIATE_CONTENT = 'inappropriate_content',
