@@ -67,16 +67,17 @@ import {CreateReportDto} from "../../../console/state/reports/report.model";
   ],
 })
 export class FeedPostComponent {
-
   @Input() post!: PostDto;
   @Input() currentUser!: UserDto;
+
   public showMore = false;
   public isClamped = false;
-  commentControl = new FormControl('');
   public page = 1;
   public hasMoreComments = false;
+  public cursor?: number;
 
-  public initialCommentCount = computed(() => this.post.commentCount!);
+  commentControl = new FormControl('');
+
   public recentComments: WritableSignal<CommentDto[]> = signal([]);
   public comments: WritableSignal<CommentDto[]> = signal([]);
   public filteredComments = computed(() =>
@@ -84,47 +85,62 @@ export class FeedPostComponent {
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
   );
+
   private feedFacade = inject(FeedFacade);
   private genericModalService = inject(GenericModalService);
   private reportsService = inject(ReportsService);
 
-  get isLiked(): boolean {
-    return this.post.likes.some(like => like.user.id === this.currentUser.id);
-  }
-
-  get likesCount(): number {
-    return this.post.likes.length;
-  }
-
   shouldShowLoadComments(): boolean {
-    return this.initialCommentCount() > 0 && this.comments().length < this.initialCommentCount();
+    return this.post.commentCount > 0 && this.filteredComments().length < this.post.commentCount;
   }
 
   shouldShowSeeMore(): boolean {
     return this.comments().length > 0;
   }
 
-  likePost() {
-    this.feedFacade.likePost(this.post.id).subscribe();
-  }
-
-  unlikePost() {
-    this.feedFacade.unlikePost(this.post.id).subscribe();
-  }
-
   addComment() {
     const createCommentDto: CreateCommentDto = {
       text: this.commentControl.value!,
-      postId: this.post.id
+      postId: this.post.id,
     };
 
     this.feedFacade.commentPost(createCommentDto).subscribe({
       next: (comment) =>
-        this.recentComments.update(comments => [comment, ...comments]),
+        this.recentComments.update((comments) => [comment, ...comments]),
     });
     this.commentControl.reset();
   }
 
+  deleteComment(commentId: number) {
+    this.feedFacade.deleteComment(commentId).subscribe({
+      next: () => {
+        this.comments.update((comments) => comments.filter((comment) => comment.id !== commentId));
+        this.recentComments.update((comments) => comments.filter((comment) => comment.id !== commentId));
+
+      },
+    });
+  }
+
+  loadComments() {
+    this.feedFacade.getPaginatedComments(this.post.id, this.cursor).subscribe({
+      next: (paginatedComments) => {
+        const newComments = paginatedComments.comments.filter(
+          (comment) =>
+            !this.comments().some((existingComment) => existingComment.id === comment.id) &&
+            !this.recentComments().some((existingComment) => existingComment.id === comment.id)
+        );
+
+        this.comments.update((comments) => [...comments, ...newComments]);
+        this.hasMoreComments = !!paginatedComments.cursor;
+
+        if (newComments.length > 0) {
+          this.cursor = paginatedComments.cursor;
+        }
+      },
+      error: (error) => console.error(error),
+    });
+  }
+  
   toggleShowMore() {
     this.showMore = !this.showMore;
   }
@@ -144,10 +160,9 @@ export class FeedPostComponent {
     );
 
     ref.onClose.pipe(
-      switchMap((result) => result ? this.feedFacade.deletePost(this.post.id) : EMPTY)
+      switchMap((result) => (result ? this.feedFacade.deletePost(this.post.id) : EMPTY))
     ).subscribe();
   }
-
 
   reportPost() {
     const dialogRef = this.genericModalService.open(
@@ -177,18 +192,21 @@ export class FeedPostComponent {
     ).subscribe();
   }
 
-  loadComments() {
-    this.feedFacade.getPaginatedComments(this.post.id, this.page).subscribe({
-      next: (paginatedComments) => {
-        const newComments = paginatedComments.comments.filter(
-          (comment) => !this.comments().some(existingComment => existingComment.id === comment.id) &&
-            !this.recentComments().some(existingComment => existingComment.id === comment.id)
-        );
-        this.comments.update(comments => [...comments, ...newComments]);
-        this.hasMoreComments = this.comments().length < paginatedComments.total;
-        this.page++;
-      },
-      error: (error) => console.error(error),
-    });
+  get isLiked(): boolean {
+    return this.post.likes.some((like) => like.user.id === this.currentUser.id);
   }
+
+  get likesCount(): number {
+    return this.post.likes.length;
+  }
+
+  likePost() {
+    this.feedFacade.likePost(this.post.id).subscribe();
+  }
+
+  unlikePost() {
+    this.feedFacade.unlikePost(this.post.id).subscribe();
+  }
+
+
 }

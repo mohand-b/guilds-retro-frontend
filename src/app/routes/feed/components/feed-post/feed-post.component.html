@@ -98,24 +98,27 @@
       </div>
     }
 
-    <div class="flex flex-col-reverse">
+    <div class="flex flex-col-reverse gap-2 mt-1">
       @for (comment of filteredComments(); track comment.id) {
-        <div [@fadeInUp] class="flex items-center gap-2 text-sm">
-          <div class="w-8 h-8 rounded-full bg-beige border border-gray-300 flex items-center justify-center">
+        <div [@fadeInUp] class="flex gap-1 text-sm items-start">
+          <div
+            class="mt-1 w-8 h-8 rounded-full bg-beige border border-gray-300 flex items-center justify-center flex-shrink-0">
             <img [src]="comment.user | characterIcon" alt="Avatar"
-                 class="w-6 h-6 rounded-full object-cover no-select no-copy">
+                 class="w-8 h-8 rounded-full object-cover no-select no-copy">
           </div>
-          <div class="flex gap-1 items-center">
-            <a [routerLink]="['/registry/user', comment.user.username]"
-               class="font-bold">{{ comment.user.username }}</a>
-            <span class="text-xs text-gray-500">({{ comment.createdAt | dateFormat }})</span>:
+          <div class="flex flex-col bg-gray-100 rounded-lg p-2 pr-4">
+            <div class="flex items-center gap-2">
+              <a [routerLink]="['/registry/user', comment.user.username]"
+                 class="font-bold">{{ comment.user.username }}</a>
+              <span class="text-xs text-gray-500">({{ comment.createdAt | dateFormat }})</span>
+            </div>
+            <div class="text-gray-700 mt-1">{{ comment.text }}</div>
           </div>
-          <div>{{ comment.text }}</div>
         </div>
       }
     </div>
-
-    @if (shouldShowLoadComments() && shouldShowSeeMore()) {
+    
+    @if (shouldShowLoadComments() && hasMoreComments) {
       <div class="text-sm cursor-pointer" (click)="loadComments()">
         Voir plus
       </div>

@@ -282,8 +282,50 @@ export class FeedFacade {
     );
   }
 
-  getPaginatedComments(postId: number, page?: number, limit?: number): Observable<PaginatedCommentsDto> {
-    return this.commentsService.getPaginatedComments(postId, page, limit);
+  getPaginatedComments(postId: number, cursor?: number, limit: number = 3): Observable<PaginatedCommentsDto> {
+    return this.commentsService.getPaginatedComments(postId, cursor, limit).pipe(
+      tap({
+        next: (paginatedComments: PaginatedCommentsDto) => {
+          const feedItem = feedStore.query(getAllEntities())
+            .find(entity => entity.post && entity.post.id === postId);
+
+          if (feedItem) {
+            feedStore.update(updateEntities(feedItem.id, (entity) => ({
+              ...entity,
+              post: {
+                ...entity.post!,
+                commentCount: paginatedComments.total,
+                comments: cursor
+                  ? [...(entity.post!.comments || []), ...paginatedComments.comments]
+                  : paginatedComments.comments,
+              }
+            })));
+          }
+        },
+        error: (error) => console.error(error),
+      })
+    );
+  }
+
+  deleteComment(commentId: number): Observable<void> {
+    return this.commentsService.deleteComment(commentId).pipe(
+      tap({
+        next: () => {
+          const feedItem = feedStore.query(getAllEntities())
+            .find(entity => entity.post && entity.post.comments && entity.post.comments.some(c => c.id === commentId));
+          if (feedItem) {
+            feedStore.update(updateEntities(feedItem.id, (entity) => ({
+              ...entity,
+              post: {
+                ...entity.post!,
+                commentCount: entity.post!.commentCount - 1,
+              }
+            })));
+          }
+        },
+        error: (error) => console.error(error),
+      }),
+    );
   }
 
 }

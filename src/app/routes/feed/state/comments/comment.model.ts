@@ -20,4 +20,5 @@ export interface PaginatedCommentsDto {
   page: number;
   limit: number;
   comments: CommentDto[];
+  cursor?: number
 }
