@@ -72,7 +72,6 @@ export class FeedPostComponent {
 
   public showMore = false;
   public isClamped = false;
-  public page = 1;
   public hasMoreComments = false;
   public cursor?: number;
 

@@ -18,6 +18,9 @@ import {MatMenuTrigger} from "@angular/material/menu";
 import {DateTime} from "luxon";
 import {ButtonModule} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
+import {ReportFormComponent} from "../../../../shared/components/report-form/report-form.component";
+import {CreateReportDto, ReportTypeEnum} from "../../../console/state/reports/report.model";
+import {ReportsService} from "../../../console/state/reports/reports.service";
 
 @Component({
   selector: 'app-post',
@@ -67,7 +70,6 @@ export class PostComponent implements OnInit {
   public currentUser: Signal<UserDto | undefined> = inject(AuthenticatedFacade).currentUser;
   public recentComments: WritableSignal<CommentDto[]> = signal([]);
   public comments: WritableSignal<CommentDto[]> = signal([]);
-  public initialCommentCount = computed(() => this.post()!.commentCount!);
   public filteredComments = computed(() =>
     [...this.recentComments(), ...this.comments()].sort((a, b) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -76,8 +78,8 @@ export class PostComponent implements OnInit {
 
   public showMore = false;
   public isClamped = false;
-  public page = 1;
   public hasMoreComments = false;
+  public cursor?: number;
 
   commentControl = new FormControl('');
 
@@ -86,14 +88,7 @@ export class PostComponent implements OnInit {
   private readonly genericModalService = inject(GenericModalService);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-
-  get isLiked(): boolean {
-    return this.post()!.likes.some(like => like.user.id === this.currentUser()!.id);
-  }
-
-  get likesCount(): number {
-    return this.post()!.likes.length;
-  }
+  private reportsService = inject(ReportsService);
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.pipe(
@@ -109,16 +104,12 @@ export class PostComponent implements OnInit {
     });
   }
 
-  toggleShowMore() {
-    this.showMore = !this.showMore;
+  shouldShowLoadComments(): boolean {
+    return this.post()!.commentCount > 0 && this.filteredComments().length < this.post()!.commentCount;
   }
 
-  handleContentClamped(clamped: boolean) {
-    this.isClamped = clamped;
-  }
-
-  goBack() {
-    this.location.back();
+  shouldShowSeeMore(): boolean {
+    return this.comments().length > 0;
   }
 
   addComment(postId: number) {
@@ -133,27 +124,58 @@ export class PostComponent implements OnInit {
     this.commentControl.reset();
   }
 
+  deleteComment(commentId: number) {
+    this.feedFacade.deleteComment(commentId).subscribe({
+      next: () => {
+        this.comments.update((comments) => comments.filter((comment) => comment.id !== commentId));
+        this.recentComments.update((comments) => comments.filter((comment) => comment.id !== commentId));
+      },
+    });
+  }
+
   loadComments(postId: number) {
-    this.feedFacade.getPaginatedComments(postId, this.page).subscribe({
+    this.feedFacade.getPaginatedComments(postId, this.cursor).subscribe({
       next: (paginatedComments) => {
         const newComments = paginatedComments.comments.filter(
-          (comment) => !this.comments().some(existingComment => existingComment.id === comment.id) &&
-            !this.recentComments().some(existingComment => existingComment.id === comment.id)
+          (comment) =>
+            !this.comments().some((existingComment) => existingComment.id === comment.id) &&
+            !this.recentComments().some((existingComment) => existingComment.id === comment.id)
         );
-        this.comments.update(comments => [...comments, ...newComments]);
-        this.hasMoreComments = this.comments().length < paginatedComments.total;
-        this.page++;
+
+        this.comments.update((comments) => [...comments, ...newComments]);
+        this.hasMoreComments = !!paginatedComments.cursor;
+
+        if (newComments.length > 0) {
+          this.cursor = paginatedComments.cursor;
+        }
       },
       error: (error) => console.error(error),
     });
   }
 
-  likePost() {
+  get isLiked(): boolean {
+    return this.post()!.likes.some(like => like.user.id === this.currentUser()!.id);
+  }
+
+  get likesCount(): number {
+    return this.post()!.likes.length;
+  }
+
+
+  toggleShowMore() {
+    this.showMore = !this.showMore;
+  }
+
+  handleContentClamped(clamped: boolean) {
+    this.isClamped = clamped;
+  }
+
+  likePost(postId: number) {
     this.post.update(post => (
       {...post!, likes: [...post!.likes, {user: this.currentUser()!}]}
     ) as PostDto);
 
-    this.feedFacade.likePost(this.post()!.id).subscribe({
+    this.feedFacade.likePost(postId).subscribe({
       error: () => {
         this.post.update(post => (
           {...post!, likes: post!.likes.filter(like => like.user.id !== this.currentUser()!.id)}
@@ -162,13 +184,13 @@ export class PostComponent implements OnInit {
     });
   }
 
-  unlikePost() {
+  unlikePost(postId: number) {
     const oldLikes = this.post()!.likes;
     this.post.update(post => (
       {...post, likes: post!.likes.filter(like => like.user.id !== this.currentUser()!.id)}
     ) as PostDto);
 
-    this.feedFacade.unlikePost(this.post()!.id).subscribe({
+    this.feedFacade.unlikePost(postId).subscribe({
       error: () => {
         this.post.update(post => (
           {...post, likes: oldLikes}
@@ -177,7 +199,7 @@ export class PostComponent implements OnInit {
     });
   }
 
-  deletePost() {
+  deletePost(postId: number) {
     const ref = this.genericModalService.open(
       'Confirmation',
       {danger: 'Oui'},
@@ -188,19 +210,69 @@ export class PostComponent implements OnInit {
     );
 
     ref.onClose.pipe(
-      switchMap((result) => result ? this.feedFacade.deletePost(this.post()!.id) : EMPTY)
+      switchMap((result) => result ? this.feedFacade.deletePost(postId) : EMPTY)
     ).subscribe(() => this.router.navigate(['/dashboard']));
   }
 
+  reportPost(postId: number) {
+    const dialogRef = this.genericModalService.open(
+      'Signaler le post',
+      {primary: 'Signaler'},
+      'sm',
+      null,
+      ReportFormComponent,
+      undefined,
+      true,
+      true
+    );
 
-  reportPost() {
+    dialogRef.onClose.pipe(
+      switchMap((report: Pick<CreateReportDto, 'reason' | 'reasonText'>) => {
+        if (report) {
+          const createReportDto: CreateReportDto = {
+            entityId: postId,
+            entityType: ReportTypeEnum.POST,
+            reason: report.reason,
+            reasonText: report.reasonText,
+          };
+          return this.reportsService.report(createReportDto);
+        }
+        return EMPTY;
+      })
+    ).subscribe();
   }
 
-  shouldShowLoadComments(): boolean {
-    return this.initialCommentCount() > 0 && this.comments().length < this.initialCommentCount();
+  reportComment(commentId: number) {
+    const dialogRef = this.genericModalService.open(
+      'Signaler le commentaire',
+      {primary: 'Signaler'},
+      'sm',
+      null,
+      ReportFormComponent,
+      undefined,
+      true,
+      true
+    );
+
+    dialogRef.onClose.pipe(
+      switchMap((report: Pick<CreateReportDto, 'reason' | 'reasonText'>) => {
+        if (report) {
+          const createReportDto: CreateReportDto = {
+            entityId: commentId,
+            entityType: ReportTypeEnum.COMMENT,
+            reason: report.reason,
+            reasonText: report.reasonText,
+          };
+          return this.reportsService.report(createReportDto);
+        }
+        return EMPTY;
+      })
+    ).subscribe();
   }
 
-  shouldShowSeeMore(): boolean {
-    return this.comments().length > 0;
+
+  goBack() {
+    this.location.back();
   }
+
 }
