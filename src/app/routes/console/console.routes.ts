@@ -24,6 +24,10 @@ export const consoleRoutes: Route[] = [
       {
         path: 'logs',
         loadComponent: () => import('./containers/logs/logs.component').then(c => c.LogsComponent),
+      },
+      {
+        path: '**',
+        redirectTo: 'reports',
       }
     ],
   }

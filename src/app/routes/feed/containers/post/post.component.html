@@ -161,6 +161,11 @@
           </form>
         </div>
       </div>
+    } @else if (notFound) {
+      <div class="text-center text-gray-500">
+        <i class="pi pi-exclamation-triangle text-4xl"></i>
+        <div class="text-lg font-semibold">Ce post n'existe pas ou n'existe plus</div>
+      </div>
     }
   }
 </div>

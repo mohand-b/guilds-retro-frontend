@@ -15,7 +15,6 @@ import {DateFormatPipe} from "../../../../shared/pipes/date-format.pipe";
 import {GuildMembershipPipe} from "../../../../shared/pipes/guild-membership.pipe";
 import {LineClampDirective} from "../../../../shared/directives/line-clamp.directive";
 import {MatMenuTrigger} from "@angular/material/menu";
-import {DateTime} from "luxon";
 import {ButtonModule} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {ReportFormComponent} from "../../../../shared/components/report-form/report-form.component";
@@ -81,6 +80,8 @@ export class PostComponent implements OnInit {
   public hasMoreComments = false;
   public cursor?: number;
 
+  public notFound = false;
+
   commentControl = new FormControl('');
 
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -96,11 +97,9 @@ export class PostComponent implements OnInit {
         const postId = Number(params.get('id'));
         return this.feedFacade.getPost(postId);
       })
-    ).subscribe(post => {
-      const localDate = DateTime.fromISO(post.createdAt, {zone: 'utc'})
-        .setZone(DateTime.local().zoneName)
-        .toLocaleString(DateTime.DATETIME_MED);
-      this.post.set(post);
+    ).subscribe({
+      next: (post) => this.post.set(post),
+      error: () => this.notFound = true
     });
   }
 

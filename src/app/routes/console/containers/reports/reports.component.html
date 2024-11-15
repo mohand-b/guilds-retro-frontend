@@ -1,1 +1,122 @@
-<p>reports works!</p>
+<p-table
+  [value]="reports()"
+  dataKey="id"
+  [tableStyle]="{ 'min-width': '60rem' }"
+  [expandedRowKeys]="expandedRows"
+  (onRowExpand)="onRowExpand($event)"
+  (onRowCollapse)="onRowCollapse($event)"
+>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 5rem"></th>
+      <th>Signalement émis par</th>
+      <th>Type</th>
+      <th>Raison</th>
+      <th>Signalé le</th>
+      <th>Status</th>
+      <th>Décision</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-report let-expanded="expanded">
+    <tr>
+      <td>
+        <p-button
+          type="button"
+          [pRowToggler]="report"
+          text
+          rounded
+          plain
+          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+        />
+      </td>
+      <td>{{ report.reporter.username }}</td>
+      <td>{{ report.reportType }}</td>
+      <td>{{ report.reason }}</td>
+      <td>{{ report.createdAt | date: 'short' }}</td>
+      <td>
+        <p-tag [severity]="report.status === ReportStatusEnum.PENDING ? 'warning' : 'success'">
+          {{ report.status }}
+        </p-tag>
+      </td>
+      <td>
+        @if (report.decision === ReportDecisionEnum.IGNORED) {
+          <span class="text-yellow-500">Signalement ignoré</span>
+        }
+        @if (report.decision === ReportDecisionEnum.OBJECT_DELETED) {
+          @if (report.reportType === ReportTypeEnum.POST) {
+            <span class="text-red-500">Post supprimé</span>
+          } @else if (report.reportType === ReportTypeEnum.COMMENT) {
+            <span class="text-red-500">Commentaire supprimé</span>
+          }
+        }
+
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-report>
+    <tr>
+      <td colspan="7" class="bg-gray-100">
+        <div class="px-3 flex flex-col gap-2">
+          <div><span class="font-bold">Raison: </span> {{ report.reasonText }}</div>
+          <span class="font-bold">Contenu signalé: </span>
+          @if (report.reportType === ReportTypeEnum.POST) {
+            <div class="flex items-center gap-2">
+              @if (report.post.image) {
+                <p-button
+                  label="Voir l'image"
+                  icon="pi pi-image"
+                  (click)="op.toggle($event)"
+                  severity="info"
+                  text
+                  rounded
+                />
+              }
+              <span>{{ report.post.text }}</span>
+            </div>
+            <p-overlayPanel #op>
+              <div class="p-2 bg-white shadow-xl">
+                <img [src]="report.post.image" alt="Post image" class="w-64 h-64 object-cover ">
+              </div>
+            </p-overlayPanel>
+
+          }
+          @if (report.reportType === ReportTypeEnum.COMMENT) {
+            <div>{{ report.comment.text }}</div>
+          }
+        </div>
+        <div class="flex justify-end gap-2">
+
+          @if (report.status === ReportStatusEnum.PENDING) {
+            <p-button
+              label="Ignorer ce signalement"
+              (click)="archiveReport(report.id)"
+              severity="warning"
+              text
+              rounded
+            />
+            <p-button
+              label="Supprimer l'objet"
+              (click)="deleteReport(report.id)"
+              severity="danger"
+              text
+              rounded
+            />
+          } @else {
+            <span class="text-xs">Traité par {{ report.resolvedBy.username }}
+              le {{ report.resolvedAt | date: 'short' }}</span>
+          }
+        </div>
+
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-paginator
+  [rows]="pageSize"
+  [totalRecords]="totalReports()"
+  (onPageChange)="onPageChange($event)"
+  [rowsPerPageOptions]="[5, 10, 20]"
+>
+</p-paginator>
