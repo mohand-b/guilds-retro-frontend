@@ -1,5 +1,5 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
-import {Router, RouterOutlet} from "@angular/router";
+import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
 import {
   AbstractControl,
   FormControl,
@@ -28,7 +28,7 @@ import {SliderModule} from "primeng/slider";
 import {ButtonDirective, ButtonModule} from "primeng/button";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {GuildSelectionComponent} from "../guild-selection/guild-selection.component";
-import {finalize} from "rxjs";
+import {combineLatest, finalize} from "rxjs";
 import {StepperModule} from "primeng/stepper";
 import {CharacterIconPipe} from "../../../../shared/pipes/character-icon.pipe";
 import {CheckboxModule} from "primeng/checkbox";
@@ -68,15 +68,16 @@ function bothCheckboxesChecked(): ValidatorFn {
   styleUrls: ['./register-member.component.scss']
 })
 export class RegisterMemberComponent implements OnInit {
-
   public characterInfoForm: FormGroup;
   public guildIdControl: FormControl;
   public confirmationForm: FormGroup;
 
   public guilds: GuildSummaryDto[] = [];
   public guildSelected: GuildSummaryDto | null = null;
+  public isGuildFromQueryParams = false;
   public loadingGuilds = true;
   public isLoading = false;
+
   protected readonly characterClasses: CharacterClassEnum[] = Object.values(CharacterClassEnum);
   protected readonly GenderEnum = GenderEnum;
   private guildFacade = inject(GuildFacade);
@@ -84,8 +85,10 @@ export class RegisterMemberComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private location: Location = inject(Location);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private authFacade = inject(AuthFacade);
   private genericModalService = inject(GenericModalService);
+
 
   constructor() {
     this.characterInfoForm = this.fb.group({
@@ -108,12 +111,28 @@ export class RegisterMemberComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.guildFacade.getGuildsRecruiting().pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe(guilds => {
-      this.loadingGuilds = false;
-      this.guilds = guilds
-    });
+    combineLatest([
+      this.route.queryParams,
+      this.guildFacade.getGuildsRecruiting()
+    ])
+      .pipe(
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(([params, guilds]) => {
+        this.loadingGuilds = false;
+        const guildId = Number(params['guildId']);
+
+        if (guildId) {
+          const guild = guilds.find((g) => g.id === guildId);
+          if (guild) {
+            this.isGuildFromQueryParams = true;
+            this.guildIdControl.patchValue(guildId);
+            this.guildSelected = guild
+          }
+        } else {
+          this.guilds = guilds;
+        }
+      });
   }
 
   onOpenGuildSelection(): void {

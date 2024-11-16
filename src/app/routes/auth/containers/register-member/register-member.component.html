@@ -68,17 +68,19 @@
 
         <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
           <div class="flex flex-col gap-3">
-            <button (click)="onOpenGuildSelection()" [disabled]="loadingGuilds"
-                    class="mb-4 w-full text-white flex items-center justify-center gap-2"
-                    pButton rounded severity="secondary" type="button">
-              @if (loadingGuilds) {
-                <i class="pi pi-spin pi-spinner"></i>
-                <span>Chargement des guildes...</span>
-              } @else {
-                <i class="pi pi-search"></i>
-                <span>Sélectionner une guilde</span>
-              }
-            </button>
+            @if (!isGuildFromQueryParams) {
+              <button (click)="onOpenGuildSelection()" [disabled]="loadingGuilds"
+                      class="mb-4 w-full text-white flex items-center justify-center gap-2"
+                      pButton rounded severity="secondary" type="button">
+                @if (loadingGuilds) {
+                  <i class="pi pi-spin pi-spinner"></i>
+                  <span>Chargement des guildes...</span>
+                } @else {
+                  <i class="pi pi-search"></i>
+                  <span>Sélectionner une guilde</span>
+                }
+              </button>
+            }
 
             @if (guildSelected) {
               <app-guild-selected-card [guild]="guildSelected" class="w-full"/>
