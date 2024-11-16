@@ -1,7 +1,7 @@
-import {Component, DestroyRef, inject} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AuthFacade} from "../../auth.facade";
-import {Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {LoginDto} from "../../state/auth/auth.model";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
@@ -30,7 +30,7 @@ import {finalize} from "rxjs";
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   destroyRef: DestroyRef = inject(DestroyRef);
   private fb: NonNullableFormBuilder = inject(NonNullableFormBuilder);
@@ -40,8 +40,17 @@ export class LoginComponent {
   });
   private authFacade: AuthFacade = inject(AuthFacade);
   private router: Router = inject(Router);
+  private route: ActivatedRoute = inject(ActivatedRoute);
 
   public isLoading = false;
+  public sessionExpired: boolean = false;
+
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.sessionExpired = params['sessionExpired'] === 'true';
+    });
+  }
 
   login() {
     if (this.loginForm.invalid) {
@@ -59,7 +68,10 @@ export class LoginComponent {
       )
       .subscribe({
         next: () => this.router.navigate(['/dashboard']),
-        error: () => this.loginForm.setErrors({invalidCredentials: true}),
+        error: () => {
+          this.sessionExpired = false;
+          this.loginForm.setErrors({invalidCredentials: true})
+        },
       });
   }
 

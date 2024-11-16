@@ -9,7 +9,14 @@
 
     <h2 class="text-2xl font-bold">Connexion</h2>
 
-    <app-alert *ngIf="loginForm.hasError('invalidCredentials')" message="Identifiants incorrects." type="error"/>
+    <div class="flex flex-col gap-2">
+      @if (sessionExpired) {
+        <app-alert message="Ta session a expiré." type="warning"/>
+      }
+      @if (loginForm.hasError('invalidCredentials')) {
+        <app-alert message="Identifiants incorrects." type="error"/>
+      }
+    </div>
 
     <div class="flex flex-col gap-4">
       <input formControlName="username" pInputText placeholder="Nom du personnage"/>

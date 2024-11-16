@@ -1,6 +1,5 @@
 import {Component, inject, Signal} from '@angular/core';
 import {AuthenticatedFacade} from "../../../routes/authenticated/authenticated.facade";
-import {NgIf} from "@angular/common";
 import {UserDto} from "../../../routes/profile/state/users/user.model";
 import {ButtonModule} from "primeng/button";
 
@@ -8,7 +7,6 @@ import {ButtonModule} from "primeng/button";
   selector: 'app-header',
   standalone: true,
   imports: [
-    NgIf,
     ButtonModule,
   ],
   templateUrl: './header.component.html',

@@ -77,33 +77,35 @@
           </ng-container>
         </app-page-block>
 
-        <app-page-block class="max-w-[55rem]" title="Statistiques de Guilde">
-          <ng-container content>
-            @if (guild.hideStats) {
-              <app-alert type="warning" message="Les statistiques de cette guilde sont masquées"/>
-            } @else {
-              <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
-            }
-          </ng-container>
-        </app-page-block>
-
-        @if (guild.isAlly) {
-          <app-page-block title="Alliances">
-            <ng-content content>
-              @if (guild.allies && guild.allies.length > 0) {
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  @for (ally of guild.allies; track ally.id) {
-                    <app-alliance-card [guild]="ally"/>
-                  }
-                </div>
+        <div class="flex flex-col xl:flex-row gap-4">
+          <app-page-block class="max-w-[55rem]" title="Statistiques de Guilde">
+            <ng-container content>
+              @if (guild.hideStats) {
+                <app-alert type="warning" message="Les statistiques de cette guilde sont masquées"/>
               } @else {
-                <div class="text-gray-500">
-                  Aucune alliance
-                </div>
+                <app-guild-stats [guildId]="guild.id" [hidden]="loading"/>
               }
-            </ng-content>
+            </ng-container>
           </app-page-block>
-        }
+
+          @if (guild.isAlly) {
+            <app-page-block class="flex-1" title="Alliances">
+              <ng-content content>
+                @if (guild.allies && guild.allies.length > 0) {
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    @for (ally of guild.allies; track ally.id) {
+                      <app-alliance-card [guild]="ally"/>
+                    }
+                  </div>
+                } @else {
+                  <div class="text-gray-500">
+                    Aucune alliance
+                  </div>
+                }
+              </ng-content>
+            </app-page-block>
+          }
+        </div>
       }
     }
 

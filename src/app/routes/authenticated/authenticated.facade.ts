@@ -1,5 +1,5 @@
 import {inject, Injectable, Signal} from '@angular/core';
-import {createStore, getRegistry, select, withProps} from '@ngneat/elf';
+import {createStore, select, withProps} from '@ngneat/elf';
 import {AuthedStateDto} from './state/authed/authed.model';
 import {createRequestsStatusOperator, updateRequestStatus, withRequestsStatus,} from '@ngneat/elf-requests';
 import {localStorageStrategy, persistState} from '@ngneat/elf-persist-state';
@@ -58,10 +58,8 @@ export class AuthenticatedFacade {
   }
 
   logout(): void {
-
-    getRegistry().forEach(store => store.reset());
-
-    this.router.navigateByUrl('/auth');
+    authenticatedStore.reset();
+    this.router.navigateByUrl('/auth/login?sessionExpired=true')
   }
 
   refreshUser(): Observable<AuthedStateDto> {
@@ -76,9 +74,6 @@ export class AuthenticatedFacade {
             }),
             updateRequestStatus(AUTHENTICATED_STORE_NAME, 'success'),
           );
-        },
-        error: () => {
-          console.log('error');
         },
       }),
       trackAuthedRequestsStatus(AUTHENTICATED_STORE_NAME),

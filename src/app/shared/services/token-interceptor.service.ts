@@ -1,5 +1,13 @@
 import {inject, Injectable, Signal} from '@angular/core';
-import { HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpHeaders,
+  HttpInterceptor,
+  HttpRequest
+} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthenticatedFacade} from "../../routes/authenticated/authenticated.facade";
@@ -23,7 +31,16 @@ export class TokenInterceptorService implements HttpInterceptor {
     }
 
     return next.handle(request).pipe(
-      catchError((error) => throwError(error)),
+      catchError((error) => {
+        if (
+          error instanceof HttpErrorResponse &&
+          error.status === 401 &&
+          error.error.error === 'InvalidToken'
+        ) {
+          this.authenticatedFacade.logout();
+        }
+        return throwError(error);
+      })
     );
   }
 }
